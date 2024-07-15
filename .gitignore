@@ -1,3 +1,4 @@
+# bundle 
 /.bundle/
 /.yardoc
 /_yardoc/
@@ -9,3 +10,11 @@
 
 # rspec failure tracking
 .rspec_status
+
+# ruby
+*.gem
+
+# vagrant
+.vagrant/
+# testing vagrant
+Vagrantfile 

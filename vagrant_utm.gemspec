@@ -4,7 +4,7 @@ require_relative "lib/vagrant_utm/version"
 
 Gem::Specification.new do |spec|
   spec.name = "vagrant_utm"
-  spec.version = VagrantUtm::VERSION
+  spec.version = VagrantPlugins::Utm::VERSION
   spec.authors = ["Naveenraj M"]
   spec.email = ["naveenrajm97@gmail.com"]
 
