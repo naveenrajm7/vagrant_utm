@@ -5,9 +5,8 @@ require "log4r"
 
 module VagrantPlugins
   module Utm
-    # This is the provider for UTM.
+    # Provider that is responsible for managing the virtual machine and exposing it to Vagrant.
     class Provider < Vagrant.plugin("2", :provider)
-
       # Initialize the provider with given machine.
       def initialize(machine)
         super
@@ -26,7 +25,38 @@ module VagrantPlugins
         true
       rescue Errors::UtmError
         raise if raise_error
+
         false
+      end
+
+      # Execute the action with the given name.
+      def action(name)
+        action_method = "action_#{name}"
+        return Action.send(action_method) if Action.respond_to?(action_method)
+
+        nil
+      end
+
+      # Return the state of the virtual machine.
+      def state
+        @logger.info("Getting state of '#{@machine.id}'")
+
+        state_id = nil
+        state_id = :not_created unless @machine.id
+
+        unless state_id
+          env = @machine.action(:get_state)
+          state_id = env[:machine_state_id]
+        end
+
+        # Get the short and long description
+        short = state_id.to_s
+        long  = ""
+
+        # If machine created, then specify the special ID flag
+        state_id = Vagrant::MachineState::NOT_CREATED_ID if state_id == :not_created
+
+        Vagrant::MachineState.new(state_id, short, long)
       end
     end
   end

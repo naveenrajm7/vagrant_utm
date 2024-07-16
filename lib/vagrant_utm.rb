@@ -7,8 +7,8 @@ module VagrantPlugins
   # Top level module for the UTM provider plugin.
   module Utm
     lib_path = Pathname.new(File.expand_path("vagrant_utm", __dir__))
-    # autoload :Action, lib_path.join("action")
-    # autoload :Errors, lib_path.join("errors")
+    autoload :Action, lib_path.join("action")
+    autoload :Errors, lib_path.join("errors")
 
     # This returns the path to the source of this plugin.
     #

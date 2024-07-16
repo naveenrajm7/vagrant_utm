@@ -17,11 +17,11 @@ module VagrantPlugins
       name "utm"
       description "UTM provider for Vagrant"
 
-      #   # Register the configuration
-      #   config(:utm, :provider) do
-      #     require_relative "config"
-      #     Config
-      #   end
+      # Register the configuration
+      config(:utm, :provider) do
+        require_relative "config"
+        Config
+      end
 
       # Register the provider
       provider(:utm) do
