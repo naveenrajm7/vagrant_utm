@@ -25,8 +25,15 @@ module VagrantPlugins
 
       # Register the provider
       provider(:utm) do
+        setup_i18n
         require_relative "provider"
         Provider
+      end
+
+      # Load the translation files
+      def self.setup_i18n
+        I18n.load_path << File.expand_path("locales/en.yml", Utm.source_root)
+        I18n.reload!
       end
     end
   end

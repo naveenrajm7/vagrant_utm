@@ -1,0 +1,11 @@
+en:
+  vagrant_utm:
+    errors:
+      command_error: |-
+        Command failed with error: %{stderr}
+      instance_not_created: |-
+        The virtual machine has not been created yet.
+      instance_not_running: |-
+        The virtual machine is not running.
+      macos_required: |-
+        MacOS is required to run this provider
