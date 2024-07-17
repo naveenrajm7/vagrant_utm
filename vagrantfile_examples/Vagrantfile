@@ -3,6 +3,8 @@
 
 Vagrant.configure("2") do |config|
   config.vm.provider :utm do |utm|
-    utm.name = "RHEL"
+    # TODO: pass this to UTM file setting in the provider
+    utm.name = "vagutm"
+    utm.utm_file = "/Users/naveenrajm/Developer/UTMvagrant/DebianTest.utm"
   end
 end

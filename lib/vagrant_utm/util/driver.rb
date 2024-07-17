@@ -19,6 +19,7 @@ module VagrantPlugins
         # Execute the 'status' command and returns the machine status.
         # @param name [String] The name of the machine.
         # @return status [String] The status of the machine.
+        # TODO: Use VM UUID instead of name
         def get_status(name)
           cmd = ["utmctl", "status", name]
           result = execute(*cmd)
@@ -33,6 +34,24 @@ module VagrantPlugins
           result = execute(*cmd)
           data = JSON.parse(result)
           Model::ListResult.new(data)
+        end
+
+        # Execute the 'Open with UTM'
+        # @param utm_file [String] The path to the UTM file.
+        # @return [void]
+        def import(utm_file)
+          script_path = @script_path.join("open_with_utm.js")
+          cmd = ["osascript", script_path.to_s, utm_file]
+          execute(*cmd)
+        end
+
+        # Execute the 'start' command to start a machine.
+        # @param name [String] The name of the machine.
+        # @return [void]
+        # TODO: Use VM UUID instead of name
+        def start(name)
+          cmd = ["utmctl", "start", name]
+          execute(*cmd)
         end
 
         # Execute a command on the host machine.
@@ -52,7 +71,7 @@ module VagrantPlugins
           result.stdout.gsub!("\r\n", "\n")
 
           if result.exit_code != 0 && !interrupted
-            raise VagrantPlugins::Tart::Errors::CommandError,
+            raise VagrantPlugins::Utm::Errors::CommandError,
                   command: cmd.inspect,
                   stderr: result.stderr,
                   stdout: result.stdout

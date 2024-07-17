@@ -6,18 +6,39 @@ require "vagrant/action/builder"
 module VagrantPlugins
   module Utm
     # Contains all the supported actions of the UTM provider.
-    class Action
+    module Action
       # Include the built-in Vagrant action modules
       include Vagrant::Action::Builtin
 
       # Autoloading action blocks
-      action_root = Pathname.new(File.expand_path("../action", __dir__))
+      action_root = Pathname.new(File.expand_path("action", __dir__))
       autoload :GetState, action_root.join("get_state")
+      autoload :ImportVM, action_root.join("import_vm")
+      autoload :StartVM, action_root.join("start_vm")
 
       # Retrieves the state of the virtual machine.
       def self.action_get_state
         Vagrant::Action::Builder.new.tap do |b|
           b.use GetState
+        end
+      end
+
+      # This action starts a VM, assuming it is already imported and exists.
+      # A precondition of this action is that the VM exists.
+      def self.action_start
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use StartVM
+        end
+      end
+
+      # This actions brings up the virtual machine.
+      # For now we start from UTM file
+      def self.action_up
+        Vagrant::Action::Builder.new.tap do |b|
+          # Import UTM file to UTM app, through open with UTM
+          b.use ImportVM
+          # Start the VM
+          b.use action_start
         end
       end
     end

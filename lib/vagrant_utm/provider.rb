@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
 require "log4r"
-# require_relative "util/driver"
+require_relative "util/driver"
 
 module VagrantPlugins
   module Utm
     # Provider that is responsible for managing the virtual machine and exposing it to Vagrant.
     class Provider < Vagrant.plugin("2", :provider)
+      # The driver for this provider.
+      attr_reader :driver
+
       # Initialize the provider with given machine.
       def initialize(machine)
         super
         @logger = Log4r::Logger.new("vagrant::provider::utm")
         @machine = machine
-        @driver = nil
+        @driver = Util::Driver.new
       end
 
       # Check if the provider is usable.
