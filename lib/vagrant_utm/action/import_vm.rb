@@ -10,11 +10,17 @@ module VagrantPlugins
         end
 
         def call(env)
+          import(env)
+        end
+
+        def import(env)
           machine = env[:machine]
           config = machine.provider_config
           driver = machine.provider.driver
           utm_file = config.utm_file
 
+          env[:ui].info I18n.t("vagrant_utm.messages.importing_utm_file",
+                               name: utm_file)
           driver.import(utm_file)
 
           @app.call(env)

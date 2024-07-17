@@ -9,3 +9,7 @@ en:
         The virtual machine is not running.
       macos_required: |-
         MacOS is required to run this provider
+
+    messages:
+      importing_utm_file: |-
+        Importing UTM virtual machine file %{name}...
