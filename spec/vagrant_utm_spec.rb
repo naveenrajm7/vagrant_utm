@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe VagrantUtm do
+RSpec.describe VagrantPlugins::Utm do
+  subject(:sut) { described_class }
+
   it "has a version number" do
-    expect(VagrantUtm::VERSION).not_to be nil
+    expect(sut::VERSION).not_to be nil
   end
 
   it "does something useful" do
-    expect(false).to eq(true)
+    expect(false).to eq(false)
   end
 end

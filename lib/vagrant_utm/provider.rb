@@ -19,6 +19,7 @@ module VagrantPlugins
       end
 
       # Check if the provider is usable.
+      # rubocop:disable Style/OptionalBooleanParameter
       def self.usable?(raise_error = false)
         raise Errors::MacOSRequired unless Vagrant::Util::Platform.darwin?
 
@@ -31,6 +32,7 @@ module VagrantPlugins
 
         false
       end
+      # rubocop:enable Style/OptionalBooleanParameter
 
       # Execute the action with the given name.
       def action(name)

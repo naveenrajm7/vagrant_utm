@@ -15,10 +15,10 @@ module VagrantPlugins
     # This is the main entry point for the UTM provider plugin.
     class Plugin < Vagrant.plugin("2")
       name "utm"
-      description <<-EOF
+      description <<-DESCRIPTION
       UTM provider allows Vagrant to manage and control
       VMs using UTM through Apple Scripting Bridge.
-      EOF
+      DESCRIPTION
 
       # Register the configuration
       config(:utm, :provider) do
