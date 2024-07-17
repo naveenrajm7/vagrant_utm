@@ -15,7 +15,10 @@ module VagrantPlugins
     # This is the main entry point for the UTM provider plugin.
     class Plugin < Vagrant.plugin("2")
       name "utm"
-      description "UTM provider for Vagrant"
+      description <<-EOF
+      UTM provider allows Vagrant to manage and control
+      VMs using UTM through Apple Scripting Bridge.
+      EOF
 
       # Register the configuration
       config(:utm, :provider) do
@@ -24,7 +27,12 @@ module VagrantPlugins
       end
 
       # Register the provider
-      provider(:utm) do
+      # TODO: Define box format for UTM
+      # IDEA: UTM file comes as a zip file containing
+      # directory with Data/qcow2, Data/efi_vars.fd and config.plist
+      # Box format will only require additional metadata.json file
+      # Till then use UTM file directly and so box_optional: true
+      provider(:utm, box_optional: true) do
         setup_i18n
         require_relative "provider"
         Provider
