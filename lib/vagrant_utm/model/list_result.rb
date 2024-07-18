@@ -32,6 +32,12 @@ module VagrantPlugins
           @machines.find { |i| i.name == name }
         end
 
+        # Return the last machine in the list.
+        # @return [ListResultItem]
+        def last
+          @machines.last
+        end
+
         # Represents an item in the list result.
         class ListResultItem
           # @return [String] The UUID of the machine.

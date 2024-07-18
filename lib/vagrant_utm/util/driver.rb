@@ -36,12 +36,33 @@ module VagrantPlugins
           Model::ListResult.new(data)
         end
 
-        # Execute the 'Open with UTM'
-        # @param utm_file [String] The path to the UTM file.
+        # Execute the 'utm://downloadVM?url='
+        # See https://docs.getutm.app/advanced/remote-control/
+        # @param utm_file_url [String] The url to the UTM file.
+        # @return [uuid] The UUID of the imported machine.
+        def import(utm_file_url)
+          script_path = @script_path.join("downloadVM.sh")
+          cmd = [script_path.to_s, utm_file_url]
+          execute(*cmd)
+          # wait for the VM to be imported
+          # TODO: UTM API to give the progress of the import
+          # along with the UUID of the imported VM
+          sleep(30)
+          # Get the UUID of the imported VM
+          # HACK: Currently we do not know the UUID of the imported VM
+          # So, we just get the UUID of the last VM in the list
+          # which is the last imported VM (unless UTM changes the order)
+          # TODO: Use UTM API to get the UUID of the imported VM
+          last_uuid
+        end
+
+        # Configure the VM with the given config.
+        # @param uuid [String] The UUID of the machine.
+        # @param config [Config] The configuration of the machine.
         # @return [void]
-        def import(utm_file)
-          script_path = @script_path.join("open_with_utm.js")
-          cmd = ["osascript", script_path.to_s, utm_file]
+        def configure(uuid, config)
+          script_path = @script_path.join("configure_vm.applescript")
+          cmd = ["osascript", script_path.to_s, uuid, config.name]
           execute(*cmd)
         end
 
@@ -52,6 +73,15 @@ module VagrantPlugins
         def start(name)
           cmd = ["utmctl", "start", name]
           execute(*cmd)
+        end
+
+        private
+
+        # Return UUID of the last VM in the list.
+        # @return [uuid] The UUID of the VM.
+        def last_uuid
+          list_result = list
+          list_result.last.uuid
         end
 
         # Execute a command on the host machine.

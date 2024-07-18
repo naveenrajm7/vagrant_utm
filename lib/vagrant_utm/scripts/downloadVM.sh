@@ -1,0 +1,1 @@
+open -g "utm://downloadVM?url=$1"
