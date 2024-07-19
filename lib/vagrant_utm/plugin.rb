@@ -32,7 +32,7 @@ module VagrantPlugins
       # directory with Data/qcow2, Data/efi_vars.fd and config.plist
       # Box format will only require additional metadata.json file
       # Till then use UTM file directly and so box_optional: true
-      provider(:utm, box_optional: true) do
+      provider(:utm, box_optional: true, parallel: false) do
         setup_i18n
         require_relative "provider"
         Provider

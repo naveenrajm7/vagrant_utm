@@ -19,7 +19,7 @@ module VagrantPlugins
         end
 
         # Checks if a machine with the given name exists.
-        # @param [String] name The name of the machine.
+        # @param name [String]  The name of the machine.
         # @return [Boolean]
         def any?(name)
           @machines.any? { |i| i.name == name }

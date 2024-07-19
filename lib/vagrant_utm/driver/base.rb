@@ -7,13 +7,22 @@ require_relative "../model/list_result"
 
 module VagrantPlugins
   module Utm
-    module Util
+    module Driver
       # Executes commands on the host machine through the AppleScript bridge interface
       # paired with a command line interface.
-      class Driver
-        # Initializes the driver with the path to the scripts directory.
+      class Base
+        # Include this so we can use `Subprocess` more easily.
+        include Vagrant::Util::Retryable
+
         def initialize
+          # This flag is used to keep track of interrupted state (SIGINT)
+          @interrupted = false
+          # The path to the scripts directory.
           @script_path = Pathname.new(File.expand_path("../scripts", __dir__))
+        end
+
+        # Check if the VM with the given UUID (Name) exists.
+        def vm_exists?(uuid)
         end
 
         # Execute the 'status' command and returns the machine status.
@@ -21,19 +30,15 @@ module VagrantPlugins
         # @return status [String] The status of the machine.
         # TODO: Use VM UUID instead of name
         def get_status(name)
-          cmd = ["utmctl", "status", name]
-          result = execute(*cmd)
-          result.strip
+        end
+
+        # virtualbox plugin style
+        def read_state
         end
 
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
         def list
-          script_path = @script_path.join("list_vm.js")
-          cmd = ["osascript", script_path.to_s]
-          result = execute(*cmd)
-          data = JSON.parse(result)
-          Model::ListResult.new(data)
         end
 
         # Execute the 'utm://downloadVM?url='
@@ -41,19 +46,6 @@ module VagrantPlugins
         # @param utm_file_url [String] The url to the UTM file.
         # @return [uuid] The UUID of the imported machine.
         def import(utm_file_url)
-          script_path = @script_path.join("downloadVM.sh")
-          cmd = [script_path.to_s, utm_file_url]
-          execute(*cmd)
-          # wait for the VM to be imported
-          # TODO: UTM API to give the progress of the import
-          # along with the UUID of the imported VM
-          sleep(30)
-          # Get the UUID of the imported VM
-          # HACK: Currently we do not know the UUID of the imported VM
-          # So, we just get the UUID of the last VM in the list
-          # which is the last imported VM (unless UTM changes the order)
-          # TODO: Use UTM API to get the UUID of the imported VM
-          last_uuid
         end
 
         # Configure the VM with the given config.
@@ -61,9 +53,6 @@ module VagrantPlugins
         # @param config [Config] The configuration of the machine.
         # @return [void]
         def configure(uuid, config)
-          script_path = @script_path.join("configure_vm.applescript")
-          cmd = ["osascript", script_path.to_s, uuid, config.name]
-          execute(*cmd)
         end
 
         # Execute the 'start' command to start a machine.
@@ -71,17 +60,11 @@ module VagrantPlugins
         # @return [void]
         # TODO: Use VM UUID instead of name
         def start(name)
-          cmd = ["utmctl", "start", name]
-          execute(*cmd)
         end
-
-        private
 
         # Return UUID of the last VM in the list.
         # @return [uuid] The UUID of the VM.
         def last_uuid
-          list_result = list
-          list_result.last.uuid
         end
 
         # Execute a command on the host machine.

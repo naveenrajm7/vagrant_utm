@@ -27,9 +27,12 @@ module VagrantPlugins
           # Configure the VM, change the name (required) and settings (if needed).
           driver.configure(uuid, config)
 
-          # Set the UID and Name of the machine for vagrant
-          # machine does not have uid (Need to store else where)
-          # machine.uid = uuid
+          # Set the UID of Vagrant machine to the Name of the VM in UTM (same as name in Vagrantfile config)
+          # UTM maintains UUID as primary key for VMs, but even the name works for all commands
+          # However, name is not unique.
+          # TODO: Decide if we want to use UTM 'UUID' or 'Name' for Vagrant machine ID
+
+          # For now we are using the 'Name' as the machine ID
           machine.id = name
 
           @app.call(env)
