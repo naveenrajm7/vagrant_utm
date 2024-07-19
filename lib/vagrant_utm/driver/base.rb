@@ -58,6 +58,9 @@ module VagrantPlugins
         # Halts the virtual machine (pulls the plug).
         def halt; end
 
+        # Suspend the virtual machine.
+        def suspend; end
+
         # Execute a command on the host machine.
         # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.
         def execute(*cmd, &block)

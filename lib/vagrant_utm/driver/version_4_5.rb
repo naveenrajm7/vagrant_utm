@@ -36,6 +36,11 @@ module VagrantPlugins
           execute(*cmd)
         end
 
+        def suspend
+          cmd = ["utmctl", "suspend", @uuid]
+          execute(*cmd)
+        end
+
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
         def list

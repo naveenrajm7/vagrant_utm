@@ -70,6 +70,7 @@ module VagrantPlugins
                        :start,
                        :vm_exists?,
                        :halt,
+                       :suspend,
                        :last_uuid
       end
     end
