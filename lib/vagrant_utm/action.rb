@@ -17,6 +17,7 @@ module VagrantPlugins
       autoload :StartVM, action_root.join("start_vm")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :Suspend, action_root.join("suspend")
+      autoload :Resume, action_root.join("resume")
 
       # Retrieves the state of the virtual machine.
       def self.action_get_state
@@ -57,6 +58,14 @@ module VagrantPlugins
       def self.action_suspend
         Vagrant::Action::Builder.new.tap do |b|
           b.use Suspend
+        end
+      end
+
+      # This action is primarily responsible for resuming the VM.
+      # UTM equivalent of `utmctl start <uuid>`
+      def self.action_resume
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use Resume
         end
       end
     end
