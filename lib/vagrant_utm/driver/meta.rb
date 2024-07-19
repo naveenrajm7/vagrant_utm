@@ -69,6 +69,7 @@ module VagrantPlugins
                        :read_state,
                        :start,
                        :vm_exists?,
+                       :halt,
                        :last_uuid
       end
     end

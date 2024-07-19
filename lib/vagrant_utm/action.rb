@@ -15,6 +15,7 @@ module VagrantPlugins
       autoload :GetState, action_root.join("get_state")
       autoload :ImportVM, action_root.join("import_vm")
       autoload :StartVM, action_root.join("start_vm")
+      autoload :ForcedHalt, action_root.join("forced_halt")
 
       # Retrieves the state of the virtual machine.
       def self.action_get_state
@@ -39,6 +40,14 @@ module VagrantPlugins
           b.use ImportVM
           # Start the VM
           b.use action_start
+        end
+      end
+
+      # This action is primarily responsible for halting the VM.
+      # UTM equivalent of `utmctl stop <uuid>`
+      def self.action_halt
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use ForcedHalt
         end
       end
     end

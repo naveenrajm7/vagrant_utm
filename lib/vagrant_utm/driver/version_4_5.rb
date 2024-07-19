@@ -28,7 +28,12 @@ module VagrantPlugins
         def read_state
           cmd = ["utmctl", "status", @uuid]
           output = execute(*cmd)
-          output.strip
+          output.strip.to_sym
+        end
+
+        def halt
+          cmd = ["utmctl", "stop", @uuid]
+          execute(*cmd)
         end
 
         # Execute the 'list' command and returns the list of machines.

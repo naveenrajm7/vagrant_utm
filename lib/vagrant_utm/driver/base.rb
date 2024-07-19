@@ -24,7 +24,9 @@ module VagrantPlugins
         # Check if the VM with the given UUID (Name) exists.
         def vm_exists?(uuid); end
 
-        # virtualbox plugin style
+        # Returns the current state of this VM.
+        #
+        # @return [Symbol]
         def read_state; end
 
         # Execute the 'list' command and returns the list of machines.
@@ -52,6 +54,9 @@ module VagrantPlugins
         # Return UUID of the last VM in the list.
         # @return [uuid] The UUID of the VM.
         def last_uuid; end
+
+        # Halts the virtual machine (pulls the plug).
+        def halt; end
 
         # Execute a command on the host machine.
         # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.
