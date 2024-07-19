@@ -14,7 +14,7 @@ module VagrantPlugins
       action_root = Pathname.new(File.expand_path("action", __dir__))
       autoload :GetState, action_root.join("get_state")
       autoload :ImportVM, action_root.join("import_vm")
-      autoload :StartVM, action_root.join("start_vm")
+      autoload :Start, action_root.join("start")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :Suspend, action_root.join("suspend")
       autoload :Resume, action_root.join("resume")
@@ -30,7 +30,7 @@ module VagrantPlugins
       # A precondition of this action is that the VM exists.
       def self.action_start
         Vagrant::Action::Builder.new.tap do |b|
-          b.use StartVM
+          b.use Start
         end
       end
 

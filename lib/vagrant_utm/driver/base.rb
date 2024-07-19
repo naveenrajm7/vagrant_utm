@@ -48,7 +48,6 @@ module VagrantPlugins
         # Execute the 'start' command to start a machine.
         # @param name [String] The name of the machine.
         # @return [void]
-        # TODO: Use VM UUID instead of name
         def start(name); end
 
         # Return UUID of the last VM in the list.

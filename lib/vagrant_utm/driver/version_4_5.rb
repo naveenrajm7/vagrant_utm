@@ -31,6 +31,11 @@ module VagrantPlugins
           output.strip.to_sym
         end
 
+        def start
+          cmd = ["utmctl", "start", @uuid]
+          execute(*cmd)
+        end
+
         def halt
           cmd = ["utmctl", "stop", @uuid]
           execute(*cmd)
@@ -79,15 +84,6 @@ module VagrantPlugins
         def configure(uuid, config)
           script_path = @script_path.join("configure_vm.applescript")
           cmd = ["osascript", script_path.to_s, uuid, config.name]
-          execute(*cmd)
-        end
-
-        # Execute the 'start' command to start a machine.
-        # @param name [String] The name of the machine.
-        # @return [void]
-        # TODO: Use VM UUID instead of name
-        def start(name)
-          cmd = ["utmctl", "start", name]
           execute(*cmd)
         end
 
