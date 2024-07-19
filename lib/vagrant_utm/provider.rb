@@ -68,7 +68,10 @@ module VagrantPlugins
         nil
       end
 
-      # Return the state of the virtual machine.
+      # Return the state of UTM virtual machine by actually
+      # querying utmctl.
+      #
+      # @return [Symbol]
       def state
         @logger.info("Getting state of '#{@machine.id}'")
 
@@ -80,7 +83,7 @@ module VagrantPlugins
 
         # Translate into short/long descriptions
         short = state_id.to_s.gsub("_", " ")
-        long  = I18n.t("vagrant.commands.status.#{state_id}")
+        long  = I18n.t("vagrant_utm.commands.status.#{state_id}")
 
         # If we're not created, then specify the special ID flag
         state_id = Vagrant::MachineState::NOT_CREATED_ID if state_id == :not_created

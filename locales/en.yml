@@ -13,3 +13,24 @@ en:
     messages:
       importing_utm_file: |-
         Importing UTM virtual machine file %{name}...
+    
+    commands:
+      # UTM VM Status
+      status:
+        stopped: |-
+          The VM is stopped. To restart the VM, simply run `vagrant up`
+        starting: |-
+          The VM is starting.
+        started: |-
+          The VM is started. To stop this VM, you can run `vagrant halt` to
+          shut it down forcefully, or you can run `vagrant suspend` to simply
+          suspend the virtual machine. In either case, to restart it again,
+          simply run `vagrant up`.
+        pausing: |-
+          The VM is pausing.
+        paused: |-
+          The VM is paused.
+        resuming: |-
+          The VM is resuming.   
+        stopping: |-
+          The VM is stopping.
