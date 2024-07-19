@@ -22,50 +22,36 @@ module VagrantPlugins
         end
 
         # Check if the VM with the given UUID (Name) exists.
-        def vm_exists?(uuid)
-        end
-
-        # Execute the 'status' command and returns the machine status.
-        # @param name [String] The name of the machine.
-        # @return status [String] The status of the machine.
-        # TODO: Use VM UUID instead of name
-        def get_status(name)
-        end
+        def vm_exists?(uuid); end
 
         # virtualbox plugin style
-        def read_state
-        end
+        def read_state; end
 
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
-        def list
-        end
+        def list; end
 
         # Execute the 'utm://downloadVM?url='
         # See https://docs.getutm.app/advanced/remote-control/
         # @param utm_file_url [String] The url to the UTM file.
         # @return [uuid] The UUID of the imported machine.
-        def import(utm_file_url)
-        end
+        def import(utm_file_url); end
 
         # Configure the VM with the given config.
         # @param uuid [String] The UUID of the machine.
         # @param config [Config] The configuration of the machine.
         # @return [void]
-        def configure(uuid, config)
-        end
+        def configure(uuid, config); end
 
         # Execute the 'start' command to start a machine.
         # @param name [String] The name of the machine.
         # @return [void]
         # TODO: Use VM UUID instead of name
-        def start(name)
-        end
+        def start(name); end
 
         # Return UUID of the last VM in the list.
         # @return [uuid] The UUID of the VM.
-        def last_uuid
-        end
+        def last_uuid; end
 
         # Execute a command on the host machine.
         # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.

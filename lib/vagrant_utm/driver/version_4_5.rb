@@ -24,16 +24,6 @@ module VagrantPlugins
           list_result.any?(uuid)
         end
 
-        # Execute the 'status' command and returns the machine status.
-        # @param name [String] The name of the machine.
-        # @return status [String] The status of the machine.
-        # TODO: Use VM UUID instead of name
-        def get_status(name)
-          cmd = ["utmctl", "status", name]
-          result = execute(*cmd)
-          result.strip
-        end
-
         # virtualbox plugin style
         def read_state
           cmd = ["utmctl", "status", @uuid]
