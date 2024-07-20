@@ -31,6 +31,11 @@ module VagrantPlugins
           output.strip.to_sym
         end
 
+        def delete
+          cmd = ["utmctl", "delete", @uuid]
+          execute(*cmd)
+        end
+
         def start
           cmd = ["utmctl", "start", @uuid]
           execute(*cmd)

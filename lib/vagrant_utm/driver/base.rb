@@ -45,10 +45,13 @@ module VagrantPlugins
         # @return [void]
         def configure(uuid, config); end
 
-        # Execute the 'start' command to start a machine.
-        # @param name [String] The name of the machine.
+        # Starts the virtual machine referenced by this driver.
         # @return [void]
-        def start(name); end
+        def start; end
+
+        # Deletes the virtual machine references by this driver.
+        # @return [void]
+        def delete; end
 
         # Return UUID of the last VM in the list.
         # @return [uuid] The UUID of the VM.
