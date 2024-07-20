@@ -63,6 +63,11 @@ module VagrantPlugins
         # Suspend the virtual machine.
         def suspend; end
 
+        # Verifies that the driver is ready to accept work.
+        #
+        # This should raise a VagrantError if things are not ready.
+        def verify!; end
+
         # Execute a command on the host machine.
         # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.
         def execute(*cmd, &block)

@@ -98,6 +98,12 @@ module VagrantPlugins
           list_result = list
           list_result.last.uuid
         end
+
+        def verify!
+          # Verify UTM installation
+          # TODO execute a command to verify UTM installation
+          # raise Vagrant::Errors::UtmNotDetected if not installed
+        end
       end
     end
   end
