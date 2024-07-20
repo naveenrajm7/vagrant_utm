@@ -12,6 +12,7 @@ module VagrantPlugins
 
       # Autoloading action blocks
       action_root = Pathname.new(File.expand_path("action", __dir__))
+      autoload :CheckUtm, action_root.join("check_utm")
       autoload :Created, action_root.join("created")
       autoload :Destroy, action_root.join("destroy")
       autoload :GetState, action_root.join("get_state")
@@ -36,6 +37,7 @@ module VagrantPlugins
       # A precondition of this action is that the VM exists.
       def self.action_start
         Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
           b.use Start
         end
       end
@@ -63,12 +65,20 @@ module VagrantPlugins
         end
       end
 
-      # This actions brings up the virtual machine.
-      # For now we start from UTM file
+      # This action brings the machine up from nothing, including importing
+      # the UTM file, configuring metadata, and booting.
       def self.action_up
         Vagrant::Action::Builder.new.tap do |b|
-          # Import UTM file to UTM app, through open with UTM
-          b.use ImportVM
+          b.use CheckUtm
+
+          b.use Call, Created do |env1, b2|
+            # If the VM is NOT created yet, then do the setup steps
+            unless env1[:result]
+              # load UTM file to UTM app, through 'utm://downloadVM?url='
+              b2.use ImportVM
+            end
+          end
+
           # Start the VM
           b.use action_start
         end
@@ -78,7 +88,14 @@ module VagrantPlugins
       # UTM equivalent of `utmctl stop <uuid>`
       def self.action_halt
         Vagrant::Action::Builder.new.tap do |b|
-          b.use ForcedHalt
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              b2.use ForcedHalt
+            else
+              b2.use MessageNotCreated
+            end
+          end
         end
       end
 
@@ -86,7 +103,14 @@ module VagrantPlugins
       # UTM equivalent of `utmctl suspend <uuid>`
       def self.action_suspend
         Vagrant::Action::Builder.new.tap do |b|
-          b.use Suspend
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              b2.use Suspend
+            else
+              b2.use MessageNotCreated
+            end
+          end
         end
       end
 
@@ -94,7 +118,14 @@ module VagrantPlugins
       # UTM equivalent of `utmctl start <uuid>`
       def self.action_resume
         Vagrant::Action::Builder.new.tap do |b|
-          b.use Resume
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              b2.use Resume
+            else
+              b2.use MessageNotCreated
+            end
+          end
         end
       end
     end
