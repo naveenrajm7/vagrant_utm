@@ -34,3 +34,8 @@ en:
           The VM is resuming.   
         stopping: |-
           The VM is stopping.
+        not_created: |-
+          The environment has not yet been created. Run `vagrant up` to
+          create the environment. If a machine is not created, only the
+          default provider will be shown. So if a provider is not listed,
+          then the machine is not created for that environment.
