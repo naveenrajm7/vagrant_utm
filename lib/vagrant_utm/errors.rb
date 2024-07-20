@@ -13,9 +13,19 @@ module VagrantPlugins
         error_key(:macos_required)
       end
 
-      # This error is raised if the utmctl binary is not found.
+      # This error is raised if the UTM is not found.
       class UtmRequired < UtmError
         error_key(:utm_required)
+      end
+
+      # This error is raised if the utmctl is not found.
+      class UtmctlNotFoundError < UtmError
+        error_key(:utmctl_not_found)
+      end
+
+      # This error is raised if the utmctl command fails.
+      class UtmctlError < UtmError
+        error_key(:utmctl_error)
       end
 
       # This error is raised if a UTM command fails.
