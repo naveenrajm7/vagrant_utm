@@ -12,7 +12,7 @@ module VagrantPlugins
     module Driver
       # Executes commands on the host machine through the AppleScript bridge interface
       # paired with a command line interface.
-      class Base
+      class Base # rubocop:disable Metrics/ClassLength
         # Include this so we can use `Subprocess` more easily.
         include Vagrant::Util::Retryable
 
@@ -81,7 +81,7 @@ module VagrantPlugins
 
         # Execute a command on the host machine.
         # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.
-        def execute(*cmd, &block)
+        def execute_shell(*cmd, &block)
           # Append in the options for subprocess
           cmd << { notify: %i[stdout stderr] }
 
@@ -107,10 +107,10 @@ module VagrantPlugins
         end
 
         # Execute the given subcommand for utmctl and return the output.
-        # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/virtualbox/driver/base.rb.
+        # Copied from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/virtualbox/driver/base.rb.
         # @param [String] subcommand The subcommand to execute.
         # @return [String] The output of the command.
-        def utmctl_execute(*command, &block)
+        def execute(*command, &block)
           # Get the options hash if it exists
           opts = {}
           opts = command.pop if command.last.is_a?(Hash)
@@ -139,19 +139,29 @@ module VagrantPlugins
               else
                 errored = true
               end
-            elsif r.stdout.include?("Error:")
-              # if utmctl fails but doesn't return a non-zero exit code
-              # Handle that here
-              errored = true
+            else
+              # if utmctl fails but doesn't exit with an error code
+              # Handle those cases here
+
+              if r.stderr =~ /Error/
+                @logger.info("Error found, assuming error.")
+                errored = true
+              end
+
+              if r.stderr =~ /OSStatus error/
+                @logger.info("OSStatus error found, assuming error.")
+                errored = true
+
+              end
             end
 
             # If there was an error running utmctl, show the error and the output
-            return unless errored
-
-            raise Errors::UtmctlError,
-                  command: command.inspect,
-                  stderr: r.stderr,
-                  stdout: r.stdout
+            if errored
+              raise Errors::UtmctlError,
+                    command: command.inspect,
+                    stderr: r.stderr,
+                    stdout: r.stdout
+            end
           end
 
           # Return the output, making sure to replace any Windows-style

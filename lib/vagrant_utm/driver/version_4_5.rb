@@ -26,29 +26,24 @@ module VagrantPlugins
 
         # virtualbox plugin style
         def read_state
-          cmd = ["utmctl", "status", @uuid]
-          output = execute(*cmd)
+          output = execute("status", @uuid)
           output.strip.to_sym
         end
 
         def delete
-          cmd = ["utmctl", "delete", @uuid]
-          execute(*cmd)
+          execute("delete", @uuid)
         end
 
         def start
-          cmd = ["utmctl", "start", @uuid]
-          execute(*cmd)
+          execute("start", @uuid)
         end
 
         def halt
-          cmd = ["utmctl", "stop", @uuid]
-          execute(*cmd)
+          execute("stop", @uuid)
         end
 
         def suspend
-          cmd = ["utmctl", "suspend", @uuid]
-          execute(*cmd)
+          execute("suspend", @uuid)
         end
 
         # Execute the 'list' command and returns the list of machines.
@@ -56,7 +51,7 @@ module VagrantPlugins
         def list
           script_path = @script_path.join("list_vm.js")
           cmd = ["osascript", script_path.to_s]
-          result = execute(*cmd)
+          result = execute_shell(*cmd)
           data = JSON.parse(result)
           Model::ListResult.new(data)
         end
@@ -69,7 +64,7 @@ module VagrantPlugins
           puts "Downloading VM from #{utm_file_url}"
           script_path = @script_path.join("downloadVM.sh")
           cmd = [script_path.to_s, utm_file_url]
-          execute(*cmd)
+          execute_shell(*cmd)
           # wait for the VM to be imported
           # TODO: UTM API to give the progress of the import
           # along with the UUID of the imported VM
@@ -89,7 +84,7 @@ module VagrantPlugins
         def configure(uuid, config)
           script_path = @script_path.join("configure_vm.applescript")
           cmd = ["osascript", script_path.to_s, uuid, config.name]
-          execute(*cmd)
+          execute_shell(*cmd)
         end
 
         # Return UUID of the last VM in the list.
