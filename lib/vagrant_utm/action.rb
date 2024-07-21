@@ -6,13 +6,13 @@ require "vagrant/action/builder"
 module VagrantPlugins
   module Utm
     # Contains all the supported actions of the UTM provider.
-    module Action
-      # Include the built-in Vagrant action modules (e.g., DestroyConfirm)
-      include Vagrant::Action::Builtin
-
+    module Action # rubocop:disable Metrics/ModuleLength
       # Autoloading action blocks
       action_root = Pathname.new(File.expand_path("action", __dir__))
+      autoload :CheckAccessible, action_root.join("check_accessible")
+      autoload :CheckCreated, action_root.join("check_created")
       autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
+      autoload :CheckRunning, action_root.join("check_running")
       autoload :CheckUtm, action_root.join("check_utm")
       autoload :Created, action_root.join("created")
       autoload :Customize, action_root.join("customize")
@@ -31,7 +31,83 @@ module VagrantPlugins
       autoload :Suspend, action_root.join("suspend")
       autoload :Resume, action_root.join("resume")
 
+      # Include the built-in Vagrant action modules (e.g., DestroyConfirm)
+      include Vagrant::Action::Builtin
+
       # State of VM is given by Driver read state
+
+      # This is the action that is primarily responsible for completely
+      # freeing the resources of the underlying virtual machine.
+      # UTM equivalent of `utmctl delete <uuid>`
+      def self.action_destroy
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use Call, Created do |env1, b2|
+            unless env1[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use Call, DestroyConfirm do |env2, b3|
+              if env2[:result]
+                b3.use CheckAccessible
+                b3.use action_halt
+                b3.use Destroy
+              else
+                b3.use MessageWillNotDestroy
+              end
+            end
+          end
+        end
+      end
+
+      # This action is primarily responsible for halting the VM.
+      # UTM equivalent of `utmctl stop <uuid>`
+      def self.action_halt
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              b2.use CheckAccessible
+              b2.use ForcedHalt
+            else
+              b2.use MessageNotCreated
+            end
+          end
+        end
+      end
+
+      # This action packages the virtual machine into a single box file.
+      def self.action_package
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            unless env[:result]
+              b2.use MessageNotCreated
+              next
+            end
+            # REMOVE: TEST: using this action to test development actions
+            b2.use CheckGuestAdditions
+            b2.use Export
+          end
+        end
+      end
+
+      # This action is primarily responsible for resuming the suspended VM.
+      # UTM equivalent of `utmctl start <uuid>`
+      def self.action_resume
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              b2.use CheckAccessible
+              b2.use Resume
+            else
+              b2.use MessageNotCreated
+            end
+          end
+        end
+      end
 
       # This action starts a VM, assuming it is already imported and exists.
       # A precondition of this action is that the VM exists.
@@ -42,24 +118,17 @@ module VagrantPlugins
         end
       end
 
-      # This is the action that is primarily responsible for completely
-      # freeing the resources of the underlying virtual machine.
-      # UTM equivalent of `utmctl delete <uuid>`
-      def self.action_destroy
+      # This action is primarily responsible for suspending the VM.
+      # UTM equivalent of `utmctl suspend <uuid>`
+      def self.action_suspend
         Vagrant::Action::Builder.new.tap do |b|
-          b.use Call, Created do |env1, b2|
-            unless env1[:result]
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              b2.use CheckAccessible
+              b2.use Suspend
+            else
               b2.use MessageNotCreated
-              next
-            end
-
-            b2.use Call, DestroyConfirm do |env2, b3|
-              if env2[:result]
-                b3.use action_halt
-                b3.use Destroy
-              else
-                b3.use MessageWillNotDestroy
-              end
             end
           end
         end
@@ -94,67 +163,6 @@ module VagrantPlugins
 
           # Start the VM
           b.use action_start
-        end
-      end
-
-      # This action is primarily responsible for halting the VM.
-      # UTM equivalent of `utmctl stop <uuid>`
-      def self.action_halt
-        Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckUtm
-          b.use Call, Created do |env, b2|
-            if env[:result]
-              b2.use ForcedHalt
-            else
-              b2.use MessageNotCreated
-            end
-          end
-        end
-      end
-
-      # This action packages the virtual machine into a single box file.
-      def self.action_package
-        Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckUtm
-          b.use Call, Created do |env, b2|
-            unless env[:result]
-              b2.use MessageNotCreated
-              next
-            end
-            # REMOVE: TEST: using this action to test development actions
-            b2.use CheckGuestAdditions
-            b2.use Export
-          end
-        end
-      end
-
-      # This action is primarily responsible for suspending the VM.
-      # UTM equivalent of `utmctl suspend <uuid>`
-      def self.action_suspend
-        Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckUtm
-          b.use Call, Created do |env, b2|
-            if env[:result]
-              b2.use Suspend
-            else
-              b2.use MessageNotCreated
-            end
-          end
-        end
-      end
-
-      # This action is primarily responsible for resuming the VM.
-      # UTM equivalent of `utmctl start <uuid>`
-      def self.action_resume
-        Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckUtm
-          b.use Call, Created do |env, b2|
-            if env[:result]
-              b2.use Resume
-            else
-              b2.use MessageNotCreated
-            end
-          end
         end
       end
     end
