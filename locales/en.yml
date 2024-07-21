@@ -11,6 +11,13 @@ en:
         MacOS is required to run this provider
       utm_import_failed: |-
         UTM virtual machine import failed.
+      utmctl_error: |-
+        There was an error while executing `utmctl`, a CLI used by vagrant-utm
+        for controlling UTM. The command and stderr is shown below.
+
+        Command: %{command}
+
+        Stderr: %{stderr}        
 
     messages:
       importing_utm_file: |-
@@ -54,4 +61,24 @@ en:
           create the environment. If a machine is not created, only the
           default provider will be shown. So if a provider is not listed,
           then the machine is not created for that environment.
+    utm:
+      checking_guest_additions: |-
+        Checking for guest additions in VM...
 
+    actions:
+      vm:
+        check_guest_additions:
+          detected: |-
+            Guest additions detected
+          not_detected: |-
+            No guest additions were detected for this VM! Guest
+            additions are required for forwarded ports, shared folders, host only
+            networking, and more. If SSH fails on this machine, please install
+            the guest additions and retry
+        export:
+          manual_exporting: |-
+            UTM 'Share' feature in UI will Export the virtual machine and all its data.
+            Till 'Share' is exposed via API, this plugin shows manual steps to export VM.
+            1. Headover to UTM.
+            2. Open the action menu of VM by a secondary click on a virtual machine %{name} in the list.
+            3. Select 'Share' and save the file to a location.
