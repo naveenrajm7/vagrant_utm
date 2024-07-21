@@ -79,6 +79,15 @@ module VagrantPlugins
         # This should raise a VagrantError if things are not ready.
         def verify!; end
 
+        # Execute a raw shell command
+        #
+        # Raises a CommandError if the command fails.
+        # @param [Array] command The command to execute.
+        def execute_shell_command(command); end
+
+        # Execute a script using the OSA interface.
+        def execute_osa_script(command); end
+
         # Execute a command on the host machine.
         # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.
         def execute_shell(*cmd, &block)

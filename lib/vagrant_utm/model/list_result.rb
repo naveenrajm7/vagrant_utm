@@ -18,11 +18,11 @@ module VagrantPlugins
           end
         end
 
-        # Checks if a machine with the given name exists.
-        # @param name [String]  The name of the machine.
+        # Checks if a machine with the given UUID exists.
+        # @param uuid [String]  The UUID of the machine.
         # @return [Boolean]
-        def any?(name)
-          @machines.any? { |i| i.name == name }
+        def any?(uuid)
+          @machines.any? { |i| i.uuid == uuid }
         end
 
         # Finds a machine with the given name.

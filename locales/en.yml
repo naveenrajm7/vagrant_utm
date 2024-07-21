@@ -9,12 +9,27 @@ en:
         The virtual machine is not running.
       macos_required: |-
         MacOS is required to run this provider
+      utm_import_failed: |-
+        UTM virtual machine import failed.
 
     messages:
       importing_utm_file: |-
         Importing UTM virtual machine file %{name}...
+      download_confirmation: |-
+        IMPORTANT: Due to limited UTM API support, this plugin does not know when the download is finished.
+        1. Headover to UTM and confirm to download UTM file.
+        2. Make sure the file is loaded and exists as last VM in UTM list (UI).
+        3. If the downloaded VM name is same as existing VM, UTM will throw pop-up and 
+        you need to change the name of existing VM and retry `vagrant up`.
+        "Are you sure the file '%{name}' is loaded in UTM and exists as last VM? [y/N] 
+      setting_id: |-
+        Setting the Vagrant machine ID to UTM VM UUID: %{id}
     
     commands:
+      # VM Commands 
+      up:
+        will_not_create: |-
+          The UTM virtual machine will not be created.
       # UTM VM Status
       status:
         stopped: |-
@@ -39,3 +54,4 @@ en:
           create the environment. If a machine is not created, only the
           default provider will be shown. So if a provider is not listed,
           then the machine is not created for that environment.
+

@@ -18,7 +18,7 @@ module VagrantPlugins
           @uuid = uuid
         end
 
-        # Check if the VM with the given UUID (Name) exists.
+        # Check if the VM with the given UUID  exists.
         def vm_exists?(uuid)
           list_result = list
           list_result.any?(uuid)
@@ -46,6 +46,16 @@ module VagrantPlugins
           execute("suspend", @uuid)
         end
 
+        def execute_shell_command(command)
+          execute_shell(*command)
+        end
+
+        def execute_osa_script(command)
+          script_path = @script_path.join(command[0])
+          cmd = ["osascript", script_path.to_s] + command[1..]
+          execute_shell(*cmd)
+        end
+
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
         def list
@@ -61,20 +71,19 @@ module VagrantPlugins
         # @param utm_file_url [String] The url to the UTM file.
         # @return [uuid] The UUID of the imported machine.
         def import(utm_file_url)
-          puts "Downloading VM from #{utm_file_url}"
           script_path = @script_path.join("downloadVM.sh")
           cmd = [script_path.to_s, utm_file_url]
           execute_shell(*cmd)
           # wait for the VM to be imported
           # TODO: UTM API to give the progress of the import
           # along with the UUID of the imported VM
-          sleep(60)
+          # sleep(60)
           # Get the UUID of the imported VM
           # HACK: Currently we do not know the UUID of the imported VM
           # So, we just get the UUID of the last VM in the list
           # which is the last imported VM (unless UTM changes the order)
           # TODO: Use UTM API to get the UUID of the imported VM
-          last_uuid
+          # last_uuid
         end
 
         # Configure the VM with the given config.
@@ -95,9 +104,10 @@ module VagrantPlugins
         end
 
         def verify!
-          # Verify UTM installation
-          # TODO execute a command to verify UTM installation
-          # raise Vagrant::Errors::UtmNotDetected if not installed
+          # Verify proper functionality of UTM
+          # add any command that should be checked
+          # we now only check if the 'utmctl' command is available
+          execute("--list")
         end
       end
     end

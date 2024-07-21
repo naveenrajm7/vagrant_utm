@@ -72,6 +72,8 @@ module VagrantPlugins
                        :halt,
                        :suspend,
                        :delete,
+                       :execute_shell_command,
+                       :execute_osa_script,
                        :last_uuid
       end
     end

@@ -6,7 +6,7 @@ require "vagrant/action/builder"
 module VagrantPlugins
   module Utm
     # Contains all the supported actions of the UTM provider.
-    module Action
+    module Action # rubocop:disable Metrics/ModuleLength
       # Include the built-in Vagrant action modules (e.g., DestroyConfirm)
       include Vagrant::Action::Builtin
 
@@ -14,13 +14,17 @@ module VagrantPlugins
       action_root = Pathname.new(File.expand_path("action", __dir__))
       autoload :CheckUtm, action_root.join("check_utm")
       autoload :Created, action_root.join("created")
+      autoload :Customize, action_root.join("customize")
       autoload :Destroy, action_root.join("destroy")
+      autoload :DownloadConfirm, action_root.join("download_confirm")
       autoload :GetState, action_root.join("get_state")
       autoload :ImportVM, action_root.join("import_vm")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :MessageNotRunning, action_root.join("message_not_running")
+      autoload :MessageWillNotCreate, action_root.join("message_will_not_create")
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
+      autoload :SetId, action_root.join("set_id")
       autoload :Start, action_root.join("start")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :Suspend, action_root.join("suspend")
@@ -76,6 +80,19 @@ module VagrantPlugins
             unless env1[:result]
               # load UTM file to UTM app, through 'utm://downloadVM?url='
               b2.use ImportVM
+
+              b2.use Call, DownloadConfirm do |env2, b3|
+                if env2[:result]
+                  # SetID
+                  b3.use SetId
+                  # Customize
+                  b3.use Customize, "pre-boot"
+                else
+                  b3.use MessageWillNotCreate
+                  raise Errors::UTMImportFailed
+                end
+              end
+
             end
           end
 

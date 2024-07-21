@@ -28,9 +28,14 @@ module VagrantPlugins
         error_key(:utmctl_error)
       end
 
-      # This error is raised if a UTM command fails.
+      # This error is raised if a shell/osascript command fails.
       class CommandError < UtmError
         error_key(:command_error)
+      end
+
+      # This error is raised if UTM file was failed to import.
+      class UTMImportFailed < UtmError
+        error_key(:utm_import_failed)
       end
 
       # This error is raised if the virtual machine is not created
