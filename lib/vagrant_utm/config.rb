@@ -10,12 +10,18 @@ module VagrantPlugins
       # This should be set to the name of the machine in the UTM GUI.
       #
       # @return [String]
-      # attr_accessor :name
+      attr_accessor :name
 
       # The path to the UTM VM file.
       #
       # @return [String]
       attr_accessor :utm_file_url
+
+      # If true, will check if guest additions are installed and up to
+      # date. By default, this is true.
+      #
+      # @return [Boolean]
+      attr_accessor :check_guest_additions
 
       # An array of customizations to make on the VM prior to booting it.
       #
@@ -25,6 +31,7 @@ module VagrantPlugins
       # Initialize the configuration with unset values.
       def initialize
         super
+        @check_guest_additions = UNSET_VALUE
         @customizations = []
         @name = UNSET_VALUE
         @utm_file_url = UNSET_VALUE
@@ -45,11 +52,14 @@ module VagrantPlugins
         @customizations << [event, command]
       end
 
+      # name in utm config will call this method
+      # Will change the name of the VM in UTM GUI
       # Shortcut for setting the VM name.
       # Calls #customize internally.
       #
       # @param name [String] the name of the virtual machine
-      def name=(name)
+      def name=(name) # rubocop:disable Lint/DuplicateMethods
+        @name = name # To be able to access config.name else where
         customize("pre-boot", ["customize_vm.applescript", :id, "--name", name.to_s])
       end
 
