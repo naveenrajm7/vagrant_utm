@@ -74,6 +74,7 @@ module VagrantPlugins
                        :delete,
                        :execute_shell_command,
                        :execute_osa_script,
+                       :check_qemu_guest_agent,
                        :last_uuid
       end
     end

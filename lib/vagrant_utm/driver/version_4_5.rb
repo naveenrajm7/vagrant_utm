@@ -18,6 +18,16 @@ module VagrantPlugins
           @uuid = uuid
         end
 
+        def check_qemu_guest_agent
+          # Check if the qemu-guest-agent is installed and running
+          # Ideally do: utmctl exec id --cmd systemctl is-active qemu-guest-agent
+          # But this is not returning anything, so we just do any utmctl exec command
+          # Here we check if the user is root
+          output = execute("exec", @uuid, "--cmd", "whoami")
+          # check if output contains 'root'
+          output.include?("root")
+        end
+
         # Check if the VM with the given UUID  exists.
         def vm_exists?(uuid)
           list_result = list

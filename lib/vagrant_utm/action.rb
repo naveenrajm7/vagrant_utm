@@ -12,11 +12,13 @@ module VagrantPlugins
 
       # Autoloading action blocks
       action_root = Pathname.new(File.expand_path("action", __dir__))
+      autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
       autoload :CheckUtm, action_root.join("check_utm")
       autoload :Created, action_root.join("created")
       autoload :Customize, action_root.join("customize")
       autoload :Destroy, action_root.join("destroy")
       autoload :DownloadConfirm, action_root.join("download_confirm")
+      autoload :Export, action_root.join("export")
       autoload :ImportVM, action_root.join("import_vm")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
@@ -106,6 +108,22 @@ module VagrantPlugins
             else
               b2.use MessageNotCreated
             end
+          end
+        end
+      end
+
+      # This action packages the virtual machine into a single box file.
+      def self.action_package
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use Call, Created do |env, b2|
+            unless env[:result]
+              b2.use MessageNotCreated
+              next
+            end
+            # REMOVE: TEST: using this action to test development actions
+            b2.use CheckGuestAdditions
+            b2.use Export
           end
         end
       end

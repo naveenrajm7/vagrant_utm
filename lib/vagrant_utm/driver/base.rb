@@ -32,6 +32,10 @@ module VagrantPlugins
           @logger.info("utmctl path: #{@utmctl_path}")
         end
 
+        # Checks if the qemu-guest-agent is installed and running in this VM.
+        # @return [Boolean]
+        def check_qemu_guest_agent; end
+
         # Check if the VM with the given UUID (Name) exists.
         def vm_exists?(uuid); end
 
