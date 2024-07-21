@@ -6,7 +6,7 @@ require "vagrant/action/builder"
 module VagrantPlugins
   module Utm
     # Contains all the supported actions of the UTM provider.
-    module Action # rubocop:disable Metrics/ModuleLength
+    module Action
       # Include the built-in Vagrant action modules (e.g., DestroyConfirm)
       include Vagrant::Action::Builtin
 
@@ -17,7 +17,6 @@ module VagrantPlugins
       autoload :Customize, action_root.join("customize")
       autoload :Destroy, action_root.join("destroy")
       autoload :DownloadConfirm, action_root.join("download_confirm")
-      autoload :GetState, action_root.join("get_state")
       autoload :ImportVM, action_root.join("import_vm")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
@@ -30,12 +29,7 @@ module VagrantPlugins
       autoload :Suspend, action_root.join("suspend")
       autoload :Resume, action_root.join("resume")
 
-      # Retrieves the state of the virtual machine.
-      def self.action_get_state
-        Vagrant::Action::Builder.new.tap do |b|
-          b.use GetState
-        end
-      end
+      # State of VM is given by Driver read state
 
       # This action starts a VM, assuming it is already imported and exists.
       # A precondition of this action is that the VM exists.
