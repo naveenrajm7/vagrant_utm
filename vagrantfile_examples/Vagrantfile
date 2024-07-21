@@ -7,6 +7,9 @@ Vagrant.configure("2") do |config|
   config.vm.provider :utm do |utm|
     # TODO: pass this to UTM file setting in the provider
     utm.name = "abcvm"
-    utm.utm_file_url = "https://github.com/utmapp/vm-downloads/releases/download/archlinux-arm64/archlinux-arm64-utm4.zip"
+    # utm.utm_file_url = "https://github.com/utmapp/vm-downloads/releases/download/archlinux-arm64/archlinux-arm64-utm4.zip"
+    utm.utm_file_url = "https://github.com/utmapp/vm-downloads/releases/download/debian-11.5/debian-11.5-ldxe-arm64-utm4.zip"
+    utm.memory = 512
+    utm.cpus = 3
   end
 end
