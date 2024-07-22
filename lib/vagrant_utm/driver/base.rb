@@ -44,6 +44,11 @@ module VagrantPlugins
         # @return [Symbol]
         def read_state; end
 
+        # Returns the IP address of the guest machine.
+        #
+        # @return [String] The IP address of the guest machine.
+        def read_guest_ip; end
+
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
         def list; end

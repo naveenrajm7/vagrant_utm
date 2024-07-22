@@ -60,6 +60,27 @@ module VagrantPlugins
         end
       end
 
+      # Returns the SSH info for accessing the UTM VM.
+      def ssh_info
+        # If the VM is not running (utm, started) that we can't possibly SSH into it
+        return nil if state.id != :started
+
+        # If there is port forwarding, GuestPort 22 to HostPort XXXX,
+        # We can use host as "127.0.0.1" and port as XXXX (forwarded ports)
+        # But we keep it simple for now, and just use the IP address of the VM
+        #
+        # Return what we know
+        # host = get the IP address of the VM from first IP of utmctl ip-address
+        # port = 22, the default SSH port (Since we use IP address of VM, we don't need to forward ports)
+        # username = vagrant, the default vagrant user
+        # private_key_path = get the private key of the VM (default ~/.vagrant.d/insecure_private_key)
+
+        {
+          host: @driver.read_guest_ip,
+          port: "22"
+        }
+      end
+
       # Execute the action with the given name.
       def action(name)
         action_method = "action_#{name}"

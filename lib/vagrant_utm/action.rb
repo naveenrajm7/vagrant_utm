@@ -109,6 +109,28 @@ module VagrantPlugins
         end
       end
 
+      # This is the action that will exec into an SSH shell.
+      def self.action_ssh
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use CheckCreated
+          b.use CheckAccessible
+          b.use CheckRunning
+          b.use SSHExec
+        end
+      end
+
+      # This is the action that will run a single SSH command.
+      def self.action_ssh_run
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use CheckCreated
+          b.use CheckAccessible
+          b.use CheckRunning
+          b.use SSHRun
+        end
+      end
+
       # This action starts a VM, assuming it is already imported and exists.
       # A precondition of this action is that the VM exists.
       def self.action_start

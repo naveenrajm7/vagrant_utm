@@ -34,6 +34,12 @@ module VagrantPlugins
           list_result.any?(uuid)
         end
 
+        def read_guest_ip
+          command = ["read_guest_ip.applescript", @uuid]
+          output = execute_osa_script(command)
+          output.strip
+        end
+
         # virtualbox plugin style
         def read_state
           output = execute("status", @uuid)
