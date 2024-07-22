@@ -52,17 +52,6 @@ module VagrantPlugins
         @customizations << [event, command]
       end
 
-      # name in utm config will call this method
-      # Will change the name of the VM in UTM GUI
-      # Shortcut for setting the VM name.
-      # Calls #customize internally.
-      #
-      # @param name [String] the name of the virtual machine
-      def name=(name) # rubocop:disable Lint/DuplicateMethods
-        @name = name # To be able to access config.name else where
-        customize("pre-boot", ["customize_vm.applescript", :id, "--name", name.to_s])
-      end
-
       # Shortcut for setting memory size for the virtual machine.
       # Calls #customize internally.
       #

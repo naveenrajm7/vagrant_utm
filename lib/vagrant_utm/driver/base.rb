@@ -65,6 +65,11 @@ module VagrantPlugins
         # @return [void]
         def configure(uuid, config); end
 
+        # Sets the name of the virtual machine.
+        # @param name [String] The new name of the machine.
+        # @return [void]
+        def set_name(name); end # rubocop:disable Naming/AccessorMethodName
+
         # Starts the virtual machine referenced by this driver.
         # @return [void]
         def start; end

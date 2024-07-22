@@ -26,6 +26,7 @@ module VagrantPlugins
       autoload :MessageWillNotCreate, action_root.join("message_will_not_create")
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
       autoload :SetId, action_root.join("set_id")
+      autoload :SetName, action_root.join("set_name")
       autoload :Start, action_root.join("start")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :Suspend, action_root.join("suspend")
@@ -172,6 +173,7 @@ module VagrantPlugins
                 if env2[:result]
                   # SetID
                   b3.use SetId
+                  b3.use SetName
                   # Customize
                   b3.use Customize, "pre-boot"
                 else

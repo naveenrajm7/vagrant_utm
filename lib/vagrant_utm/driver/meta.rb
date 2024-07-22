@@ -71,6 +71,7 @@ module VagrantPlugins
                        :vm_exists?,
                        :halt,
                        :suspend,
+                       :set_name,
                        :delete,
                        :execute_shell_command,
                        :execute_osa_script,

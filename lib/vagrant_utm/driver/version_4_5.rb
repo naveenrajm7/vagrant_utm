@@ -46,6 +46,11 @@ module VagrantPlugins
           output.strip.to_sym
         end
 
+        def set_name(name) # rubocop:disable Naming/AccessorMethodName
+          command = ["customize_vm.applescript", @uuid, "--name", name.to_s]
+          execute_osa_script(command)
+        end
+
         def delete
           execute("delete", @uuid)
         end
