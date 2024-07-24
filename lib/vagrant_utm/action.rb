@@ -9,6 +9,7 @@ module VagrantPlugins
     module Action # rubocop:disable Metrics/ModuleLength
       # Autoloading action blocks
       action_root = Pathname.new(File.expand_path("action", __dir__))
+      autoload :Boot, action_root.join("boot")
       autoload :CheckAccessible, action_root.join("check_accessible")
       autoload :CheckCreated, action_root.join("check_created")
       autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
@@ -29,15 +30,44 @@ module VagrantPlugins
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
       autoload :SetId, action_root.join("set_id")
       autoload :SetName, action_root.join("set_name")
-      autoload :Start, action_root.join("start")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :Suspend, action_root.join("suspend")
       autoload :Resume, action_root.join("resume")
+      autoload :WaitForRunning, action_root.join("wait_for_running")
 
       # Include the built-in Vagrant action modules (e.g., DestroyConfirm)
       include Vagrant::Action::Builtin
 
       # State of VM is given by Driver read state
+
+      # This action boots the VM, assuming the VM is in a state that requires
+      # a bootup (i.e. not saved).
+      def self.action_boot
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckAccessible
+          b.use SetName
+          b.use Provision
+          b.use SetHostname
+          b.use Customize, "pre-boot"
+          b.use Boot
+          b.use Customize, "post-boot"
+          # WaitForCommunicator reads machine ssh_info.
+          # Our ssh_info returns nil if machine is not 'started'
+          # if 'started' we query the guest machine for IP address.
+          # But after 'started' it takes some time for the machine to be 'running'
+          # we need to wait for the machine to be 'running' before we can query
+          # but UTM does not report a 'running' state (machine ready to take commands)
+          # If you put wait in the function ssh_info, which is called muliple timmes
+          # we wait every time we call ssh_info, which is not good.
+          # So we wait here , after boot, before we can query the machine.
+          b.use WaitForRunning
+          # Machine need to be up and running before we can query
+          # add valid states to starting, started, running (after UTM provides running state)
+          b.use WaitForCommunicator, %i[starting started]
+          b.use Customize, "post-comm"
+          b.use CheckGuestAdditions
+        end
+      end
 
       # This is the action that is primarily responsible for completely
       # freeing the resources of the underlying virtual machine.
@@ -131,6 +161,8 @@ module VagrantPlugins
             if env[:result]
               b2.use CheckAccessible
               b2.use Resume
+              b2.use Provision
+              b2.use WaitForCommunicator, %i[restoring running]
             else
               b2.use MessageNotCreated
             end
@@ -166,7 +198,24 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use ConfigValidate
-          b.use Start
+          b.use Call, IsRunning do |env, b2|
+            # If the VM is running, run the necessary provisioners
+            if env[:result]
+              b2.use action_provision
+              next
+            end
+
+            b2.use Call, IsPaused do |env2, b3|
+              if env2[:result]
+                b3.use Resume
+                next
+              end
+
+              # The VM is not paused, so we must have to boot it up
+              # like normal. Boot!
+              b3.use action_boot
+            end
+          end
         end
       end
 
@@ -192,14 +241,16 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use ConfigValidate
-          b.use Call, Created do |env1, b2|
+          b.use Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
-            unless env1[:result]
+            unless env[:result]
+              b2.use CheckAccessible
+              b2.use Customize, "pre-import"
               # load UTM file to UTM app, through 'utm://downloadVM?url='
               b2.use ImportVM
 
-              b2.use Call, DownloadConfirm do |env2, b3|
-                if env2[:result]
+              b2.use Call, DownloadConfirm do |env1, b3|
+                if env1[:result]
                   # SetID
                   b3.use SetId
                   b3.use SetName
@@ -210,7 +261,6 @@ module VagrantPlugins
                   raise Errors::UTMImportFailed
                 end
               end
-
             end
           end
 
