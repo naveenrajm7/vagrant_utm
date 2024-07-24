@@ -53,6 +53,7 @@ module VagrantPlugins
 
             b2.use Call, DestroyConfirm do |env2, b3|
               if env2[:result]
+                b3.use ConfigValidate
                 b3.use CheckAccessible
                 b3.use action_halt
                 b3.use Destroy
@@ -100,7 +101,7 @@ module VagrantPlugins
       def self.action_provision
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
-          # b.use ConfigValidate
+          b.use ConfigValidate
           b.use Call, Created do |env1, b2|
             unless env1[:result]
               b2.use MessageNotCreated
@@ -163,6 +164,7 @@ module VagrantPlugins
       def self.action_start
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
+          b.use ConfigValidate
           b.use Start
         end
       end
@@ -185,10 +187,10 @@ module VagrantPlugins
 
       # This action brings the machine up from nothing, including importing
       # the UTM file, configuring metadata, and booting.
-      def self.action_up
+      def self.action_up # rubocop:disable Metrics/AbcSize
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
-
+          b.use ConfigValidate
           b.use Call, Created do |env1, b2|
             # If the VM is NOT created yet, then do the setup steps
             unless env1[:result]
