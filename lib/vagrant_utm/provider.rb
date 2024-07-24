@@ -43,6 +43,14 @@ module VagrantPlugins
         machine_id_changed
       end
 
+      # Execute the action with the given name.
+      def action(name)
+        action_method = "action_#{name}"
+        return Action.send(action_method) if Action.respond_to?(action_method)
+
+        nil
+      end
+
       # If the machine ID changed, then we need to rebuild our underlying
       # driver.
       def machine_id_changed
@@ -63,6 +71,8 @@ module VagrantPlugins
       # Returns the SSH info for accessing the UTM VM.
       def ssh_info
         # If the VM is not running (utm, started) that we can't possibly SSH into it
+        # TODO: We should use the state 'running', rather than 'started'
+        # This is a workaround for the UTM provider, which does not expose 'running' state
         return nil if state.id != :started
 
         # If there is port forwarding, GuestPort 22 to HostPort XXXX,
@@ -79,14 +89,6 @@ module VagrantPlugins
           host: @driver.read_guest_ip,
           port: "22"
         }
-      end
-
-      # Execute the action with the given name.
-      def action(name)
-        action_method = "action_#{name}"
-        return Action.send(action_method) if Action.respond_to?(action_method)
-
-        nil
       end
 
       # Return the state of UTM virtual machine by actually

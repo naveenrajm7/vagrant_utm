@@ -28,6 +28,11 @@ module VagrantPlugins
       # @return [Array]
       attr_reader :customizations
 
+      # The time to wait for the VM to be 'running' after 'started'.
+      #
+      # @return [Integer]
+      attr_accessor :wait_time
+
       # Initialize the configuration with unset values.
       def initialize
         super
@@ -35,6 +40,7 @@ module VagrantPlugins
         @customizations = []
         @name = UNSET_VALUE
         @utm_file_url = UNSET_VALUE
+        @wait_time = UNSET_VALUE
       end
 
       # Customize the VM by calling 'osascript' with the given
@@ -71,8 +77,11 @@ module VagrantPlugins
       # This is the hook that is called to finalize the object before it
       # is put into use.
       def finalize!
+        @check_guest_additions = true if @check_guest_additions == UNSET_VALUE
+        # The default name is just nothing, and we default it
         @name = nil if @name == UNSET_VALUE
         @utm_file_url = nil if @utm_file_url == UNSET_VALUE
+        @wait_time = 10 if @wait_time == UNSET_VALUE
       end
     end
   end
