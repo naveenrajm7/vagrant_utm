@@ -20,6 +20,8 @@ module VagrantPlugins
       autoload :DownloadConfirm, action_root.join("download_confirm")
       autoload :Export, action_root.join("export")
       autoload :ImportVM, action_root.join("import_vm")
+      autoload :IsPaused, action_root.join("is_paused")
+      autoload :IsRunning, action_root.join("is_running")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :MessageNotRunning, action_root.join("message_not_running")
@@ -90,6 +92,30 @@ module VagrantPlugins
             # REMOVE: TEST: using this action to test development actions
             b2.use CheckGuestAdditions
             b2.use Export
+          end
+        end
+      end
+
+      # This action just runs the provisioners on the machine.
+      def self.action_provision
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          # b.use ConfigValidate
+          b.use Call, Created do |env1, b2|
+            unless env1[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use Call, IsRunning do |env2, b3|
+              unless env2[:result]
+                b3.use MessageNotRunning
+                next
+              end
+
+              b3.use CheckAccessible
+              b3.use Provision
+            end
           end
         end
       end
