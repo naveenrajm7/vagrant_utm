@@ -31,6 +31,9 @@ en:
         "Are you sure the file '%{name}' is loaded in UTM and exists as last VM? [y/N] 
       setting_id: |-
         Setting the Vagrant machine ID to UTM VM UUID: %{id}
+      waiting_for_vm: |-
+        Waiting %{time} secs for the UTM virtual machine to be ready...
+        Default wait time is 20 seconds, you can change it by setting `config.vm.provider.utm.wait_time` in Vagrantfile.
     
     commands:
       # VM Commands 

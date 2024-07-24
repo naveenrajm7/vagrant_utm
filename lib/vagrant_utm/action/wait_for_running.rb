@@ -17,7 +17,7 @@ module VagrantPlugins
           # set the wait time to use configures time or
           # default to 10 seconds.
           wait_time = env[:machine].provider_config.wait_time
-          env[:ui].info I18n.t("vagrant.boot_waiting")
+          env[:ui].info I18n.t("vagrant_utm.messages.waiting_for_vm", time: wait_time)
           sleep(wait_time)
 
           @app.call(env)
