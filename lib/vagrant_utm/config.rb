@@ -81,7 +81,7 @@ module VagrantPlugins
         # The default name is just nothing, and we default it
         @name = nil if @name == UNSET_VALUE
         @utm_file_url = nil if @utm_file_url == UNSET_VALUE
-        @wait_time = 10 if @wait_time == UNSET_VALUE
+        @wait_time = 20 if @wait_time == UNSET_VALUE
       end
     end
   end

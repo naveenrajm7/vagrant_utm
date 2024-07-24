@@ -162,6 +162,7 @@ module VagrantPlugins
               b2.use CheckAccessible
               b2.use Resume
               b2.use Provision
+              b2.use WaitForRunning
               b2.use WaitForCommunicator, %i[resuming started]
             else
               b2.use MessageNotCreated
