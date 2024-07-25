@@ -4,7 +4,7 @@ on run argv
         set vmName to ""
         set cpuCount to 0
         set memorySize to 0
-        set additionalNotes to ""
+        set vmNotes to ""
 
         -- Parse arguments
         repeat with i from 2 to (count argv)
@@ -16,7 +16,7 @@ on run argv
             else if currentArg is "--memory" then
                 set memorySize to item (i + 1) of argv
             else if currentArg is "--notes" then
-                set additionalNotes to item (i + 1) of argv
+                set vmNotes to item (i + 1) of argv
             end if
         end repeat
         
@@ -39,10 +39,9 @@ on run argv
             set memory of config to memorySize
         end if
         
-        -- Append to the notes if --notes is provided
-        if additionalNotes is not "" then
-            set currentNotes to notes of config
-            set notes of config to currentNotes & "\n" & additionalNotes
+        -- Set the notes if --notes is provided (existing notes will be overwritten)
+        if vmNotes is not "" then
+            set notes of config to vmNotes
         end if
 
         -- Save the configuration
