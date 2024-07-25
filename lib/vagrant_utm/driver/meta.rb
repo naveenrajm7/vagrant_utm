@@ -86,7 +86,6 @@ module VagrantPlugins
         end
 
         def_delegators :@driver,
-                       :configure,
                        :import,
                        :list,
                        :read_state,

@@ -107,16 +107,6 @@ module VagrantPlugins
           # last_uuid
         end
 
-        # Configure the VM with the given config.
-        # @param uuid [String] The UUID of the machine.
-        # @param config [Config] The configuration of the machine.
-        # @return [void]
-        def configure(uuid, config)
-          script_path = @script_path.join("configure_vm.applescript")
-          cmd = ["osascript", script_path.to_s, uuid, config.name]
-          execute_shell(*cmd)
-        end
-
         # Return UUID of the last VM in the list.
         # @return [uuid] The UUID of the VM.
         def last_uuid

@@ -59,12 +59,6 @@ module VagrantPlugins
         # @return [uuid] The UUID of the imported machine.
         def import(utm_file_url); end
 
-        # Configure the VM with the given config.
-        # @param uuid [String] The UUID of the machine.
-        # @param config [Config] The configuration of the machine.
-        # @return [void]
-        def configure(uuid, config); end
-
         # Sets the name of the virtual machine.
         # @param name [String] The new name of the machine.
         # @return [void]
