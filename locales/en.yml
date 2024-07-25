@@ -29,7 +29,7 @@ en:
 
         Command: %{command}
 
-        Stderr: %{stderr}        
+        Stderr: %{stderr}  
 
     messages:
       importing_utm_file: |-
@@ -38,8 +38,8 @@ en:
         IMPORTANT: Due to limited UTM API support, this plugin does not know when the download is finished.
         1. Headover to UTM and confirm to download UTM file.
         2. Make sure the file is loaded and exists as last VM in UTM list (UI).
-        3. If the downloaded VM name is same as existing VM, UTM will throw pop-up and 
-        you need to change the name of existing VM and retry `vagrant up`.
+        3. If the downloaded VM file name is same as existing VM, UTM will cause unexpected behavior.
+        Change VM, make sure the VM is last in the list and then continue.
         "Are you sure the file '%{name}' is loaded in UTM and exists as last VM? [y/N] 
       setting_id: |-
         Setting the Vagrant machine ID to UTM VM UUID: %{id}
@@ -101,3 +101,4 @@ en:
           disposable: |-
             WARNING: The UTM virtual machine is booting in disposable mode. 
             Changes made to the VM will be lost when the VM is powered off.
+            Learn more at https://docs.getutm.app/advanced/disposable/
