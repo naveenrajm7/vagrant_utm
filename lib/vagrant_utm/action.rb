@@ -152,6 +152,25 @@ module VagrantPlugins
         end
       end
 
+      # This action is responsible for reloading the machine, which
+      # brings it down, sucks in new configuration, and brings the
+      # machine back up with the new configuration.
+      def self.action_reload
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use Call, Created do |env1, b2|
+            unless env1[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use ConfigValidate
+            b2.use action_halt
+            b2.use action_start
+          end
+        end
+      end
+
       # This action is primarily responsible for resuming the suspended VM.
       # UTM equivalent of `utmctl start <uuid>`
       def self.action_resume
