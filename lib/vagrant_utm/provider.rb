@@ -22,11 +22,14 @@ module VagrantPlugins
       # Check if the provider is usable.
       # rubocop:disable Style/OptionalBooleanParameter
       def self.usable?(raise_error = false)
-        # Instantiate the driver, which will determine the VirtualBox
-        # version and all that, which checks for VirtualBox being present.
+        raise Errors::MacOSRequired unless Vagrant::Util::Platform.darwin?
+
+        # Instantiate the driver, which will determine the UTM
+        # version and all that, which checks for UTM being present.
         Driver::Meta.new
         true
-      rescue Errors::UtmInvalidVersion,
+      rescue Errors::MacOSRequired,
+             Errors::UtmInvalidVersion,
              Errors::UtmNotDetected
         raise if raise_error
 
