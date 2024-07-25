@@ -20,30 +20,47 @@ module VagrantPlugins
         # We use forwardable to do all our driver forwarding
         extend Forwardable
 
+        # We cache the read UTM version here once we have one,
+        # since during the execution of Vagrant, it likely doesn't change.
+        @version = nil
+        @@version_lock = Mutex.new # rubocop:disable Style/ClassVars
+
         # The UUID of the virtual machine we represent (Name in UTM).
         attr_reader :uuid
 
-        # TODO: get UTM version
-        # attr_reader :version
+        # The version of UTM that is running.
+        attr_reader :version
 
         include Vagrant::Util::Retryable
 
-        # Initializes the driver with the path to the scripts directory.
-        def initialize(uuid = nil)
+        def initialize(uuid = nil) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/AbcSize,Metrics/PerceivedComplexity
           # Setup the base
           super()
 
+          @logger = Log4r::Logger.new("vagrant::provider::utm::meta")
           @uuid = uuid
-          # TODO: read UTM version
-          # begin
-          #   read_version
-          # rescue Errors::UtmError
-          #   raise
-          # end
-          @version = "4.5"
+
+          @@version_lock.synchronize do
+            unless @version
+              begin
+                @version = read_version
+              rescue Errors::CommandError
+                # This means that UTM was not found, so we raise this
+                # error here.
+                raise Errors::UtmNotDetected
+              end
+            end
+          end
+
+          # Instantiate the proper version driver for UTM
+          @logger.debug("Finding driver for UTM version: #{@version}")
           driver_map = {
             "4.5" => Version_4_5
           }
+
+          # UTM 4.5.0 just doesn't work with Vagrant (https://github.com/utmapp/UTM/issues/5963),
+          # so show error
+          raise Errors::UtmInvalidVersion if @version.start_with?("4.5.0")
 
           driver_klass = nil
           driver_map.each do |key, klass|
@@ -53,8 +70,14 @@ module VagrantPlugins
             end
           end
 
+          unless driver_klass
+            supported_versions = driver_map.keys.sort.join(", ")
+            raise Errors::UtmInvalidVersion,
+                  supported_versions: supported_versions
+          end
+
+          @logger.info("Using UTM driver: #{driver_klass}")
           @driver = driver_klass.new(@uuid)
-          # @version = @@version
 
           return unless @uuid
           # Verify the VM exists, and if it doesn't, then don't worry
@@ -78,6 +101,22 @@ module VagrantPlugins
                        :check_qemu_guest_agent,
                        :read_guest_ip,
                        :last_uuid
+
+        protected
+
+        # This returns the version of UTM that is running.
+        #
+        # @return [String]
+        def read_version
+          # The version string is in the format "4.5.3"
+          # Error: Can’t get application "UTM"
+          # Success: "4.5.0"
+          cmd = ["osascript", "-e", 'tell application "System Events" to return version of application "UTM"']
+          output = execute_shell(*cmd)
+          return output.strip unless output =~ /get application/
+
+          raise Errors::UtmNotDetected
+        end
       end
     end
   end

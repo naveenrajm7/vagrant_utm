@@ -1,6 +1,18 @@
 en:
   vagrant_utm:
     errors:
+      utm_not_detected: |-
+        UTM Application not detected. Please install UTM from https://mac.getutm.app/
+      utm_invalid_version: |-
+        utm_vagrant has detected that you have a version of UTM installed
+        that is not supported by this version of utm_vagrant. Please install one of
+        the supported versions listed below to use utm_vagrant plugin:
+
+        %{supported_versions}
+
+        A plugin update may also be available that adds support for the version
+        you specified. Please check github page of the plugin to download
+        the latest version.
       command_error: |-
         Command failed with error: %{stderr}
       instance_not_created: |-

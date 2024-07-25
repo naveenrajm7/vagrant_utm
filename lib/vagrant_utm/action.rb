@@ -259,7 +259,7 @@ module VagrantPlugins
                   b3.use Customize, "pre-boot"
                 else
                   b3.use MessageWillNotCreate
-                  raise Errors::UTMImportFailed
+                  raise Errors::UtmImportFailed
                 end
               end
             end

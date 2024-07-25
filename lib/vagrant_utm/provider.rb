@@ -12,7 +12,8 @@ module VagrantPlugins
       def self.installed?
         Driver::Meta.new
         true
-      rescue Errors::UtmError
+      rescue Errors::UtmInvalidVersion,
+             Errors::UtmNotDetected
         raise if raise_error
 
         false
@@ -25,7 +26,8 @@ module VagrantPlugins
         # version and all that, which checks for VirtualBox being present.
         Driver::Meta.new
         true
-      rescue Errors::UtmError
+      rescue Errors::UtmInvalidVersion,
+             Errors::UtmNotDetected
         raise if raise_error
 
         false

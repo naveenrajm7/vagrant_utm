@@ -14,8 +14,13 @@ module VagrantPlugins
       end
 
       # This error is raised if the UTM is not found.
-      class UtmRequired < UtmError
-        error_key(:utm_required)
+      class UtmNotDetected < UtmError
+        error_key(:utm_not_detected)
+      end
+
+      # This error is raised if the UTM version is not supported.
+      class UtmInvalidVersion < UtmError
+        error_key(:utm_invalid_version)
       end
 
       # This error is raised if the utmctl is not found.
@@ -34,7 +39,7 @@ module VagrantPlugins
       end
 
       # This error is raised if UTM file was failed to import.
-      class UTMImportFailed < UtmError
+      class UtmImportFailed < UtmError
         error_key(:utm_import_failed)
       end
 
