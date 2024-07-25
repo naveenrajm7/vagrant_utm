@@ -5,6 +5,7 @@ on run argv
         set cpuCount to 0
         set memorySize to 0
         set vmNotes to ""
+        set directoryShareMode to null
 
         -- Parse arguments
         repeat with i from 2 to (count argv)
@@ -17,6 +18,8 @@ on run argv
                 set memorySize to item (i + 1) of argv
             else if currentArg is "--notes" then
                 set vmNotes to item (i + 1) of argv
+            else if currentArg is "--directory-share-mode" then
+                set directoryShareMode to item (i + 1) of argv
             end if
         end repeat
         
@@ -42,6 +45,11 @@ on run argv
         -- Set the notes if --notes is provided (existing notes will be overwritten)
         if vmNotes is not "" then
             set notes of config to vmNotes
+        end if
+
+        -- Set Directory Sharing mode if provided
+        if directoryShareMode is not null then
+            set directory share mode of config to directoryShareMode -- mode is assumed to be enum value
         end if
 
         -- Save the configuration

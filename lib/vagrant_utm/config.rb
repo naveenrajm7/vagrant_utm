@@ -82,6 +82,28 @@ module VagrantPlugins
         customize("pre-boot", ["customize_vm.applescript", :id, "--notes", notes])
       end
 
+      # Shortcut for setting the directory share mode of the virtual machine.
+      # Calls #customize internally.
+      #
+      # @param mode [String] the directory share mode for the VM
+      def directory_share_mode=(mode)
+        # The mode can be 'none', 'webDAV', 'virtFS'
+        # Convert the mode to the corresponding 4-byte code
+        # and pass it to the customize_vm.applescript
+        mode_code = case mode.to_s
+                    when "none"
+                      "SmOf"
+                    when "webDAV"
+                      "SmWv"
+                    when "virtFS"
+                      "SmVs"
+                    else
+                      raise Vagrant::Errors::ConfigInvalid,
+                            errors: "Invalid directory share mode, must be 'none', 'webDAV', or 'virtFS'"
+                    end
+        customize("pre-boot", ["customize_vm.applescript", :id, "--directory-share-mode", mode_code])
+      end
+
       # This is the hook that is called to finalize the object before it
       # is put into use.
       def finalize!
