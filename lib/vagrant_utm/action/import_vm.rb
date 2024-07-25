@@ -24,13 +24,13 @@ module VagrantPlugins
           # Import the UTM VM file
           driver.import(utm_file_url)
 
-          # Set the UID of Vagrant machine to the Name of the VM in UTM (same as name in Vagrantfile config)
+          # Set the UID of Vagrant machine to the UUID of the VM in UTM.
           # UTM maintains UUID as primary key for VMs, but even the name works for all commands
           # However, name is not unique.
-          # TODO: Decide if we want to use UTM 'UUID' or 'Name' for Vagrant machine ID
 
-          # For now we are using the 'Name' as the machine ID
-          # machine.id = name
+          # So we set the machine.id to UUID in next step after import.
+          # TODO: Set the machine.id to UUID after import returns the UUID.
+          # machine.id = return value of import
 
           @app.call(env)
         end
