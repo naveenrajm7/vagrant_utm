@@ -68,6 +68,10 @@ module VagrantPlugins
         # @return [void]
         def start; end
 
+        # Starts the virtual machine in disposable mode.
+        # @return [void]
+        def start_disposable; end
+
         # Deletes the virtual machine references by this driver.
         # @return [void]
         def delete; end

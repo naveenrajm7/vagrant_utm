@@ -97,3 +97,7 @@ en:
             1. Headover to UTM.
             2. Open the action menu of VM by a secondary click on a virtual machine %{name} in the list.
             3. Select 'Share' and save the file to a location.
+        boot:
+          disposable: |-
+            WARNING: The UTM virtual machine is booting in disposable mode. 
+            Changes made to the VM will be lost when the VM is powered off.

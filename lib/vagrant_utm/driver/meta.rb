@@ -90,6 +90,7 @@ module VagrantPlugins
                        :list,
                        :read_state,
                        :start,
+                       :start_disposable,
                        :vm_exists?,
                        :halt,
                        :suspend,

@@ -59,6 +59,10 @@ module VagrantPlugins
           execute("start", @uuid)
         end
 
+        def start_disposable
+          execute("start", @uuid, "--disposable")
+        end
+
         def halt
           execute("stop", @uuid)
         end

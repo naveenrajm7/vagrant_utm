@@ -10,6 +10,7 @@ module VagrantPlugins
       # Autoloading action blocks
       action_root = Pathname.new(File.expand_path("action", __dir__))
       autoload :Boot, action_root.join("boot")
+      autoload :BootDisposable, action_root.join("boot_disposable")
       autoload :CheckAccessible, action_root.join("check_accessible")
       autoload :CheckCreated, action_root.join("check_created")
       autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
@@ -235,6 +236,23 @@ module VagrantPlugins
               # like normal. Boot!
               b3.use action_boot
             end
+          end
+        end
+      end
+
+      # This action start VM in disposable mode.
+      # UTM equivalent of `utmctl start <uuid> --disposable`
+      def self.action_start_disposable
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use ConfigValidate
+          b.use Call, IsRunning do |env1, b2|
+            if env1[:result]
+              b2.use MessageAlreadyRunning
+              next
+            end
+            # If the VM is NOT running, then start in disposable mode
+            b2.use BootDisposable
           end
         end
       end
