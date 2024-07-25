@@ -61,7 +61,7 @@ module VagrantPlugins
       # Shortcut for setting memory size for the virtual machine.
       # Calls #customize internally.
       #
-      # @param size [Integer, String] the memory size in MB
+      # @param size [Integer] the memory size in MB
       def memory=(size)
         customize("pre-boot", ["customize_vm.applescript", :id, "--memory", size.to_s])
       end
@@ -69,9 +69,17 @@ module VagrantPlugins
       # Shortcut for setting CPU count for the virtual machine.
       # Calls #customize internally.
       #
-      # @param count [Integer, String] the count of CPUs
+      # @param count [Integer] the count of CPUs
       def cpus=(count)
         customize("pre-boot", ["customize_vm.applescript", :id, "--cpus", count.to_i])
+      end
+
+      # Shortcut for setting the notes of the virtual machine.
+      # Calls #customize internally.
+      #
+      # @param notes [String] the notes for the VM
+      def notes=(notes)
+        customize("pre-boot", ["customize_vm.applescript", :id, "--notes", notes])
       end
 
       # This is the hook that is called to finalize the object before it
