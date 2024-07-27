@@ -260,7 +260,7 @@ module VagrantPlugins
         # By default set the LANG to C. If the host has the locale command
         # available, check installed locales and verify C is included (or
         # use C variant if available).
-        def env_lang
+        def env_lang # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
           # If already set, just return immediately
           return @env_lang if @env_lang
 
@@ -293,7 +293,7 @@ module VagrantPlugins
           if lang
             @logger.debug("valid variation found for LANG value: #{lang}")
             @env_lang[:LANG] = lang
-            @@env_lang = @env_lang
+            @@env_lang = @env_lang # rubocop:disable Style/ClassVars
           end
 
           @logger.debug("LANG value set: #{@env_lang[:LANG].inspect}")

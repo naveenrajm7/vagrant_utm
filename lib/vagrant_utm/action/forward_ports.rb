@@ -37,7 +37,7 @@ module VagrantPlugins
           @app.call(env)
         end
 
-        def forward_ports
+        def forward_ports # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
           ports = []
 
           interfaces = @env[:machine].provider.driver.read_network_interfaces
