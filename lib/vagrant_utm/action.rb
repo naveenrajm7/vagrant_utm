@@ -51,6 +51,7 @@ module VagrantPlugins
           b.use SetName
           b.use ClearForwardedPorts
           b.use Provision
+          # TODO: Implement port collision detection
           b.use ForwardPorts
           b.use SetHostname
           b.use Customize, "pre-boot"
@@ -126,8 +127,9 @@ module VagrantPlugins
               b2.use MessageNotCreated
               next
             end
-            # REMOVE: TEST: using this action to test development actions
-            b2.use CheckGuestAdditions
+            b2.use CheckAccessible
+            b2.use action_halt
+            b2.use ClearForwardedPorts
             b2.use Export
           end
         end
