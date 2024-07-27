@@ -103,6 +103,7 @@ module VagrantPlugins
       end
 
       # This action is primarily responsible for halting the VM.
+      # gracefully or by force.
       # UTM equivalent of `utmctl stop <uuid>`
       def self.action_halt
         Vagrant::Action::Builder.new.tap do |b|
@@ -110,7 +111,18 @@ module VagrantPlugins
           b.use Call, Created do |env, b2|
             if env[:result]
               b2.use CheckAccessible
-              b2.use ForcedHalt
+
+              # if VM is paused, resume it before halting
+              # utmctl stop will not work on paused VM
+              b2.use Call, IsPaused do |env2, b3|
+                next unless env2[:result]
+
+                b3.use Resume
+              end
+
+              b2.use Call, GracefulHalt, :stopped, :started do |env2, b3|
+                b3.use ForcedHalt unless env2[:result]
+              end
             else
               b2.use MessageNotCreated
             end
