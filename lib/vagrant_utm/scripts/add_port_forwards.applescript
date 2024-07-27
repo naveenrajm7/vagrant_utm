@@ -1,3 +1,5 @@
+# Usage: osascript add_port_forwards.applescript UUID  --index 2 "protocol,guestIp,guestPort,hostIp,hostPort" --index 1 "UdPp,100,100,100,100"
+# index is the index of the network interface
 on run argv
   -- VM id is assumed to be the first argument
   set vmID to item 1 of argv 

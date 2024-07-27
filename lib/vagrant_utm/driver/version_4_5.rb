@@ -14,8 +14,18 @@ module VagrantPlugins
         def initialize(uuid)
           super()
 
-          # @logger = Log4r::Logger.new("vagrant::provider::virtualbox_4_3")
+          @logger = Log4r::Logger.new("vagrant::provider::utm_4_5")
           @uuid = uuid
+        end
+
+        def clear_forwarded_ports
+          args = []
+          read_forwarded_ports(@uuid).each do |nic, name, _, _|
+            args.concat(["--index", nic.to_s, name])
+          end
+
+          command = ["clear_port_forwards.applescript", @uuid] + args
+          execute_osa_script(command) unless args.empty?
         end
 
         def check_qemu_guest_agent
@@ -74,15 +84,18 @@ module VagrantPlugins
           return [] if active_only && read_state != :started
 
           # Get the forwarded ports from emulated Network interface
+          # Format: [nicIndex, name, hostPort, guestPort]
+          # We use hostPort as the name, since UTM does not support name
+          # Becuase hostport is and should be unique
           results = []
-          current_nic = nil
           command = ["read_forwarded_ports.applescript", @uuid]
           info = execute_osa_script(command)
           info.split("\n").each do |line|
-            # Parse out the forwarded port information.  Forwarding(i)="Protocol,GuestIP,GuestPort,HostIP,HostPort"
-            next unless (matcher = /^Forwarding.+?="(.+?),.*?,(.+?),.*?,(.+?)"$/.match(line))
+            # Parse info, Forwarding(nicIndex)(ruleIndex)="Protocol,GuestIP,GuestPort,HostIP,HostPort"
+            next unless (matcher = /^Forwarding\((\d+)\)\((\d+)\)="(.+?),.*?,(.+?),.*?,(.+?)"$/.match(line))
 
-            result = [current_nic, matcher[1], matcher[2].to_i, matcher[3].to_i]
+            #        nicIndex         name( our hostPort)   hostport        guestport
+            result = [matcher[1].to_i, matcher[5], matcher[5].to_i, matcher[4].to_i]
             @logger.debug("  - #{result.inspect}")
             results << result
           end

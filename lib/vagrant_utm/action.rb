@@ -16,6 +16,7 @@ module VagrantPlugins
       autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
       autoload :CheckRunning, action_root.join("check_running")
       autoload :CheckUtm, action_root.join("check_utm")
+      autoload :ClearForwardedPorts, action_root.join("clear_forwarded_ports")
       autoload :Created, action_root.join("created")
       autoload :Customize, action_root.join("customize")
       autoload :Destroy, action_root.join("destroy")
@@ -48,9 +49,10 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckAccessible
           b.use SetName
+          b.use ClearForwardedPorts
           b.use Provision
-          b.use SetHostname
           b.use ForwardPorts
+          b.use SetHostname
           b.use Customize, "pre-boot"
           b.use Boot
           b.use Customize, "post-boot"

@@ -86,6 +86,7 @@ module VagrantPlugins
         end
 
         def_delegators :@driver,
+                       :clear_forwarded_ports,
                        :forward_ports,
                        :import,
                        :list,

@@ -32,6 +32,9 @@ module VagrantPlugins
           @logger.info("utmctl path: #{@utmctl_path}")
         end
 
+        # Clears the forwarded ports that have been set on the virtual machine.
+        def clear_forwarded_ports; end
+
         # Checks if the qemu-guest-agent is installed and running in this VM.
         # @return [Boolean]
         def check_qemu_guest_agent; end
