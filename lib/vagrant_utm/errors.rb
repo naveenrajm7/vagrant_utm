@@ -42,6 +42,11 @@ module VagrantPlugins
       class UtmImportFailed < UtmError
         error_key(:utm_import_failed)
       end
+
+      # This error is raised if invalid protocol is used in forwarded ports.
+      class ForwardedPortInvalidProtocol < UtmError
+        error_key(:forwarded_port_invalid_protocol)
+      end
     end
   end
 end

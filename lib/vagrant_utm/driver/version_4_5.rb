@@ -10,7 +10,7 @@ module VagrantPlugins
   module Utm
     module Driver
       # Driver for UTM 4.5.x
-      class Version_4_5 < Base # rubocop:disable Naming/ClassAndModuleCamelCase
+      class Version_4_5 < Base # rubocop:disable Naming/ClassAndModuleCamelCase,Metrics/ClassLength
         def initialize(uuid)
           super()
 
@@ -28,16 +28,88 @@ module VagrantPlugins
           output.include?("root")
         end
 
+        def forward_ports(ports) # rubocop:disable Metrics/CyclomaticComplexity
+          args = []
+          ports.each do |options|
+            # Convert to UTM protcol enum
+            protocol_code = case options[:protocol]
+                            when "tcp"
+                              "TcPp"
+                            when "udp"
+                              "UdPp"
+                            else
+                              raise Errors::ForwardedPortInvalidProtocol
+                            end
+
+            pf_builder = [
+              # options[:name], # Name is not supported in UTM
+              protocol_code || "TcPp", # Default to TCP
+              options[:guestip] || "",
+              options[:guestport],
+              options[:hostip] || "",
+              options[:hostport]
+            ]
+
+            args.concat(["--index", options[:adapter].to_s,
+                         pf_builder.join(",")])
+          end
+
+          command = ["add_port_forwards.applescript", @uuid] + args
+          execute_osa_script(command) unless args.empty?
+        end
+
         # Check if the VM with the given UUID  exists.
         def vm_exists?(uuid)
           list_result = list
           list_result.any?(uuid)
         end
 
+        def read_forwarded_ports(uuid = nil, active_only: false) # rubocop:disable Metrics/AbcSize
+          uuid ||= @uuid
+
+          @logger.debug("read_forward_ports: uuid=#{uuid} active_only=#{active_only}")
+
+          # If we care about active VMs only, then we check the state
+          # to verify the VM is running.
+          return [] if active_only && read_state != :started
+
+          # Get the forwarded ports from emulated Network interface
+          results = []
+          current_nic = nil
+          command = ["read_forwarded_ports.applescript", @uuid]
+          info = execute_osa_script(command)
+          info.split("\n").each do |line|
+            # Parse out the forwarded port information.  Forwarding(i)="Protocol,GuestIP,GuestPort,HostIP,HostPort"
+            next unless (matcher = /^Forwarding.+?="(.+?),.*?,(.+?),.*?,(.+?)"$/.match(line))
+
+            result = [current_nic, matcher[1], matcher[2].to_i, matcher[3].to_i]
+            @logger.debug("  - #{result.inspect}")
+            results << result
+          end
+
+          results
+        end
+
         def read_guest_ip
           command = ["read_guest_ip.applescript", @uuid]
           output = execute_osa_script(command)
           output.strip
+        end
+
+        def read_network_interfaces
+          nics = {}
+          command = ["read_network_interfaces.applescript", @uuid]
+          info = execute_osa_script(command)
+          info.split("\n").each do |line|
+            next unless (matcher = /^nic(\d+),(.+?)$/.match(line))
+
+            adapter = matcher[1].to_i
+            type = matcher[2].to_sym
+            nics[adapter] ||= {}
+            nics[adapter][:type] = type
+          end
+
+          nics
         end
 
         # virtualbox plugin style

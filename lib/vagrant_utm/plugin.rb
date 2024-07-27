@@ -20,12 +20,6 @@ module VagrantPlugins
       VMs using UTM through Apple Scripting Bridge.
       DESCRIPTION
 
-      # Register the configuration
-      config(:utm, :provider) do
-        require_relative "config"
-        Config
-      end
-
       # Register the provider
       # TODO: Define box format for UTM
       # IDEA: UTM file comes as a zip file containing
@@ -36,6 +30,18 @@ module VagrantPlugins
         setup_i18n
         require_relative "provider"
         Provider
+      end
+
+      # Register the configuration
+      config(:utm, :provider) do
+        require_relative "config"
+        Config
+      end
+
+      # Register capabilities
+      provider_capability(:utm, :forwarded_ports) do
+        require_relative "cap"
+        Cap
       end
 
       # Register the command

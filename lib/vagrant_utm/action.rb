@@ -21,6 +21,8 @@ module VagrantPlugins
       autoload :Destroy, action_root.join("destroy")
       autoload :DownloadConfirm, action_root.join("download_confirm")
       autoload :Export, action_root.join("export")
+      autoload :ForcedHalt, action_root.join("forced_halt")
+      autoload :ForwardPorts, action_root.join("forward_ports")
       autoload :ImportVM, action_root.join("import_vm")
       autoload :IsPaused, action_root.join("is_paused")
       autoload :IsRunning, action_root.join("is_running")
@@ -31,7 +33,6 @@ module VagrantPlugins
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
       autoload :SetId, action_root.join("set_id")
       autoload :SetName, action_root.join("set_name")
-      autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :Suspend, action_root.join("suspend")
       autoload :Resume, action_root.join("resume")
       autoload :WaitForRunning, action_root.join("wait_for_running")
@@ -49,6 +50,7 @@ module VagrantPlugins
           b.use SetName
           b.use Provision
           b.use SetHostname
+          b.use ForwardPorts
           b.use Customize, "pre-boot"
           b.use Boot
           b.use Customize, "post-boot"

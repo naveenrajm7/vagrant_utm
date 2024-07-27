@@ -36,8 +36,39 @@ module VagrantPlugins
         # @return [Boolean]
         def check_qemu_guest_agent; end
 
+        # Forwards a set of ports for a VM.
+        #
+        # This will not affect any previously set forwarded ports,
+        # so be sure to delete those if you need to.
+        #
+        # The format of each port hash should be the following:
+        #
+        #     {
+        #       name: "foo",
+        #       hostport: 8500,
+        #       guestport: 80,
+        #       adapter: 1,
+        #       protocol: "tcp"
+        #     }
+        #
+        # Note that "adapter" and "protocol" are optional and will default
+        # to 1 and "tcp" respectively.
+        #
+        # @param [Array<Hash>] ports An array of ports to set. See documentation
+        #   for more information on the format.
+        def forward_ports(ports); end
+
         # Check if the VM with the given UUID (Name) exists.
         def vm_exists?(uuid); end
+
+        # Returns a list of forwarded ports for a VM.
+        #
+        # @param [String] uuid UUID of the VM to read from, or `nil` if this
+        #   VM.
+        # @param [Boolean] active_only If true, only VMs that are running will
+        #   be checked.
+        # @return [Array<Array>]
+        def read_forwarded_ports(uuid = nil, active_only: false); end
 
         # Returns the current state of this VM.
         #
@@ -48,6 +79,11 @@ module VagrantPlugins
         #
         # @return [String] The IP address of the guest machine.
         def read_guest_ip; end
+
+        # Returns a list of network interfaces of the VM.
+        #
+        # @return [Hash]
+        def read_network_interfaces; end
 
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
@@ -131,7 +167,7 @@ module VagrantPlugins
         # Copied from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/virtualbox/driver/base.rb.
         # @param [String] subcommand The subcommand to execute.
         # @return [String] The output of the command.
-        def execute(*command, &block)
+        def execute(*command, &block) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           # Get the options hash if it exists
           opts = {}
           opts = command.pop if command.last.is_a?(Hash)
@@ -142,7 +178,7 @@ module VagrantPlugins
           # Variable to store our execution result
           r = nil
 
-          retryable(on: Errors::UtmctlError, tries: tries, sleep: 1) do
+          retryable(on: Errors::UtmctlError, tries: tries, sleep: 1) do # rubocop:disable Metrics/BlockLength
             # if there is an error with utmctl, this gets set to true
             errored = false
 
