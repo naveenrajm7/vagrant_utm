@@ -1,3 +1,7 @@
+# Usage: osascript read_port_forwards.applescript <vmID>
+# vmID is the id of the virtual machine
+# This script reads the port forwards of the 'emulated' network interface
+# 'Forwarding(nicIndex)(ruleIndex)="protocol,guestAddress,guestPort,hostAddress,hostPort"'
 on run argv
   set vmID to item 1 of argv
     tell application "UTM"
@@ -11,8 +15,9 @@ on run argv
                 set i to -1
                 repeat with aPortForward in portForwards
                     set i to i + 1
-                    # Log the port forward details Virtualbox style 'Forwarding(0)="tcp,,8000,,2080"'
-                    log "Forwarding(" & i & ")=\"" & protocol of aPortForward & "," Â
+                    # Log the port forward details Virtualbox style 
+                    # 'Forwarding(nicIndex)(ruleIndex)="protocol,guestAddress,guestPort,hostAddress,hostPort"'
+                    log "Forwarding(" & index of anInterface & ")(" & i & ")=\"" & protocol of aPortForward & "," Â
                         & guest address of aPortForward & "," & guest port of aPortForward & "," Â
                         & host address of aPortForward & "," & host port of aPortForward & "\""
                 end repeat
