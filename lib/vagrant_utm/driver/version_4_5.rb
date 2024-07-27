@@ -90,6 +90,7 @@ module VagrantPlugins
           results = []
           command = ["read_forwarded_ports.applescript", @uuid]
           info = execute_osa_script(command)
+          info.strip! # remove leading and trailing whitespaces to match the regex
           info.split("\n").each do |line|
             # Parse info, Forwarding(nicIndex)(ruleIndex)="Protocol,GuestIP,GuestPort,HostIP,HostPort"
             next unless (matcher = /^Forwarding\((\d+)\)\((\d+)\)="(.+?),.*?,(.+?),.*?,(.+?)"$/.match(line))
@@ -113,6 +114,7 @@ module VagrantPlugins
           nics = {}
           command = ["read_network_interfaces.applescript", @uuid]
           info = execute_osa_script(command)
+          info.strip! # remove leading and trailing whitespaces to match the regex
           info.split("\n").each do |line|
             next unless (matcher = /^nic(\d+),(.+?)$/.match(line))
 
