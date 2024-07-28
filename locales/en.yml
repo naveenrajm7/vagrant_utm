@@ -21,6 +21,27 @@ en:
         The virtual machine is not running.
       macos_required: |-
         MacOS is required to run this provider
+      qemu_img_required: |-
+        qemu-img is required to use snapshot feature.
+        You can install qemu-img using `brew install qemu`.
+      snapshot_command_failed: |-
+        There was an error while executing `qemu-img`, a CLI used by vagrant-utm
+        for managing UTM snapshots. qemu-img only supports offline operations, so
+        the VM must be stopped before any snapshot operation.
+        The error is shown below.
+
+        Error: %{stderr} 
+      snapshot_multiple_vm_files: |-
+        Multiple VM files detected. vagrant-utm which uses qemu-img does not support 
+        snapshot feature when multiple VM files are present.
+        
+        Directory checked: %{directory}
+        Files found: %{files}
+      snapshot_vm_file_not_found: |-
+        VM file not detected. vagrant-utm checks for single qcow2 file named in 
+        UUID format in VM's data directory.
+
+        Directory checked: %{directory}
       utm_import_failed: |-
         UTM virtual machine import failed.
       utmctl_error: |-
@@ -76,6 +97,10 @@ en:
           create the environment. If a machine is not created, only the
           default provider will be shown. So if a provider is not listed,
           then the machine is not created for that environment.
+      common:
+        vm_not_stopped: |-
+          The VM is not in a stopped state, but the command requires the VM to be 
+          stopped. To stop this VM, you can run `vagrant halt` to shut it down forcefully.
     utm:
       checking_guest_additions: |-
         Checking for guest additions in VM...
@@ -102,3 +127,7 @@ en:
             WARNING: The UTM virtual machine is booting in disposable mode. 
             Changes made to the VM will be lost when the VM is powered off.
             Learn more at https://docs.getutm.app/advanced/disposable/
+        snapshot:
+          list: |-
+            Listing snapshots for UTM virtual machine...
+            

@@ -44,6 +44,11 @@ module VagrantPlugins
         Cap
       end
 
+      provider_capability(:utm, :snapshot_list) do
+        require_relative "cap"
+        Cap
+      end
+
       # Register the command
       command "disposable" do
         require_relative "disposable"

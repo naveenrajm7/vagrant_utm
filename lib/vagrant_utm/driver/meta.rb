@@ -86,25 +86,29 @@ module VagrantPlugins
         end
 
         def_delegators :@driver,
+                       :check_qemu_guest_agent,
                        :clear_forwarded_ports,
-                       :forward_ports,
-                       :import,
-                       :list,
-                       :read_forwarded_ports,
-                       :read_network_interfaces,
-                       :read_state,
-                       :start,
-                       :start_disposable,
-                       :vm_exists?,
-                       :halt,
-                       :suspend,
-                       :set_name,
+                       :create_snapshot,
                        :delete,
+                       :delete_snapshot,
                        :execute_shell_command,
                        :execute_osa_script,
-                       :check_qemu_guest_agent,
+                       :forward_ports,
+                       :halt,
+                       :import,
+                       :last_uuid,
+                       :list,
+                       :list_snapshots,
+                       :read_forwarded_ports,
                        :read_guest_ip,
-                       :last_uuid
+                       :read_network_interfaces,
+                       :read_state,
+                       :restore_snapshot,
+                       :set_name,
+                       :start,
+                       :start_disposable,
+                       :suspend,
+                       :vm_exists?
 
         protected
 

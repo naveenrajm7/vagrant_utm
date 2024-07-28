@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "log4r"
-
+require "etc"
 require "vagrant/util/platform"
 
 require File.expand_path("base", __dir__)
@@ -38,6 +38,45 @@ module VagrantPlugins
           output.include?("root")
         end
 
+        def create_snapshot(machine_id, snapshot_name)
+          list_result = list
+          machine_name = list_result.find(uuid: machine_id).name
+          machine_file = get_vm_file(machine_name)
+          execute_shell("qemu-img", "snapshot", "-c", snapshot_name, machine_file)
+        end
+
+        def delete_snapshot(machine_id, snapshot_name)
+          list_result = list
+          machine_name = list_result.find(uuid: machine_id).name
+          machine_file = get_vm_file(machine_name)
+          execute_shell("qemu-img", "snapshot", "-d", snapshot_name, machine_file)
+        end
+
+        def list_snapshots(machine_id) # rubocop:disable Metrics/AbcSize
+          list_result = list
+          machine_name = list_result.find(uuid: machine_id).name
+          machine_file = get_vm_file(machine_name)
+          output = execute_shell("qemu-img", "snapshot", "-l", machine_file)
+
+          return [] if output.nil? || output.strip.empty?
+
+          @logger.debug("list_snapshots_here: #{output}")
+
+          result = []
+          output.split("\n").map do |line|
+            result << ::Regexp.last_match(1).to_s if line =~ /^\d+\s+(\w+)/
+          end
+
+          result.sort
+        end
+
+        def restore_snapshot(machine_id, snapshot_name)
+          list_result = list
+          machine_name = list_result.find(uuid: machine_id).name
+          machine_file = get_vm_file(machine_name)
+          execute_shell("qemu-img", "snapshot", "-a", snapshot_name, machine_file)
+        end
+
         def forward_ports(ports) # rubocop:disable Metrics/CyclomaticComplexity
           args = []
           ports.each do |options|
@@ -66,6 +105,31 @@ module VagrantPlugins
 
           command = ["add_port_forwards.applescript", @uuid] + args
           execute_osa_script(command) unless args.empty?
+        end
+
+        def get_vm_file(vm_name)
+          # Get the current username
+          username = ENV["USER"] || Etc.getlogin
+
+          data_path = "/Users/#{username}/Library/Containers/com.utmapp.UTM/Data/Documents/#{vm_name}.utm/Data"
+          # Define the regex for UUID pattern
+          pattern = /^\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}\b.qcow2$/
+
+          # List the files in the directory and filter by regex
+          matching_files = Dir.entries(data_path).select do |file|
+            file.match?(pattern)
+          end
+
+          if matching_files.length == 1
+            # If there is exactly one matching file, return full path to file
+            "#{data_path}/#{matching_files[0]}"
+          elsif matching_files.length > 1
+            # If there are multiple matching files, raise an error
+            raise Errors::SnapShotMultipleVMFiles, directory: data_path, files: matching_files
+          else
+            # If there are no matching files, raise an error
+            raise Errors::SnapShotVMFileNotFound, directory: data_path
+          end
         end
 
         # Check if the VM with the given UUID  exists.

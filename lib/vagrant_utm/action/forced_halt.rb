@@ -17,7 +17,7 @@ module VagrantPlugins
           end
 
           # Sleep for a second to verify that the VM properly
-          # cleans itself up. Silly VirtualBox.
+          # cleans itself up.
           sleep 1 unless env["vagrant.test"]
 
           @app.call(env)

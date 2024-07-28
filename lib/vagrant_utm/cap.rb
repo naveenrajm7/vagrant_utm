@@ -20,6 +20,21 @@ module VagrantPlugins
           end
         end
       end
+
+      # Returns a list of the snapshots that are taken on this machine.
+      #
+      # @return [Array<String>] Snapshot Name
+      def self.snapshot_list(machine)
+        return [] if machine.id.nil?
+
+        begin
+          machine.provider.driver.list_snapshots(machine.id)
+        rescue VagrantPlugins::Utm::Errors::CommandError => e
+          raise Errors::SnapShotCommandFailed, {
+            stderr: e.inspect
+          }
+        end
+      end
     end
   end
 end

@@ -47,6 +47,26 @@ module VagrantPlugins
       class ForwardedPortInvalidProtocol < UtmError
         error_key(:forwarded_port_invalid_protocol)
       end
+
+      # This error is raised if the qemu-img is not detected.
+      class QemuImgRequired < UtmError
+        error_key(:qemu_img_required)
+      end
+
+      # This error is raised if the snapshot command failed.
+      class SnapShotCommandFailed < UtmError
+        error_key(:snapshot_command_failed)
+      end
+
+      # This error is raised if multiple VM files are found during snapshot.
+      class SnapShotMultipleVMFiles < UtmError
+        error_key(:snapshot_multiple_vm_files)
+      end
+
+      # This error is raised if the VM is not found.
+      class SnapShotVMFileNotFound < UtmError
+        error_key(:snapshot_vm_file_not_found)
+      end
     end
   end
 end

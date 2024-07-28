@@ -14,6 +14,7 @@ module VagrantPlugins
       autoload :CheckAccessible, action_root.join("check_accessible")
       autoload :CheckCreated, action_root.join("check_created")
       autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
+      autoload :CheckQemuImg, action_root.join("check_qemu_img")
       autoload :CheckRunning, action_root.join("check_running")
       autoload :CheckUtm, action_root.join("check_utm")
       autoload :ClearForwardedPorts, action_root.join("clear_forwarded_ports")
@@ -27,13 +28,18 @@ module VagrantPlugins
       autoload :ImportVM, action_root.join("import_vm")
       autoload :IsPaused, action_root.join("is_paused")
       autoload :IsRunning, action_root.join("is_running")
+      autoload :IsStopped, action_root.join("is_stopped")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :MessageNotRunning, action_root.join("message_not_running")
+      autoload :MessageNotStopped, action_root.join("message_not_stopped")
       autoload :MessageWillNotCreate, action_root.join("message_will_not_create")
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
       autoload :SetId, action_root.join("set_id")
       autoload :SetName, action_root.join("set_name")
+      autoload :SnapshotDelete, action_root.join("snapshot_delete")
+      autoload :SnapshotRestore, action_root.join("snapshot_restore")
+      autoload :SnapshotSave, action_root.join("snapshot_save")
       autoload :Suspend, action_root.join("suspend")
       autoload :Resume, action_root.join("resume")
       autoload :WaitForRunning, action_root.join("wait_for_running")
@@ -202,6 +208,74 @@ module VagrantPlugins
               b2.use Provision
               b2.use WaitForRunning
               b2.use WaitForCommunicator, %i[resuming started]
+            else
+              b2.use MessageNotCreated
+            end
+          end
+        end
+      end
+
+      # This is the action that is primarily responsible for deleting a snapshot
+      def self.action_snapshot_delete
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use CheckQemuImg
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              # qemu-img needs write-lock to file, so VM should be stopped
+              b2.use Call, IsStopped do |env2, b3|
+                if env2[:result]
+                  b3.use SnapshotDelete
+                else
+                  b3.use MessageNotStopped
+                end
+              end
+            else
+              b2.use MessageNotCreated
+            end
+          end
+        end
+      end
+
+      # This is the action that is primarily responsible for restoring a snapshot
+      def self.action_snapshot_restore # rubocop:disable Metrics/AbcSize
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use CheckQemuImg
+          b.use Call, Created do |env, b2|
+            raise Vagrant::Errors::VMNotCreatedError unless env[:result]
+
+            b2.use CheckAccessible
+            b2.use EnvSet, force_halt: true
+            b2.use action_halt
+            b2.use SnapshotRestore
+
+            b2.use Call, IsEnvSet, :snapshot_delete do |env2, b3|
+              b3.use action_snapshot_delete if env2[:result]
+            end
+
+            b2.use Call, IsEnvSet, :snapshot_start do |env2, b3|
+              b3.use action_start if env2[:result]
+            end
+          end
+        end
+      end
+
+      # This is the action that is primarily responsible for saving a snapshot
+      def self.action_snapshot_save
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use CheckQemuImg
+          b.use Call, Created do |env, b2|
+            if env[:result]
+              # qemu-img does offline snapshot, so VM should be stopped
+              b2.use Call, IsStopped do |env2, b3|
+                if env2[:result]
+                  b3.use SnapshotSave
+                else
+                  b3.use MessageNotStopped
+                end
+              end
             else
               b2.use MessageNotCreated
             end

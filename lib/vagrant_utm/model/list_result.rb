@@ -25,11 +25,15 @@ module VagrantPlugins
           @machines.any? { |i| i.uuid == uuid }
         end
 
-        # Finds a machine with the given name.
+        # Finds a machine with the given name or uuid.
         # @param [String] name The name of the machine.
         # @return [ListResultItem]
-        def find(name)
-          @machines.find { |i| i.name == name }
+        def find(name: nil, uuid: nil)
+          if name
+            @machines.find { |i| i.name == name }
+          elsif uuid
+            @machines.find { |i| i.uuid == uuid }
+          end
         end
 
         # Return the last machine in the list.
