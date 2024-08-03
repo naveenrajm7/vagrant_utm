@@ -103,6 +103,11 @@ module VagrantPlugins
         # @return [void]
         def set_name(name); end # rubocop:disable Naming/AccessorMethodName
 
+        # Reads the SSH port of this VM.
+        #
+        # @param [Integer] expected Expected guest port of SSH.
+        def ssh_port(expected); end
+
         # Starts the virtual machine referenced by this driver.
         # @return [void]
         def start; end

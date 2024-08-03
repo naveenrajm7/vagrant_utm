@@ -34,7 +34,7 @@ en:
       snapshot_multiple_vm_files: |-
         Multiple VM files detected. vagrant-utm which uses qemu-img does not support 
         snapshot feature when multiple VM files are present.
-        
+
         Directory checked: %{directory}
         Files found: %{files}
       snapshot_vm_file_not_found: |-
@@ -65,7 +65,8 @@ en:
       setting_id: |-
         Setting the Vagrant machine ID to UTM VM UUID: %{id}
       waiting_for_vm: |-
-        Waiting %{time} secs for the UTM virtual machine to be ready...
+        UTM does not report when the VM is ready, it only reports when the VM is started.
+        So, waiting %{time} secs for the UTM virtual machine to be ready...
         Default wait time is 20 seconds, you can change it by setting `config.vm.provider.utm.wait_time` in Vagrantfile.
     
     commands:

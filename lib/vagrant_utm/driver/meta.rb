@@ -105,6 +105,7 @@ module VagrantPlugins
                        :read_state,
                        :restore_snapshot,
                        :set_name,
+                       :ssh_port,
                        :start,
                        :start_disposable,
                        :suspend,

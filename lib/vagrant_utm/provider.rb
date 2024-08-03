@@ -78,24 +78,25 @@ module VagrantPlugins
 
       # Returns the SSH info for accessing the UTM VM.
       def ssh_info
-        # If the VM is not running (utm, started) that we can't possibly SSH into it
+        # If the VM is not running (utm, started) then we can't possibly SSH into it
         # TODO: We should use the state 'running', rather than 'started'
-        # This is a workaround for the UTM provider, which does not expose 'running' state
+        # UTM provider, which does not expose 'running' state. So we use 'started' state
         return nil if state.id != :started
 
-        # If there is port forwarding, GuestPort 22 to HostPort XXXX,
-        # We can use host as "127.0.0.1" and port as XXXX (forwarded ports)
-        # But we keep it simple for now, and just use the IP address of the VM
-        #
         # Return what we know
-        # host = get the IP address of the VM from first IP of utmctl ip-address
-        # port = 22, the default SSH port (Since we use IP address of VM, we don't need to forward ports)
+        # host = IP address of the VM
+        # port = the SSH port
         # username = vagrant, the default vagrant user
         # private_key_path = get the private key of the VM (default ~/.vagrant.d/insecure_private_key)
 
+        # Return ssh info for connector to connect to the VM
+        # If VM has shared network adapter in UTM, then we can use the IP address of the VM
+        # If we have multiple network adapters, we need to pick the right one, read_guest_ip returns just first IP
+        # Also, since Vagrant by default adds port forwarding for ssh port 22,
+        # we might aswell use the forwarded ports to connect to the VM using the localhost.
         {
-          host: @driver.read_guest_ip,
-          port: "22"
+          host: "127.0.0.1",
+          port: @driver.ssh_port(@machine.config.ssh.guest_port)
         }
       end
 

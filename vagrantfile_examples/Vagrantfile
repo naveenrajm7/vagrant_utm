@@ -6,11 +6,12 @@
 Vagrant.configure("2") do |config|
   # hostname inside the VM
   config.vm.hostname = "utm"
+  config.vm.network "forwarded_port", guest: 80, host: 8989
   config.vm.provider :utm do |utm|
     # Name in UTM UI
-    utm.name = "vagrant"
+    utm.name = "debian"
     # UTM VM file
-    utm.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-12.6/debian-12.6.0-arm64-netinst-vagrant.zip"
+    utm.utm_file_url = "http://localhost:8000/vm_utm.zip"
     utm.memory = 512
     utm.cpus = 1
     utm.notes = "Vagrant: For testing plugin development"
