@@ -108,10 +108,33 @@ module VagrantPlugins
       # is put into use.
       def finalize!
         @check_guest_additions = true if @check_guest_additions == UNSET_VALUE
+
         # The default name is just nothing, and we default it
         @name = nil if @name == UNSET_VALUE
+
         @utm_file_url = nil if @utm_file_url == UNSET_VALUE
+
         @wait_time = 20 if @wait_time == UNSET_VALUE
+      end
+
+      def validate(_machine)
+        errors = _detected_errors
+
+        # Checks for the UTM file URL
+        errors << I18n.t("vagrant_utm.config.utm_file_url_required") if @utm_file_url.nil? || @utm_file_url.empty?
+
+        valid_events = %w[pre-import pre-boot post-boot post-comm]
+        @customizations.each do |event, _| # rubocop:disable Style/HashEachMethods
+          next if valid_events.include?(event)
+
+          errors << I18n.t(
+            "vagrant.virtualbox.config.invalid_event",
+            event: event.to_s,
+            valid_events: valid_events.join(", ")
+          )
+        end
+
+        { "UTM Provider" => errors }
       end
     end
   end
