@@ -25,7 +25,7 @@ module VagrantPlugins
       autoload :Export, action_root.join("export")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :ForwardPorts, action_root.join("forward_ports")
-      autoload :ImportVM, action_root.join("import_vm")
+      autoload :Import, action_root.join("import")
       autoload :IsPaused, action_root.join("is_paused")
       autoload :IsRunning, action_root.join("is_running")
       autoload :IsStopped, action_root.join("is_stopped")
@@ -377,7 +377,7 @@ module VagrantPlugins
               b2.use CheckAccessible
               b2.use Customize, "pre-import"
               # load UTM file to UTM app, through 'utm://downloadVM?url='
-              b2.use ImportVM
+              b2.use Import
 
               b2.use Call, DownloadConfirm do |env1, b3|
                 if env1[:result]

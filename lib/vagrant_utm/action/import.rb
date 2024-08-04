@@ -4,7 +4,7 @@ module VagrantPlugins
   module Utm
     module Action
       # This action imports the virtual machine to UTM.
-      class ImportVM
+      class Import
         def initialize(app, _env)
           @app = app
         end
@@ -29,7 +29,7 @@ module VagrantPlugins
           # However, name is not unique.
 
           # So we set the machine.id to UUID in next step after import.
-          # TODO: Set the machine.id to UUID after import returns the UUID.
+          # TODO: Set the machine.id to UUID after import returns the UUID (yet to be supported by UTM).
           # machine.id = return value of import
 
           @app.call(env)
