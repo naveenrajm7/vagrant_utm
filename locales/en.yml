@@ -1,5 +1,9 @@
 en:
   vagrant_utm:
+    config:
+      utm_file_url_required: |-
+        Configuration must specify utm.file_url.
+        UTM file URL is required to import the UTM virtual machine. 
     errors:
       utm_not_detected: |-
         UTM Application not detected. Please install UTM from https://mac.getutm.app/

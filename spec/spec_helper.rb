@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require "rspec"
+
 require "vagrant_utm"
+require "vagrant_utm/config"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -12,4 +15,7 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Load the translations
+  VagrantPlugins::Utm::Plugin.setup_i18n
 end
