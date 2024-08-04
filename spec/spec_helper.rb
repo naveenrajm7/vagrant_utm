@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
+# Gems
 require "rspec"
+
+# Require Vagrant itself so we can reference the proper
+# classes to test.
+require "vagrant"
+require "vagrant/util/platform"
+
+# Load in helpers
+require "support/dummy_provider"
+require "support/shared/base_context"
 
 require "vagrant_utm"
 require "vagrant_utm/config"
