@@ -34,6 +34,29 @@ module VagrantPlugins
 
           @app.call(env)
         end
+
+        def recover(env)
+          return unless env[:machine] && env[:machine].state.id != Vagrant::MachineState::NOT_CREATED_ID
+          return if env["vagrant.error"].is_a?(Vagrant::Errors::VagrantError)
+
+          # If we're not supposed to destroy on error then just return
+          return unless env[:destroy_on_error]
+
+          # Interrupted, destroy the VM. We note that we don't want to
+          # validate the configuration here, and we don't want to confirm
+          # we want to destroy.
+          destroy_env = env.clone
+          destroy_env[:config_validate] = false
+          destroy_env[:force_confirm_destroy] = true
+
+          # We don't want to double-execute any hooks attached to
+          # machine_action_up. Instead we should be honoring destroy hooks.
+          # Changing the action name here should make the Builder do the
+          # right thing.
+          destroy_env[:raw_action_name] = :destroy
+          destroy_env[:action_name] = :machine_action_destroy
+          env[:action_runner].run(Action.action_destroy, destroy_env)
+        end
       end
     end
   end
