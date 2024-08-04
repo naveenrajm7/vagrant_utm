@@ -70,7 +70,8 @@ module VagrantPlugins
         #   VM.
         # @param [Boolean] active_only If true, only VMs that are running will
         #   be checked.
-        # @return [Array<Array>]
+        # @return [Array<Array>] An array of arrays, each of which contains
+        # [nic, name(hostport), hostport, guestport]
         def read_forwarded_ports(uuid = nil, active_only: false); end
 
         # Returns the current state of this VM.
