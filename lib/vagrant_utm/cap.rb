@@ -15,7 +15,7 @@ module VagrantPlugins
         return nil if machine.state.id != :running
 
         {}.tap do |result|
-          machine.provider.driver.read_forwarded_ports.each do |_, _, g, h|
+          machine.provider.driver.read_forwarded_ports.each do |_, _, h, g|
             result[h] = g
           end
         end
