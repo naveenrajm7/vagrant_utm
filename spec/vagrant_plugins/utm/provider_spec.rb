@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "vagrant_utm/provider"
+
 RSpec.describe VagrantPlugins::Utm::Provider do # rubocop:disable Metrics/BlockLength
   let(:driver) { double("driver") }
   let(:provider) { double("provider", driver: driver) }

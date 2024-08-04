@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "vagrant_utm/config"
+
 RSpec.describe VagrantPlugins::Utm::Config do
   subject(:sut) { described_class.new }
 

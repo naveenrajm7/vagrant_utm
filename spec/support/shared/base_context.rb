@@ -50,9 +50,9 @@ shared_context "unit" do # rubocop:disable Metrics/BlockLength
     f = dir.join("tempfile")
 
     contents ||= ""
-    f.open("w") do |f|
-      f.write(contents)
-      f.flush
+    f.open("w") do |file|
+      file.write(contents)
+      file.flush
     end
 
     Pathname.new(Vagrant::Util::Platform.fs_real_path(f.to_s))
