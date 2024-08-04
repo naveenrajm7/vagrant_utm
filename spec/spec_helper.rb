@@ -4,6 +4,7 @@ require "rspec"
 
 require "vagrant_utm"
 require "vagrant_utm/config"
+require "vagrant_utm/provider"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
