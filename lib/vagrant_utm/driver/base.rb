@@ -278,7 +278,7 @@ module VagrantPlugins
 
           return @env_lang = @@env_lang if defined?(@@env_lang)
 
-          @logger.debug("validating LANG value for virtualbox cli commands")
+          @logger.debug("validating LANG value for UTM cli commands")
           # Get list of available locales on the system
           result = Vagrant::Util::Subprocess.execute("locale", "-a")
 
