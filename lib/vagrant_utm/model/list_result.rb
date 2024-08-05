@@ -6,7 +6,7 @@ module VagrantPlugins
       # Represents the result of a 'utmctl list' operation.
       class ListResult
         # @return [Array<ListResultItem>] The list of machines.
-        attr_accessor :names
+        attr_accessor :machines
 
         # Initialize the result from raw data.
         # @param [Array<Hash>] data The raw data.
