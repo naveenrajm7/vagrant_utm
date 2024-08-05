@@ -138,7 +138,7 @@ module VagrantPlugins
           list_result.any?(uuid)
         end
 
-        def read_forwarded_ports(uuid = nil, active_only: false) # rubocop:disable Metrics/AbcSize
+        def read_forwarded_ports(uuid = nil, active_only = false) # rubocop:disable Metrics/AbcSize,Style/OptionalBooleanParameter
           uuid ||= @uuid
 
           @logger.debug("read_forward_ports: uuid=#{uuid} active_only=#{active_only}")
@@ -206,6 +206,20 @@ module VagrantPlugins
         def read_state
           output = execute("status", @uuid)
           output.strip.to_sym
+        end
+
+        def read_used_ports
+          ports = []
+          list.machines.each do |machine|
+            # Ignore our own used ports
+            next if machine.uuid == @uuid
+
+            read_forwarded_ports(machine.uuid, true).each do |_, _, hostport, _|
+              ports << hostport
+            end
+          end
+
+          ports
         end
 
         def set_name(name) # rubocop:disable Naming/AccessorMethodName

@@ -35,13 +35,14 @@ module VagrantPlugins
       autoload :MessageNotStopped, action_root.join("message_not_stopped")
       autoload :MessageWillNotCreate, action_root.join("message_will_not_create")
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
+      autoload :PrepareForwardedPortCollisionParams, action_root.join("prepare_forwarded_port_collision_params")
+      autoload :Resume, action_root.join("resume")
       autoload :SetId, action_root.join("set_id")
       autoload :SetName, action_root.join("set_name")
       autoload :SnapshotDelete, action_root.join("snapshot_delete")
       autoload :SnapshotRestore, action_root.join("snapshot_restore")
       autoload :SnapshotSave, action_root.join("snapshot_save")
       autoload :Suspend, action_root.join("suspend")
-      autoload :Resume, action_root.join("resume")
       autoload :WaitForRunning, action_root.join("wait_for_running")
 
       # Include the built-in Vagrant action modules (e.g., DestroyConfirm)
@@ -51,13 +52,15 @@ module VagrantPlugins
 
       # This action boots the VM, assuming the VM is in a state that requires
       # a bootup (i.e. not saved).
-      def self.action_boot
+      def self.action_boot # rubocop:disable Metrics/AbcSize
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckAccessible
           b.use SetName
           b.use ClearForwardedPorts
           b.use Provision
-          # TODO: Implement port collision detection
+          b.use EnvSet, port_collision_repair: true
+          b.use PrepareForwardedPortCollisionParams
+          b.use HandleForwardedPortCollisions
           b.use ForwardPorts
           b.use SetHostname
           b.use Customize, "pre-boot"
@@ -204,6 +207,9 @@ module VagrantPlugins
           b.use Call, Created do |env, b2|
             if env[:result]
               b2.use CheckAccessible
+              b2.use EnvSet, port_collision_repair: false
+              b2.use PrepareForwardedPortCollisionParams
+              b2.use HandleForwardedPortCollisions
               b2.use Resume
               b2.use Provision
               b2.use WaitForRunning

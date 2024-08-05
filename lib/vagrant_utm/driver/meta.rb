@@ -103,6 +103,7 @@ module VagrantPlugins
                        :read_guest_ip,
                        :read_network_interfaces,
                        :read_state,
+                       :read_used_ports,
                        :restore_snapshot,
                        :set_name,
                        :ssh_port,

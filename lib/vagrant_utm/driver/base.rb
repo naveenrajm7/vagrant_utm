@@ -79,6 +79,12 @@ module VagrantPlugins
         # @return [Symbol]
         def read_state; end
 
+        # Returns a list of all forwarded ports in use by active
+        # virtual machines.
+        #
+        # @return [Array]
+        def read_used_ports; end
+
         # Returns the IP address of the guest machine.
         #
         # @return [String] The IP address of the guest machine.
