@@ -138,21 +138,22 @@ module VagrantPlugins
           list_result.any?(uuid)
         end
 
-        def read_forwarded_ports(uuid = nil, active_only = false) # rubocop:disable Metrics/AbcSize,Style/OptionalBooleanParameter
+        def read_forwarded_ports(uuid = nil) # rubocop:disable Metrics/AbcSize
           uuid ||= @uuid
 
-          @logger.debug("read_forward_ports: uuid=#{uuid} active_only=#{active_only}")
+          @logger.debug("read_forward_ports: uuid=#{uuid}")
 
           # If we care about active VMs only, then we check the state
           # to verify the VM is running.
-          return [] if active_only && read_state != :started
+          # This is taken care by the caller , read used ports
+          # return [] if active_only && check_state != :started
 
           # Get the forwarded ports from emulated Network interface
           # Format: [nicIndex, name, hostPort, guestPort]
           # We use hostPort as the name, since UTM does not support name
-          # Becuase hostport is and should be unique
+          # Because hostport is and should be unique
           results = []
-          command = ["read_forwarded_ports.applescript", @uuid]
+          command = ["read_forwarded_ports.applescript", uuid]
           info = execute_osa_script(command)
           info.strip! # remove leading and trailing whitespaces to match the regex
           info.split("\n").each do |line|
@@ -208,13 +209,19 @@ module VagrantPlugins
           output.strip.to_sym
         end
 
-        def read_used_ports
+        # We handle the active only case here
+        # So we can avoid calling the utmctl status command
+        # for each VM
+        def read_used_ports(active_only = true) # rubocop:disable Style/OptionalBooleanParameter
+          @logger.debug("read_used_ports: active_only=#{active_only}")
           ports = []
           list.machines.each do |machine|
             # Ignore our own used ports
             next if machine.uuid == @uuid
+            # Ignore inactive VMs if we only care about active VMs
+            next if active_only && machine.state != :started
 
-            read_forwarded_ports(machine.uuid, true).each do |_, _, hostport, _|
+            read_forwarded_ports(machine.uuid).each do |_, _, hostport, _|
               ports << hostport
             end
           end

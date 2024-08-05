@@ -25,7 +25,7 @@ module VagrantPlugins
               next if type != :forwarded_port
 
               # UTM port forwarding does not have name field
-              # We use the host port as the name (key) since that is what is unique
+              # We use the host port as the name (key) since that is what should be unique
               # If the host port matches the name(host port) of the forwarded port, then
               # remap.
               if options[:host] == name

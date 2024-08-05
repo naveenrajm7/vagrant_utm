@@ -68,11 +68,10 @@ module VagrantPlugins
         #
         # @param [String] uuid UUID of the VM to read from, or `nil` if this
         #   VM.
-        # @param [Boolean] active_only If true, only VMs that are running will
-        #   be checked.
+
         # @return [Array<Array>] An array of arrays, each of which contains
         # [nic, name(hostport), hostport, guestport]
-        def read_forwarded_ports(uuid = nil, active_only: false); end
+        def read_forwarded_ports(uuid = nil); end
 
         # Returns the current state of this VM.
         #
@@ -82,8 +81,10 @@ module VagrantPlugins
         # Returns a list of all forwarded ports in use by active
         # virtual machines.
         #
+        # @param [Boolean] active_only If true, only VMs that are running will
+        #   be checked.
         # @return [Array]
-        def read_used_ports; end
+        def read_used_ports(active_only: true); end
 
         # Returns the IP address of the guest machine.
         #
