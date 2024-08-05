@@ -66,18 +66,16 @@ module VagrantPlugins
           b.use Customize, "pre-boot"
           b.use Boot
           b.use Customize, "post-boot"
-          # WaitForCommunicator reads machine ssh_info.
-          # Our ssh_info returns nil if machine is not 'started'
-          # if 'started' we query the guest machine for IP address.
-          # But after 'started' it takes some time for the machine to be 'running'
-          # we need to wait for the machine to be 'running' before we can query
-          # but UTM does not report a 'running' state (machine ready to take commands)
-          # If you put wait in the function ssh_info, which is called muliple timmes
-          # we wait every time we call ssh_info, which is not good.
-          # So we wait here , after boot, before we can query the machine.
-          b.use WaitForRunning
-          # Machine need to be up and running before we can query
-          # add valid states to starting, started, running (after UTM provides running state)
+
+          # UTM does not have a running state, if you want to
+          # wait manually for the VM to be running, use the following:
+          # b.use WaitForRunning
+          # Since we use forwarded ports , we do not query ip address of VM
+          # for Vagrant communicator.
+          # So we can rely on WaitForCommunicator to wait for VM to be up and running
+
+          # Machine need to be up and running before we can connect to it.
+          # TODO: change valid states to starting, started, running (after UTM provides running state)
           b.use WaitForCommunicator, %i[starting started]
           b.use Customize, "post-comm"
           b.use CheckGuestAdditions
@@ -212,7 +210,6 @@ module VagrantPlugins
               b2.use HandleForwardedPortCollisions
               b2.use Resume
               b2.use Provision
-              b2.use WaitForRunning
               b2.use WaitForCommunicator, %i[resuming started]
             else
               b2.use MessageNotCreated
