@@ -16,3 +16,6 @@
 
 # vagrant
 .vagrant/
+
+# MacOS
+.DS_Store

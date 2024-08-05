@@ -1,0 +1,42 @@
+title: Vagrant UTM
+description: >-
+  vagrant_utm is a Vagrant plugin which adds UTM provider to Vagrant, 
+  allowing Vagrant to control and provision machines via UTM's API
+theme: just-the-docs
+
+url: "https://naveenrajm7.github.io/vagrant_utm"
+github_username:  naveenrajm7
+repository: naveenrajm7/vagrant_utm
+
+# logo: "/assets/images/logo.png"
+
+heading_anchors: true
+
+nav_external_links:
+  - title: UTM for macOS
+    url: https://mac.getutm.app
+
+# Github
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub"
+gh_edit_repository: "https://github.com/naveenrajm7/vagrant_utm"
+gh_edit_branch: "main"
+gh_edit_source: "docs"
+gh_edit_view_mode: "tree"
+
+callouts_level: quiet
+callouts:
+  highlight:
+    color: yellow
+  important:
+    title: Important
+    color: blue
+  new:
+    title: New
+    color: green
+  note:
+    title: Note
+    color: purple
+  warning:
+    title: Warning
+    color: red
