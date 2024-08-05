@@ -205,9 +205,16 @@ module VagrantPlugins
           b.use Call, Created do |env, b2|
             if env[:result]
               b2.use CheckAccessible
-              b2.use EnvSet, port_collision_repair: false
-              b2.use PrepareForwardedPortCollisionParams
-              b2.use HandleForwardedPortCollisions
+
+              # if VM is paused , QEMU still holds the port
+              # so we disable port collision check while resuming
+              # lsof -i tcp:8989
+              # COMMAND     PID       USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+              # QEMULaunc 27754 xxxxxxxxx   21u  IPv4 0x41d02c3ade4c04f1      0t0  TCP *:sunwebadmins (LISTEN)
+              # b2.use EnvSet, port_collision_repair: false
+              # b2.use PrepareForwardedPortCollisionParams
+              # b2.use HandleForwardedPortCollisions
+
               b2.use Resume
               b2.use Provision
               b2.use WaitForCommunicator, %i[resuming started]
