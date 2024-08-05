@@ -8,13 +8,15 @@ url: "https://naveenrajm7.github.io/vagrant_utm"
 github_username:  naveenrajm7
 repository: naveenrajm7/vagrant_utm
 
-# logo: "/assets/images/logo.png"
+logo: "/assets/images/logo.png"
 
 heading_anchors: true
 
 nav_external_links:
   - title: UTM for macOS
     url: https://mac.getutm.app
+  - title: Vagrant
+    url: https://www.vagrantup.com
 
 # Github
 gh_edit_link: true
