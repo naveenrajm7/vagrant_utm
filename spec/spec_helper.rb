@@ -11,6 +11,7 @@ require "vagrant/util/platform"
 # Load in helpers
 require "support/dummy_provider"
 require "support/shared/base_context"
+require "support/shared/utm_context"
 
 require "vagrant_utm"
 
