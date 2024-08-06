@@ -33,6 +33,11 @@ module VagrantPlugins
         error_key(:utmctl_error)
       end
 
+      # This error is raised if the utm or other binary like osa fail to launch.
+      class UtmLaunchError < UtmError
+        error_key(:utm_launch_error)
+      end
+
       # This error is raised if a shell/osascript command fails.
       class CommandError < UtmError
         error_key(:command_error)

@@ -18,7 +18,13 @@ en:
         you specified. Please check github page of the plugin to download
         the latest version.
       command_error: |-
-        Command failed with error: %{stderr}
+        There was an error while executing a command. 
+        The command and stderr is shown below.
+
+        Command: %{command}
+
+        Stderr: %{stderr} 
+        Stdout: %{stdout} 
       instance_not_created: |-
         The virtual machine has not been created yet.
       instance_not_running: |-
@@ -54,7 +60,14 @@ en:
 
         Command: %{command}
 
-        Stderr: %{stderr}  
+        Stderr: %{stderr} 
+      utm_launch_error: |-
+        There was an error running UTM or OSA. This is usually a permissions
+        problem or installation problem with UTM itself, and not Vagrant.
+        Please note the error message below (if any), resolve the issue, and
+        try Vagrant again.
+
+        %{message}
 
     messages:
       importing_utm_file: |-
@@ -74,6 +87,9 @@ en:
         Default wait time is 20 seconds, you can change it by setting `config.vm.provider.utm.wait_time` in Vagrantfile.
     
     commands:
+      common:
+        vm_already_running: |-
+          The UTM VM is already running.
       # VM Commands 
       up:
         will_not_create: |-
