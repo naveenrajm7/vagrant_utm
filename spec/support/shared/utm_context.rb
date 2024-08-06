@@ -22,19 +22,18 @@ shared_context "utm" do
 
     # drivers will blow up on instantiation if they cannot determine the
     # utm version, so wire this stub in automatically
-    # TODO: Fix this stub to return the correct version
     allow(subprocess).to receive(:execute)
-      .with("osascript", "-e", 'tell application "System Events" to return version of application "UTM"', { notify: %i[
-              stdout stderr
-            ] })
+      .with("osascript", "-e",
+            'tell application "System Events" to return version of application "UTM"',
+            an_instance_of(Hash))
       .and_return(subprocess_result(stdout: utm_version))
 
     # drivers also call vm_exists? during init;
-    # TODO: vm_exists is calling
-    # "osascript", "/Users/naveenrajm/Developer/UTMvagrant/vagrant_utm/lib/vagrant_utm/scripts/list_vm.js",
-    # {:notify=>[:stdout, :stderr]}
-    allow(subprocess).to receive(:vm_exists?)
-      .and_return(subprocess_result(exit_code: 0))
+    allow(subprocess).to receive(:execute)
+      .with("osascript", "/Users/naveenrajm/Developer/UTMvagrant/vagrant_utm/lib/vagrant_utm/scripts/list_vm.js",
+            an_instance_of(Hash))
+      .and_return(subprocess_result(stdout: '[{ "UUID": "1234-abcd-5678-efgh", "Name": "VmName",
+                                               "Status": "stopped" }]'))
 
     allow(Vagrant::Util::Which).to receive(:which).and_call_original
     allow(Vagrant::Util::Which).to receive(:which).with("locale").and_return(false)
