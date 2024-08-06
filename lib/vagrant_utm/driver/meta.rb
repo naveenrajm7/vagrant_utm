@@ -91,7 +91,6 @@ module VagrantPlugins
                        :create_snapshot,
                        :delete,
                        :delete_snapshot,
-                       :execute_shell_command,
                        :execute_osa_script,
                        :forward_ports,
                        :halt,

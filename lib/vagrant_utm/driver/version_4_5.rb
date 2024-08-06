@@ -138,7 +138,7 @@ module VagrantPlugins
           list_result.any?(uuid)
         end
 
-        def read_forwarded_ports(uuid = nil) # rubocop:disable Metrics/AbcSize
+        def read_forwarded_ports(uuid = nil)
           uuid ||= @uuid
 
           @logger.debug("read_forward_ports: uuid=#{uuid}")
@@ -155,7 +155,6 @@ module VagrantPlugins
           results = []
           command = ["read_forwarded_ports.applescript", uuid]
           info = execute_osa_script(command)
-          info.strip! # remove leading and trailing whitespaces to match the regex
           info.split("\n").each do |line|
             # Parse info, Forwarding(nicIndex)(ruleIndex)="Protocol,GuestIP,GuestPort,HostIP,HostPort"
             next unless (matcher = /^Forwarding\((\d+)\)\((\d+)\)="(.+?),.*?,(.+?),.*?,(.+?)"$/.match(line))
@@ -179,7 +178,6 @@ module VagrantPlugins
           nics = {}
           command = ["read_network_interfaces.applescript", @uuid]
           info = execute_osa_script(command)
-          info.strip! # remove leading and trailing whitespaces to match the regex
           info.split("\n").each do |line|
             next unless (matcher = /^nic(\d+),(.+?)$/.match(line))
 
@@ -252,10 +250,6 @@ module VagrantPlugins
 
         def suspend
           execute("suspend", @uuid)
-        end
-
-        def execute_shell_command(command)
-          execute_shell(*command)
         end
 
         def execute_osa_script(command)

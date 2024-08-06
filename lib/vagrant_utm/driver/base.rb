@@ -143,40 +143,80 @@ module VagrantPlugins
         # This should raise a VagrantError if things are not ready.
         def verify!; end
 
-        # Execute a raw shell command
-        #
-        # Raises a CommandError if the command fails.
-        # @param [Array] command The command to execute.
-        def execute_shell_command(command); end
-
         # Execute a script using the OSA interface.
         def execute_osa_script(command); end
 
-        # Execute a command on the host machine.
-        # Heavily inspired from https://github.com/hashicorp/vagrant/blob/main/plugins/providers/docker/executor/local.rb.
-        def execute_shell(*cmd, &block)
+        # Execute a shell command and return the output.
+        def execute_shell(*command, &block) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+          # Get the options hash if it exists
+          opts = {}
+          opts = command.pop if command.last.is_a?(Hash)
+
+          tries = 0
+          tries = 3 if opts[:retryable]
+
+          # Variable to store our execution result
+          r = nil
+
+          retryable(on: VagrantPlugins::Utm::Errors::CommandError, tries: tries, sleep: 1) do
+            # If there is an error with VBoxManage, this gets set to true
+            errored = false
+
+            # Execute the command
+            r = raw_shell(*command, &block)
+
+            # If the command was a failure, then raise an exception that is
+            # nicely handled by Vagrant.
+            if r.exit_code != 0
+              if @interrupted
+                @logger.info("Exit code != 0, but interrupted. Ignoring.")
+              else
+                errored = true
+              end
+            end
+
+            if errored
+              raise VagrantPlugins::Utm::Errors::CommandError,
+                    command: command.inspect,
+                    stderr: r.stderr,
+                    stdout: r.stdout
+            end
+          end
+
+          # Return the output, making sure to replace any Windows-style
+          # newlines with Unix-style.
+          # AppleScript logs are always in stderr, so we return that
+          # if there is any output.
+          if r.stdout && !r.stdout.empty?
+            r.stdout.gsub("\r\n", "\n")
+          elsif r.stderr && !r.stderr.empty?
+            r.stderr.gsub("\r\n", "\n")
+          else
+            ""
+          end
+        end
+
+        # Executes a command and returns the raw result object.
+        def raw_shell(*command, &block)
+          int_callback = lambda do
+            @interrupted = true
+
+            # We have to execute this in a thread due to trap contexts
+            # and locks.
+            Thread.new { @logger.info("Interrupted.") }.join
+          end
+
           # Append in the options for subprocess
-          cmd << { notify: %i[stdout stderr] }
+          # NOTE: We include the LANG env var set to C to prevent command output
+          #       from being localized
+          command << { notify: %i[stdout stderr], env: env_lang }
 
-          interrupted  = false
-          int_callback = -> { interrupted = true }
-          result = ::Vagrant::Util::Busy.busy(int_callback) do
-            ::Vagrant::Util::Subprocess.execute(*cmd, &block)
+          Vagrant::Util::Busy.busy(int_callback) do
+            Vagrant::Util::Subprocess.execute(*command, &block)
           end
-
-          # Trim the outputs
-          result.stderr.gsub!("\r\n", "\n")
-          result.stdout.gsub!("\r\n", "\n")
-
-          if result.exit_code != 0 && !interrupted
-            raise VagrantPlugins::Utm::Errors::CommandError,
-                  command: cmd.inspect,
-                  stderr: result.stderr,
-                  stdout: result.stdout
-          end
-
-          # Return the outputs of the command
-          "#{result.stdout} #{result.stderr}"
+        rescue Vagrant::Util::Subprocess::LaunchError => e
+          raise Vagrant::Errors::UtmLaunchError,
+                message: e.to_s
         end
 
         # Execute the given subcommand for utmctl and return the output.
@@ -242,7 +282,7 @@ module VagrantPlugins
           r.stdout.gsub("\r\n", "\n")
         end
 
-        # Executes a command and returns the raw result object.
+        # Executes a utmctl command and returns the raw result object.
         def raw(*command, &block)
           int_callback = lambda do
             @interrupted = true
@@ -261,7 +301,7 @@ module VagrantPlugins
             Vagrant::Util::Subprocess.execute(@utmctl_path, *command, &block)
           end
         rescue Vagrant::Util::Subprocess::LaunchError => e
-          raise Vagrant::Errors::UtmctlLaunchError,
+          raise Vagrant::Errors::UtmLaunchError,
                 message: e.to_s
         end
 
