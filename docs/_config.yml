@@ -24,6 +24,10 @@ nav_external_links:
     url: https://mac.getutm.app
   - title: Vagrant
     url: https://www.vagrantup.com
+  - title: Packer plugin for UTM
+    url: https://github.com/naveenrajm7/packer-plugin-utm
+  - title: GitHub
+    url: https://github.com/naveenrajm7/vagrant_utm
 
 # Github
 gh_edit_link: true
