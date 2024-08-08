@@ -33,7 +33,7 @@ Browse the docs to learn more about how to use this plugin.
 
 ## Getting started
 
-Get started with Vagrant UTM plugin in 3 simple steps.
+Get started with Vagrant UTM plugin in 3 simple steps.  
 Make sure both [Vagrant] and [UTM] are installed before your proceed.
 
 {: .warning}

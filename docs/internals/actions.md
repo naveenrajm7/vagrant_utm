@@ -5,7 +5,7 @@ parent: Internals
 nav_order: 1
 ---
 
-The Table below maps the vagrant commands to executed UTM commands.
+The Table below maps the vagrant commands to the corresponding UTM commands that are executed.
 
 | Vagrant               | utmctl / AppleScript |
 | ---                   | ------------------ | 

@@ -25,6 +25,9 @@ u.utm_file_url = https://github.com/naveenrajm7/utm-box/releases/download/debian
 To enable building reproducible and easily sharable UTM VM bundle a [packer plugin for UTM](https://github.com/naveenrajm7/packer-plugin-utm) has been developed.
 Please see the [UTM Box Guide](https://github.com/naveenrajm7/utm-box/blob/main/HowToBuild/DebianUTM.md) on how these UTM Vagrant boxes were built using packer.
 
+
+Check out [Creating UTM Box](/boxes/creating_utm_box.md) to build your own Vagrant compatible UTM box.
+
 ## Corresponding VMs from UTM Gallery
 
 <div class="content">
