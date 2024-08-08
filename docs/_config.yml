@@ -16,20 +16,28 @@ plugins:
 # Website settings
 
 logo: "/assets/images/logo.png"
+# Set a path/url to a favicon that will be displayed by the browser
+favicon_ico: "/assets/images/logo.png"
 
 heading_anchors: true
 
 nav_external_links:
-  - title: UTM for macOS
-    url: https://mac.getutm.app
   - title: Vagrant
     url: https://www.vagrantup.com
+  - title: UTM for macOS
+    url: https://mac.getutm.app
   - title: Packer plugin for UTM
     url: https://github.com/naveenrajm7/packer-plugin-utm
-  - title: GitHub
-    url: https://github.com/naveenrajm7/vagrant_utm
+  # - title: GitHub
+  #   url: https://github.com/naveenrajm7/vagrant_utm
 
-# Github
+
+# Aux links for the upper right navigation
+aux_links:
+  "Vagrant UTM on GitHub":
+    - "//github.com/naveenrajm7/vagrant_utm"
+
+# Edit on Github
 gh_edit_link: true
 gh_edit_link_text: "Edit this page on GitHub"
 gh_edit_repository: "https://github.com/naveenrajm7/vagrant_utm"
@@ -37,6 +45,8 @@ gh_edit_branch: "main"
 gh_edit_source: "docs"
 gh_edit_view_mode: "tree"
 
+
+# callouts
 callouts_level: quiet
 callouts:
   highlight:
@@ -53,3 +63,13 @@ callouts:
   warning:
     title: Warning
     color: red
+
+# For copy button on code
+enable_copy_code_button: true
+
+# Back to top link
+back_to_top: true
+back_to_top_text: "Back to top"
+
+# Footer
+footer_content: "Copyright &copy; 2024 Naveenraj Muthuraj. Distributed by an <a href=\"https://github.com/naveenrajm7/vagrant_utm/tree/main/LICENSE.txt\">MIT license.</a>"

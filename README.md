@@ -44,7 +44,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/naveen
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). However, it uses vagrant library and parts of the code from virtualbox plugin both of which is BSL.
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). However, it uses vagrant library and parts of the code from virtualbox plugin both of which are BSL.
 Please be aware of this if you intend on redistributing this plugin. 
 
 ## Credits
