@@ -2,6 +2,7 @@ title: Vagrant UTM
 description: >-
   vagrant_utm is a Vagrant plugin which adds UTM provider to Vagrant, 
   allowing Vagrant to control and provision machines via UTM's API
+baseurl: "/docs" # the subpath of your site, e.g. /blog
 # theme: just-the-docs
 
 url: "https://naveenrajm7.github.io/vagrant_utm"

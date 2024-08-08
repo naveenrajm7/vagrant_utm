@@ -36,6 +36,10 @@ Browse the docs to learn more about how to use this plugin.
 Get started with Vagrant UTM plugin in 3 simple steps.
 Make sure both [Vagrant] and [UTM] are installed before your proceed.
 
+{: .warning}
+UTM Vagrant plugin is built around the existing UTM API. Some steps like Import, Snapshot are not straightforward. Please check [Known Issues](/known_issues.md) before using this plugin.
+
+
 ### Install
 
 Install vagrant_utm plugin.
@@ -49,7 +53,7 @@ Save the below config in your Vagrantfile.
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.provider :utm do |u|
-    u.utm_file_url = "http://localhost:8000/vm_utm.zip"
+    u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
   end
 end
 ```
@@ -60,6 +64,8 @@ Bring up vagrant environment.
 ```bash
 vagrant up
 ```
+
+
 
 Check [Commands](commands.md) for all supported Vagrant commands.
 Check [Configuration](configuration.md) for more provider config options.
