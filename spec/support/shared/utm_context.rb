@@ -7,6 +7,7 @@ shared_context "utm" do
   let(:uuid) { "1234-abcd-5678-efgh" }
   let(:utm_version) { "4.5.0" }
   let(:subprocess) { double("Vagrant::Util::Subprocess") }
+  let(:script_path) { File.expand_path("../../../lib/vagrant_utm/scripts/", __dir__) }
 
   # this is a helper that returns a duck type suitable from a system command
   # execution; allows setting exit_code, stdout, and stderr in stubs.
@@ -30,7 +31,7 @@ shared_context "utm" do
 
     # drivers also call vm_exists? during init;
     allow(subprocess).to receive(:execute)
-      .with("osascript", "/Users/naveenrajm/Developer/UTMvagrant/vagrant_utm/lib/vagrant_utm/scripts/list_vm.js",
+      .with("osascript", File.join(script_path, "list_vm.js"),
             an_instance_of(Hash))
       .and_return(subprocess_result(stdout: '[{ "UUID": "1234-abcd-5678-efgh", "Name": "VmName",
                                                "Status": "stopped" }]'))
