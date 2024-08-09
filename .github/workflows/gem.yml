@@ -15,13 +15,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Ruby 3.3
+    - name: Set up Ruby 3.3.4
     # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
     # change this to (see https://github.com/ruby/setup-ruby#versioning):
       uses: ruby/setup-ruby@v1
     # uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
       with:
-        ruby-version: 3.3.x
+        ruby-version: 3.3.4
 
     - name: Publish to GPR
       run: |
