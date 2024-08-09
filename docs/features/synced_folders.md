@@ -14,7 +14,7 @@ After which the the host directory can be selected from UTM UI, and the guest di
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.provider :utm do |u|
-    u.utm_file_url = "http://localhost:8000/vm_utm.zip"
+    u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
     # QEMU Directoy Share mode for the VM. 
     # Takes none, webDAV or virtFS
     u.directory_share_mode = "webDAV"

@@ -36,7 +36,7 @@ Browse the docs to learn more about how to use this plugin.
 Get started with Vagrant UTM plugin in 3 simple steps.  
 Make sure both [Vagrant] and [UTM] are installed before your proceed.
 
-{: .warning}
+{: .note}
 UTM Vagrant plugin is built around the existing UTM API. Some steps like Import, Snapshot are not straightforward. Please check [Known Issues](/known_issues.md) before using this plugin.
 
 
@@ -65,10 +65,12 @@ Bring up vagrant environment.
 vagrant up
 ```
 
+Now start using your machine!
 
+`vagrant ssh` to log into machine or forward ports to check your website or share folders and start developing.
 
 Check [Commands](commands.md) for all supported Vagrant commands.
-Check [Configuration](configuration.md) for more provider config options.
+Check [Configuration](configuration.md) for more UTM provider config options.
 
 
 ## About the project

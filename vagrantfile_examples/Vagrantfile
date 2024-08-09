@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     # Name in UTM UI
     # utm.name = "debian"
     # UTM VM file
-    utm.utm_file_url = "http://localhost:8000/debian_vagrant_utm.zip"
+    utm.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
     utm.memory = 512
     utm.cpus = 1
     utm.notes = "Vagrant: For testing plugin development"

@@ -17,6 +17,16 @@ config.vm.provider "utm" do |u|
 end
 ```
 
+## Checking for Guest Additions
+
+By default UTM plugin will check for the `qemu-guest-agent` when starting a machine, and will output a warning if the guest additions are not detected. You can skip the guest additions check by setting the check_guest_additions option:
+
+```ruby
+config.vm.provider "utm" do |u|
+  u.check_guest_additions = false
+end
+```
+
 ## Other customization
 
 ```ruby
@@ -30,12 +40,12 @@ Vagrant.configure("2") do |config|
     # Name in UTM UI
     u.name = "debian"
     # UTM VM file to import
-    u.utm_file_url = "http://localhost:8000/debian_vagrant_utm.zip"
+    u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
     # CPU in cores
     u.cpus = 1
     # Memory in MB
     u.memory = 1024
-    # Notes for UTM VM (Appears in UI)
+    # Notes for UTM VM (Appears in UTM UI)
     u.notes = "Vagrant: For testing plugin development"
     # QEMU Directoy Share mode for the VM. 
     # Takes none, webDAV or virtFS
