@@ -67,8 +67,8 @@ RSpec.describe VagrantPlugins::Utm::Provider do # rubocop:disable Metrics/BlockL
 
   describe "#state" do
     it "returns not_created if no ID" do
-      allow(machine).to receive(:id).and_return(nil)
-      allow(machine).to receive(:data_dir).and_return(".vagrant")
+      allow(VagrantPlugins::Utm::Driver::Meta).to receive(:new).and_return(driver)
+      allow(driver).to receive(:uuid).and_return(nil)
 
       expect(subject.state.id).to eq(:not_created)
     end
