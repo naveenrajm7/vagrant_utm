@@ -17,7 +17,12 @@ All the VMs provided are built from [UTM Gallery VMs](https://mac.getutm.app/gal
 
 * Debian 11 (Xfce):   
 ```ruby
-u.utm_file_url = https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip 
+u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip" 
+```
+
+* Debian 10.4 (Custom i3):
+```ruby
+u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-10/deb10_vagrant_utm.zip"
 ```
 
 * More boxes. Coming Soon...
@@ -47,6 +52,13 @@ Check out [Creating UTM Box](/creating_utm_box.md) to build your own Vagrant com
             <h3>Debian 11 (Xfce)</h3>
             <h4><i class="fas fa-microchip"></i> ARM64 </h4>
             <img src="{{ site.baseurl }}/assets/images/screens/debian-11-xfce-arm64.png" alt="Screenshot" class="screenshot" />
+        </a>
+      </div>
+      <div class="gallery-item">
+        <a href="">
+            <h3>Debian 10.4 (Custom i3)</h3>
+            <h4><i class="fas fa-microchip"></i> ARM64 </h4>
+            <img src="{{ site.baseurl }}/assets/images/screens/debian-10.4-i3-arm64.png" alt="Screenshot" class="screenshot" />
         </a>
       </div>
   </section>
