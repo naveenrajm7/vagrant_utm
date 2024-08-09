@@ -26,7 +26,7 @@ To enable building reproducible and easily sharable UTM VM bundle a [packer plug
 Please see the [UTM Box Guide](https://github.com/naveenrajm7/utm-box/blob/main/HowToBuild/DebianUTM.md) on how these UTM Vagrant boxes were built using packer.
 
 
-Check out [Creating UTM Box](/boxes/creating_utm_box.md) to build your own Vagrant compatible UTM box.
+Check out [Creating UTM Box](/creating_utm_box.md) to build your own Vagrant compatible UTM box.
 
 ## Corresponding VMs from UTM Gallery
 
