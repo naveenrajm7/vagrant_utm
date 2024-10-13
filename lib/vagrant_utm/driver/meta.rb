@@ -93,6 +93,7 @@ module VagrantPlugins
                        :delete,
                        :delete_snapshot,
                        :execute_osa_script,
+                       :export,
                        :forward_ports,
                        :halt,
                        :import,

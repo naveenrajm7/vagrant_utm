@@ -35,6 +35,10 @@ module VagrantPlugins
       autoload :MessageNotStopped, action_root.join("message_not_stopped")
       autoload :MessageWillNotCreate, action_root.join("message_will_not_create")
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
+      autoload :Package, action_root.join("package")
+      autoload :PackageSetupFiles, action_root.join("package_setup_files")
+      autoload :PackageSetupFolders, action_root.join("package_setup_folders")
+      autoload :PackageVagrantfile, action_root.join("package_vagrantfile")
       autoload :PrepareForwardedPortCollisionParams, action_root.join("prepare_forwarded_port_collision_params")
       autoload :Resume, action_root.join("resume")
       autoload :SetId, action_root.join("set_id")
@@ -146,10 +150,15 @@ module VagrantPlugins
               b2.use MessageNotCreated
               next
             end
+
+            b2.use PackageSetupFolders
+            b2.use PackageSetupFiles
             b2.use CheckAccessible
             b2.use action_halt
             b2.use ClearForwardedPorts
+            b2.use Package
             b2.use Export
+            b2.use PackageVagrantfile
           end
         end
       end
