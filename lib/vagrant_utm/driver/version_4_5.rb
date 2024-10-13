@@ -14,7 +14,7 @@ module VagrantPlugins
         def initialize(uuid)
           super()
 
-          @logger = Log4r::Logger.new("vagrant::provider::utm_4_5")
+          @logger = Log4r::Logger.new("vagrant::provider::utm::version_4_5")
           @uuid = uuid
         end
 
@@ -50,6 +50,11 @@ module VagrantPlugins
           machine_name = list_result.find(uuid: machine_id).name
           machine_file = get_vm_file(machine_name)
           execute_shell("qemu-img", "snapshot", "-d", snapshot_name, machine_file)
+        end
+
+        def export(_path)
+          @logger.info("This version of UTM does not support exporting VMs
+            Please upgrade to the latest version of UTM or UTM 'Share' feature in UI to export the virtual machine")
         end
 
         def list_snapshots(machine_id) # rubocop:disable Metrics/AbcSize
