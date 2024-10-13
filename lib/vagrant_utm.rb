@@ -16,6 +16,7 @@ module VagrantPlugins
       lib_path = Pathname.new(File.expand_path("vagrant_utm/driver", __dir__))
       autoload :Meta, lib_path.join("meta")
       autoload :Version_4_5, lib_path.join("version_4_5") # rubocop:disable Naming/VariableNumber
+      autoload :Version_4_6, lib_path.join("version_4_6") # rubocop:disable Naming/VariableNumber
     end
 
     # Drop some autoloads for the model classes
