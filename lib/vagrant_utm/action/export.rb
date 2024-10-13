@@ -3,7 +3,7 @@
 module VagrantPlugins
   module Utm
     module Action
-      # This action destroys the running machine.
+      # This action exports the virtual machine.
       class Export
         def initialize(app, _env)
           @app = app
