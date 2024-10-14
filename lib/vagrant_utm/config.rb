@@ -12,11 +12,6 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :name
 
-      # The path to the UTM VM file.
-      #
-      # @return [String]
-      attr_accessor :utm_file_url
-
       # If true, will check if guest additions are installed and up to
       # date. By default, this is true.
       #
@@ -39,7 +34,6 @@ module VagrantPlugins
         @check_guest_additions = UNSET_VALUE
         @customizations = []
         @name = UNSET_VALUE
-        @utm_file_url = UNSET_VALUE
         @wait_time = UNSET_VALUE
       end
 
@@ -112,16 +106,13 @@ module VagrantPlugins
         # The default name is just nothing, and we default it
         @name = nil if @name == UNSET_VALUE
 
-        @utm_file_url = nil if @utm_file_url == UNSET_VALUE
-
         @wait_time = 20 if @wait_time == UNSET_VALUE
       end
 
       def validate(_machine)
         errors = _detected_errors
 
-        # Checks for the UTM file URL
-        errors << I18n.t("vagrant_utm.config.utm_file_url_required") if @utm_file_url.nil? || @utm_file_url.empty?
+        # Add errors if config is invalid Ex: required fields are not set
 
         valid_events = %w[pre-import pre-boot post-boot post-comm]
         @customizations.each do |event, _| # rubocop:disable Style/HashEachMethods
