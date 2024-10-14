@@ -330,6 +330,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use ConfigValidate
+          b.use BoxCheckOutdated
           b.use Call, IsRunning do |env, b2|
             # If the VM is running, run the necessary provisioners
             if env[:result]
@@ -385,35 +386,30 @@ module VagrantPlugins
       end
 
       # This action brings the machine up from nothing, including importing
-      # the UTM file, configuring metadata, and booting.
-      def self.action_up # rubocop:disable Metrics/AbcSize
+      # the box, configuring metadata, and booting.
+      def self.action_up
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
+
+          # Handle box_url downloading early so that if the Vagrantfile
+          # references any files in the box or something it all just
+          # works fine.
+          b.use Call, Created do |env, b2|
+            b2.use HandleBox unless env[:result]
+          end
+
           b.use ConfigValidate
           b.use Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
             unless env[:result]
               b2.use CheckAccessible
               b2.use Customize, "pre-import"
-              # load UTM file to UTM app, through 'utm://downloadVM?url='
-              b2.use Import
 
-              b2.use Call, DownloadConfirm do |env1, b3|
-                if env1[:result]
-                  # SetID
-                  b3.use SetId
-                  b3.use SetName
-                  # Customize
-                  b3.use Customize, "pre-boot"
-                else
-                  b3.use MessageWillNotCreate
-                  raise Errors::UtmImportFailed
-                end
-              end
+              b2.use Import
             end
           end
 
-          # Start the VM
+          b.use EnvSet, cloud_init: true
           b.use action_start
         end
       end
