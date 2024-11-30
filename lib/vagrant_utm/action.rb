@@ -21,7 +21,6 @@ module VagrantPlugins
       autoload :Created, action_root.join("created")
       autoload :Customize, action_root.join("customize")
       autoload :Destroy, action_root.join("destroy")
-      autoload :DownloadConfirm, action_root.join("download_confirm")
       autoload :Export, action_root.join("export")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :ForwardPorts, action_root.join("forward_ports")
