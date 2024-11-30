@@ -55,7 +55,8 @@ module VagrantPlugins
           # Instantiate the proper version driver for UTM
           @logger.debug("Finding driver for UTM version: #{@version}")
           driver_map = {
-            "4.5" => Version_4_5
+            "4.5" => Version_4_5,
+            "4.6" => Version_4_6
           }
 
           # UTM 4.5.0 just doesn't work with Vagrant (https://github.com/utmapp/UTM/issues/5963),
@@ -92,6 +93,7 @@ module VagrantPlugins
                        :delete,
                        :delete_snapshot,
                        :execute_osa_script,
+                       :export,
                        :forward_ports,
                        :halt,
                        :import,

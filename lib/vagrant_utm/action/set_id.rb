@@ -3,7 +3,7 @@
 module VagrantPlugins
   module Utm
     module Action
-      # This action destroys the running machine.
+      # This action sets the machine id to the UUID of the VM in UTM.
       class SetId
         def initialize(app, _env)
           @app = app

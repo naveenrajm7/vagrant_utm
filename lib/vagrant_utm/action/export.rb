@@ -3,18 +3,39 @@
 module VagrantPlugins
   module Utm
     module Action
-      # This action destroys the running machine.
+      # This action exports the virtual machine.
       class Export
         def initialize(app, _env)
           @app = app
         end
 
         def call(env)
-          # UTM 'Share' feature in UI will Export the virtual machine and all its data.
-          # Till 'Share' is exposed via API, show a message to manually export.
-          env[:ui].info I18n.t("vagrant_utm.actions.vm.export.manual_exporting",
-                               name: env[:machine].provider_config.name)
+          @env = env
+
+          raise Vagrant::Errors::VMPowerOffToPackage if \
+            @env[:machine].state.id != :stopped
+
+          export
+
           @app.call(env)
+        end
+
+        def export
+          @env[:ui].info I18n.t("vagrant.actions.vm.export.exporting")
+          @env[:machine].provider.driver.export(utm_path) do |progress|
+            @env[:ui].rewriting do |ui|
+              ui.clear_line
+              ui.report_progress(progress.percent, 100, false)
+            end
+          end
+
+          # Clear the line a final time so the next data can appear
+          # alone on the line.
+          @env[:ui].clear_line
+        end
+
+        def utm_path
+          File.join(@env["export.temp_dir"], "box.utm")
         end
       end
     end

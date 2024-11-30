@@ -18,10 +18,16 @@ allowing Vagrant to control and provision machines via UTM's API.
 
 ---
 
-[UTM] is a free, full featured system emulator and virtual machine host for iOS and macOS.
-The UTM provider currently supports UTM versions 4.5.x (except 4.5.0).
+{: .new}
+> UTM Vagrant plugin now supports [Vagrant boxes](https://developer.hashicorp.com/vagrant/docs/boxes)!   
+> Find UTM boxes at [HCP Vagrant registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm). 
 
-[Vagrant] enables the creation and configuration of lightweight, reproducible, and portable development environments using Vagrantfile. The UTM provider plugin works with Vagrant version 2.4.1 .
+[UTM] is a free, full-featured system emulator and virtual machine host for iOS and macOS.  
+The UTM provider currently supports UTM versions 
+* 4.6.x   
+* 4.5.x (Obsolete, use plugin version 0.0.1)  
+
+[Vagrant] enables the creation and configuration of lightweight, reproducible, and portable development environments using Vagrantfile. The UTM provider plugin works with Vagrant version 2.4.1.
 
 
 Both UTM and Vagrant must be installed prior to using this plugin.
@@ -33,11 +39,11 @@ Browse the docs to learn more about how to use this plugin.
 
 ## Getting started
 
-Get started with Vagrant UTM plugin in 3 simple steps.  
+Get started with Vagrant UTM plugin in 2 simple steps.  
 Make sure both [Vagrant] and [UTM] are installed before your proceed.
 
 {: .note}
-UTM Vagrant plugin is built around the existing UTM API. Some steps like Import, Snapshot are not straightforward. Please check [Known Issues](/known_issues.md) before using this plugin.
+UTM Vagrant plugin is built around the existing UTM API. Some action like Snapshot are not straightforward. Please check [Known Issues](/known_issues.md) before using this plugin.
 
 
 ### Install
@@ -49,19 +55,25 @@ vagrant plugin install vagrant_utm
 
 ### Use
 
-Save the below config in your Vagrantfile. 
+#### Step 1
+Option 1: Create a Vagrantfile and initiate the box (OR)
+
+```
+vagrant init utm/debian11
+```
+
+Option 2: Open the Vagrantfile and replace the contents with the following
+
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.provider :utm do |u|
-    u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
-  end
+  config.vm.box = "utm/debian11"
 end
 ```
 
-### Run
+#### Step 2
+Bring up your virtual machine
 
-Bring up vagrant environment.
-```bash
+```
 vagrant up
 ```
 

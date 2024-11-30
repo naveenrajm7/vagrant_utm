@@ -19,3 +19,6 @@
 
 # MacOS
 .DS_Store
+
+# Test Vagrantfiles
+vagrant_play/

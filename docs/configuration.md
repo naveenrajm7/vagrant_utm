@@ -31,6 +31,8 @@ end
 
 ```ruby
 Vagrant.configure("2") do |config|
+  # Vagrant box 
+  config.vm.box = "utm/debian11"
   # Hostname inside the VM
   config.vm.hostname = "debian"
   # Ports to forward
@@ -39,8 +41,6 @@ Vagrant.configure("2") do |config|
   config.vm.provider "utm" do |u|
     # Name in UTM UI
     u.name = "debian"
-    # UTM VM file to import
-    u.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
     # CPU in cores
     u.cpus = 1
     # Memory in MB

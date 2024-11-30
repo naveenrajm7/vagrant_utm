@@ -21,7 +21,6 @@ module VagrantPlugins
       autoload :Created, action_root.join("created")
       autoload :Customize, action_root.join("customize")
       autoload :Destroy, action_root.join("destroy")
-      autoload :DownloadConfirm, action_root.join("download_confirm")
       autoload :Export, action_root.join("export")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :ForwardPorts, action_root.join("forward_ports")
@@ -35,6 +34,10 @@ module VagrantPlugins
       autoload :MessageNotStopped, action_root.join("message_not_stopped")
       autoload :MessageWillNotCreate, action_root.join("message_will_not_create")
       autoload :MessageWillNotDestroy, action_root.join("message_will_not_destroy")
+      autoload :Package, action_root.join("package")
+      autoload :PackageSetupFiles, action_root.join("package_setup_files")
+      autoload :PackageSetupFolders, action_root.join("package_setup_folders")
+      autoload :PackageVagrantfile, action_root.join("package_vagrantfile")
       autoload :PrepareForwardedPortCollisionParams, action_root.join("prepare_forwarded_port_collision_params")
       autoload :Resume, action_root.join("resume")
       autoload :SetId, action_root.join("set_id")
@@ -146,10 +149,15 @@ module VagrantPlugins
               b2.use MessageNotCreated
               next
             end
+
+            b2.use PackageSetupFolders
+            b2.use PackageSetupFiles
             b2.use CheckAccessible
             b2.use action_halt
             b2.use ClearForwardedPorts
+            b2.use Package
             b2.use Export
+            b2.use PackageVagrantfile
           end
         end
       end
@@ -321,6 +329,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use ConfigValidate
+          b.use BoxCheckOutdated
           b.use Call, IsRunning do |env, b2|
             # If the VM is running, run the necessary provisioners
             if env[:result]
@@ -376,35 +385,30 @@ module VagrantPlugins
       end
 
       # This action brings the machine up from nothing, including importing
-      # the UTM file, configuring metadata, and booting.
-      def self.action_up # rubocop:disable Metrics/AbcSize
+      # the box, configuring metadata, and booting.
+      def self.action_up
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
+
+          # Handle box_url downloading early so that if the Vagrantfile
+          # references any files in the box or something it all just
+          # works fine.
+          b.use Call, Created do |env, b2|
+            b2.use HandleBox unless env[:result]
+          end
+
           b.use ConfigValidate
           b.use Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
             unless env[:result]
               b2.use CheckAccessible
               b2.use Customize, "pre-import"
-              # load UTM file to UTM app, through 'utm://downloadVM?url='
-              b2.use Import
 
-              b2.use Call, DownloadConfirm do |env1, b3|
-                if env1[:result]
-                  # SetID
-                  b3.use SetId
-                  b3.use SetName
-                  # Customize
-                  b3.use Customize, "pre-boot"
-                else
-                  b3.use MessageWillNotCreate
-                  raise Errors::UtmImportFailed
-                end
-              end
+              b2.use Import
             end
           end
 
-          # Start the VM
+          b.use EnvSet, cloud_init: true
           b.use action_start
         end
       end

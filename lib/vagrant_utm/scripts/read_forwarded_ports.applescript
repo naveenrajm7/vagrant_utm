@@ -1,4 +1,4 @@
-# Usage: osascript read_port_forwards.applescript <vmID>
+# Usage: osascript read_forwarded_ports.applescript <vmID>
 # vmID is the id of the virtual machine
 # This script reads the port forwards of the 'emulated' network interface
 # 'Forwarding(nicIndex)(ruleIndex)="protocol,guestAddress,guestPort,hostAddress,hostPort"'

@@ -4,18 +4,19 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  config.vm.box = "utm/debian11"
+  config.vm.box_version = "0.0.1"
   # hostname inside the VM
   config.vm.hostname = "utm"
   config.vm.network "forwarded_port", guest: 80, host: 8989
   config.vm.provider :utm do |utm|
     # Name in UTM UI
     # utm.name = "debian"
-    # UTM VM file
-    utm.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
     utm.memory = 512
     utm.cpus = 1
     utm.notes = "Vagrant: For testing plugin development"
     # Wait time in secs for VM to be running after 'started'
+    # Currently, not used and we rely on the built-in wait for communicator(ssh) to be ready
     utm.wait_time = 22
     # QEMU Directoy Share mode for the VM
     utm.directory_share_mode = "webDAV"

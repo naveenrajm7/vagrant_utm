@@ -13,25 +13,35 @@ module VagrantPlugins
           import(env)
         end
 
-        def import(env)
-          machine = env[:machine]
-          config = machine.provider_config
-          driver = machine.provider.driver
-          utm_file_url = config.utm_file_url
+        def import(env) # rubocop:disable Metrics/AbcSize
+          env[:ui].info I18n.t("vagrant.actions.vm.import.importing",
+                               name: env[:machine].box.name)
 
-          env[:ui].info I18n.t("vagrant_utm.messages.importing_utm_file", name: utm_file_url)
+          # Import the virtual machine
+          utm_file = env[:machine].box.directory.join("box.utm").to_s
+          id = env[:machine].provider.driver.import(utm_file) do |progress|
+            env[:ui].rewriting do |ui|
+              ui.clear_line
+              ui.report_progress(progress, 100, false)
+            end
+          end
 
-          # Import the UTM VM file
-          driver.import(utm_file_url)
+          # Set the machine ID
+          env[:machine_id] = id
+          env[:machine].id = id unless env[:skip_machine]
 
-          # Set the UID of Vagrant machine to the UUID of the VM in UTM.
-          # UTM maintains UUID as primary key for VMs, but even the name works for all commands
-          # However, name is not unique.
+          # Clear the line one last time since the progress meter doesn't disappear
+          # immediately.
+          env[:ui].clear_line
 
-          # So we set the machine.id to UUID in next step after import.
-          # TODO: Set the machine.id to UUID after import returns the UUID (yet to be supported by UTM).
-          # machine.id = return value of import
+          # If we got interrupted, then the import could have been
+          # interrupted and its not a big deal. Just return out.
+          return if env[:interrupted]
 
+          # Flag as erroneous and return if import failed
+          raise Vagrant::Errors::VMImportFailure unless id
+
+          # Import completed successfully. Continue the chain
           @app.call(env)
         end
 
