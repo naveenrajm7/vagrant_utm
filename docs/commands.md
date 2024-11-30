@@ -66,7 +66,7 @@ Runs any configured [provisioners](https://developer.hashicorp.com/vagrant/docs
 
 **Command: `vagrant reload [name|id]`**
 
-The equivalent of running a [halt](https://developer.hashicorp.com/vagrant/docs/cli/halt) followed by an[up](https://developer.hashicorp.com/vagrant/docs/cli/up).
+The equivalent of running a [halt](https://developer.hashicorp.com/vagrant/docs/cli/halt) followed by an [up](https://developer.hashicorp.com/vagrant/docs/cli/up).
 
 
 

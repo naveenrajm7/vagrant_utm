@@ -37,7 +37,14 @@ Check the [UTM Guide on Guest Support](https://docs.getutm.app/guest-support/gue
 By satisfying the [general guidance on creating vagrant boxes](https://developer.hashicorp.com/vagrant/docs/boxes/base) and the above [Virtual Machine](#virtual-machine) requirements you can use your VM with Vagrant UTM plugin.
 
 Apart from manually building the boxes, you can also use the semi-automated way of building these boxes using [packer plugin for UTM](https://github.com/naveenrajm7/packer-plugin-utm).
-The packer plugin has a builder and a post processor, which uses an existing UTM file, adds Vagrant specific stuff and packs the UTM file as a zip so it can be used by UTM Vagrant plugin.
+The packer plugin has the following components:
+1. Builder
+  1. UTM - Use existing utm file 
+  2. ISO - Start from scratch using ISO files
+2. Post-processor
+  1. ZIP - Package UTM VM into zip file
+  2. Vagrant - Package UTM VM into vagrant box.
+
 
 Checkout [UTM Box Guide](https://github.com/naveenrajm7/utm-box/blob/main/HowToBuild/DebianUTM.md) to know how to build Box using packer.
 
@@ -52,9 +59,8 @@ Do you have your own UTM VM that you would like to use with Vagrant
     c. Tar the folder with .box extension
 
 2. Import the vagrant box 
-
-```
-vagrant box add --name custom/debian debian.box
+```bash
+vagrant box add --name custom/debian debian.box  
 ```
 
 3. Use in Vagrantfile
@@ -63,3 +69,5 @@ Vagrant.configure("2") do |config|
   config.vm.box = "custom/debian11"
 end
 ```
+
+You can also use [packer plugin for UTM](https://github.com/naveenrajm7/packer-plugin-utm) to build, package and publish your UTM VMs to HCP Vagrant registry and share it your teams or with the world.

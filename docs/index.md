@@ -18,10 +18,16 @@ allowing Vagrant to control and provision machines via UTM's API.
 
 ---
 
-[UTM] is a free, full featured system emulator and virtual machine host for iOS and macOS.
-The UTM provider currently supports UTM versions 4.5.x (except 4.5.0).
+{: .new}
+> UTM Vagrant plugin now supports [Vagrant boxes](https://developer.hashicorp.com/vagrant/docs/boxes)!   
+> Find UTM boxes at [HCP Vagrant registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm). 
 
-[Vagrant] enables the creation and configuration of lightweight, reproducible, and portable development environments using Vagrantfile. The UTM provider plugin works with Vagrant version 2.4.1 .
+[UTM] is a free, full-featured system emulator and virtual machine host for iOS and macOS.  
+The UTM provider currently supports UTM versions 
+* 4.6.x   
+* 4.5.x (Obsolete, use plugin version 0.0.1)  
+
+[Vagrant] enables the creation and configuration of lightweight, reproducible, and portable development environments using Vagrantfile. The UTM provider plugin works with Vagrant version 2.4.1.
 
 
 Both UTM and Vagrant must be installed prior to using this plugin.
@@ -50,7 +56,7 @@ vagrant plugin install vagrant_utm
 ### Use
 
 #### Step 1
-Option 1: Create a Vagrantfile and initiate the box
+Option 1: Create a Vagrantfile and initiate the box (OR)
 
 ```
 vagrant init utm/debian11
