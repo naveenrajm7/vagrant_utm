@@ -15,9 +15,7 @@ vagrant plugin install vagrant_utm
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.provider :utm do |utm|
-    utm.utm_file_url = "https://github.com/naveenrajm7/utm-box/releases/download/debian-11/debian_vagrant_utm.zip"
-  end
+  config.vm.box = "utm/debian11"
 end
 ```
 

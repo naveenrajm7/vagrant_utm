@@ -27,5 +27,4 @@ But, if we need to exchange complex data like json from UTM to plugin we use Jav
 All interactions with UTM should be possible with `utmctl` or `osascript`. But, due to the unavailablity of certain commands or features, we work around the issue by using direct shell command.  
 For Example:
 
-* Import `open -g utm://downloadVM?url=...` 
 * Snapshot `qemu-img snapshot ...`

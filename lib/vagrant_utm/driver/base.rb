@@ -100,11 +100,10 @@ module VagrantPlugins
         # @return [ListResult] The list of machines.
         def list; end
 
-        # Execute the 'utm://downloadVM?url='
-        # See https://docs.getutm.app/advanced/remote-control/
-        # @param utm_file_url [String] The url to the UTM file.
+        # Import a virtual machine from a UTM file.
+        # @param utm_file [String] The url to the UTM file.
         # @return [uuid] The UUID of the imported machine.
-        def import(utm_file_url); end
+        def import(utm_file); end
 
         # Sets the name of the virtual machine.
         # @param name [String] The new name of the machine.

@@ -1,6 +1,7 @@
 en:
   vagrant_utm:
     config:
+      # Deprecated Configuration field
       utm_file_url_required: |-
         Configuration must specify utm.file_url.
         UTM file URL is required to import the UTM virtual machine. 

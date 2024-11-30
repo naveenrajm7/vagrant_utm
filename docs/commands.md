@@ -9,7 +9,7 @@ nav_order: 2
 
 This page lists all the supported Vagrant commands which depend on the  UTM provider. Eg. `up`, `suspend`, `resume`, `halt`.
 
-Adds note to the command which are not yet available. Eg. `package`.
+Adds note to the command which are have some limitations. Eg. `snapshot`.
 
 The Vagrant commands that do not depend on provider are not listed and will continue to work. Eg. `global-status`
 
@@ -26,9 +26,7 @@ The Vagrant commands that do not depend on provider are not listed and will cont
 
 **Command: `vagrant box`**
 
-UTM provider uses .utm file as VM bundle .
-
-Box support is not yet available.
+UTM provider uses .utm file as VM bundle and supports box operations. 
 
 ## **Destroy**
 
@@ -46,9 +44,7 @@ Box support is not yet available.
 
 **Command: `vagrant package [name|id]`**
 
-Currently prompts to manually export (Share) the VM
-
-
+UTM 'Share' / export
 
 ## **Port**
 

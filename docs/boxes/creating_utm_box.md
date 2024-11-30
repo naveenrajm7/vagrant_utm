@@ -8,15 +8,6 @@ nav_order: 2
 
 As with [every Vagrant Provider](https://developer.hashicorp.com/vagrant/docs/providers/basic_usage), the Vagrant UTM provider has a custom box format that is required to work with Vagrant and the UTM plugin.
 
-{: .important }
-The UTM bundle (.utm file) is the box format for Vagrant UTM provider. 
-Because the current UTM API does not support importing utm file, we do not use vagrant box format (.box file).
-We currently use `utm://downloadVM?url=` to import VM to UTM.
-
-
-{: .note }
-However, once UTM supports import, we should be able to package UTM files into box format and use the benefits of Vagrant boxes . For example, downloading the box once to spin up multiple VMs and using vagrant cloud to publish custom UTM boxes.
-
 
 {: .warning } 
 This is a reasonably advanced topic that a beginning user of Vagrant does not need to understand. If you are just getting started with Vagrant, skip this and use an [available box](/utm_box_gallery.md). If you are an experienced user of Vagrant and want to create your own custom boxes, this is for you.
@@ -50,21 +41,25 @@ The packer plugin has a builder and a post processor, which uses an existing UTM
 
 Checkout [UTM Box Guide](https://github.com/naveenrajm7/utm-box/blob/main/HowToBuild/DebianUTM.md) to know how to build Box using packer.
 
-## Using your own UTM boxes
+## Using your own UTM VMs
 
-Due to the limitation of UTM API, the plugin can only take a url pointing to the zip file.
-So, you can use a local python server to host your UTM bundle in zip file
+Do you have your own UTM VM that you would like to use with Vagrant 
 
-```bash
-python3 -m http.server                                                                            
-Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+1. Convert your utm file to box format
+
+    a. Make a directory  
+    b. Put utm vm file in it  
+    c. Tar the folder with .box extension
+
+2. Import the vagrant box 
+
+```
+vagrant box add --name custom/debian debian.box
 ```
 
-Use in Vagrantfile
+3. Use in Vagrantfile
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.provider :utm do |utm|
-    utm.utm_file_url = "http://localhost:8000/debian_vagrant_utm.zip"
-  end
+  config.vm.box = "custom/debian11"
 end
 ```
