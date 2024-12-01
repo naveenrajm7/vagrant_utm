@@ -33,9 +33,16 @@ This is a reasonably advanced topic that a beginning user of Vagrant does not ne
 
 The virtual machine created in UTM can use any configuration you would like, but Vagrant has some hard requirements:
 
-* The second network interface (adapter 1 or index 1) must be a `Emulated VLAN` adapter. Vagrant uses this to connect the first time.
+* The first network interface (adapter 1 or index 0) must be `Shared Network`, which is recommended for new virtual machines. 
 
-* Use can use the first network interface (adapter 0 or index 0) to be `Shared Network`, which is recommended for new virtual machines. 
+We use 'Shared Network' as a NAT equivalent in Vagrant.
+
+* The second network interface (adapter 2 or index 1) must be a `Emulated VLAN` adapter. Vagrant uses this to connect the first time via forwarded ports.
+
+We use 'Emulated VLAN' to achieve port forwarding.
+
+
+
 
 Other than the above, you are free to customize the base virtual machine as you see fit.
 
