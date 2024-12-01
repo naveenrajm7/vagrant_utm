@@ -86,9 +86,10 @@ module VagrantPlugins
         # @return [Array]
         def read_used_ports(active_only: true); end
 
-        # Returns the IP address of the guest machine.
+        # Returns the  IP addresses of the guest machine.
+        # Only supported for VMs with qemu-guest-agent installed.
         #
-        # @return [String] The IP address of the guest machine.
+        # @return [Array<String>] The IP addresses of the guest machine.
         def read_guest_ip; end
 
         # Returns a list of network interfaces of the VM.

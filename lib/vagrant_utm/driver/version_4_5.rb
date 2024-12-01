@@ -174,9 +174,8 @@ module VagrantPlugins
         end
 
         def read_guest_ip
-          command = ["read_guest_ip.applescript", @uuid]
-          output = execute_osa_script(command)
-          output.strip
+          output = execute("ip-address", @uuid)
+          output.strip.split("\n")
         end
 
         def read_network_interfaces
