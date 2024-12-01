@@ -21,11 +21,6 @@ module VagrantPlugins
       DESCRIPTION
 
       # Register the provider
-      # TODO: Define box format for UTM
-      # IDEA: UTM file comes as a zip file containing
-      # directory with Data/qcow2, Data/efi_vars.fd and config.plist
-      # Box format will only require additional metadata.json file
-      # Till then use UTM file directly and so box_optional: true
       provider(:utm, box_optional: true, parallel: false) do
         setup_i18n
         require_relative "provider"

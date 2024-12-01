@@ -8,6 +8,23 @@ nav_order: 2
 
 As with [every Vagrant Provider](https://developer.hashicorp.com/vagrant/docs/providers/basic_usage), the Vagrant UTM provider has a custom box format that is required to work with Vagrant and the UTM plugin.
 
+## UTM Vagrant box format
+
+UTM file (in macOS) is a directory containing Data/qcow2 (s), Data/efi_vars.fd and config.plist.
+Vagrant Box format will require additional metadata.json file. 
+
+Vagrant .box is a tar file
+
+The contents of a `utm/ubuntu-24.04` vagrant box.
+```bash
+$tar -tf ubuntu-24.04.box 
+Vagrantfile
+box.utm/Data/7FB247A3-DC9F-4A61-A123-0AEE1BEEC636.qcow2
+box.utm/Data/efi_vars.fd
+box.utm/config.plist
+box.utm/screenshot.png
+metadata.json
+```
 
 {: .warning } 
 This is a reasonably advanced topic that a beginning user of Vagrant does not need to understand. If you are just getting started with Vagrant, skip this and use an [available box](/utm_box_gallery.md). If you are an experienced user of Vagrant and want to create your own custom boxes, this is for you.
