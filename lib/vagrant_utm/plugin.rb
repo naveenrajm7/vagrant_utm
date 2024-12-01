@@ -21,7 +21,7 @@ module VagrantPlugins
       DESCRIPTION
 
       # Register the provider
-      provider(:utm, box_optional: true, parallel: false) do
+      provider(:utm, box_optional: false, parallel: false) do
         setup_i18n
         require_relative "provider"
         Provider
