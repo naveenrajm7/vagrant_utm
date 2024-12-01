@@ -47,15 +47,15 @@ module VagrantPlugins
       # Register the command
       ## Start machine as a snapshot and do not save changes to disk
       command "disposable" do
-        require_relative "disposable"
-        Disposable
+        require_relative "commands/disposable"
+        CommandDisposable
       end
 
       ## Get the IP address of the machine
       ## Only supported if machine as qemu-guest-additions
       command "ip-address" do
-        require_relative "ip_address"
-        IpAddress
+        require_relative "commands/ip_address"
+        CommandIpAddress
       end
 
       # Load the translation files
