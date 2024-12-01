@@ -149,7 +149,7 @@ module VagrantPlugins
           b.use ConfigValidate
           b.use Call, IsRunning do |env1, b2|
             unless env1[:result]
-              b3.use MessageNotRunning
+              b2.use MessageNotRunning
               next
             end
             # If the VM is running, then get the IP address.
