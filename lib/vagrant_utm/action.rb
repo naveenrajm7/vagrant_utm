@@ -375,6 +375,8 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use ConfigValidate
+          b.use CheckCreated
+
           b.use Call, IsRunning do |env1, b2|
             if env1[:result]
               b2.use MessageAlreadyRunning
