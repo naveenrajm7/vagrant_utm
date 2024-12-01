@@ -29,6 +29,7 @@ module VagrantPlugins
       autoload :IsPaused, action_root.join("is_paused")
       autoload :IsRunning, action_root.join("is_running")
       autoload :IsStopped, action_root.join("is_stopped")
+      autoload :MatchMACAddress, action_root.join("match_mac_address")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :MessageNotRunning, action_root.join("message_not_running")
@@ -425,6 +426,7 @@ module VagrantPlugins
               b2.use Customize, "pre-import"
 
               b2.use Import
+              b2.use MatchMACAddress
             end
           end
 

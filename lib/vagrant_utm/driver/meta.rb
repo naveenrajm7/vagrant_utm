@@ -106,6 +106,7 @@ module VagrantPlugins
                        :read_state,
                        :read_used_ports,
                        :restore_snapshot,
+                       :set_mac_address,
                        :set_name,
                        :ssh_port,
                        :start,

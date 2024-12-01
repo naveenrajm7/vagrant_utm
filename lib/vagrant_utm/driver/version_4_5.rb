@@ -194,6 +194,14 @@ module VagrantPlugins
           nics
         end
 
+        def set_mac_address(mac) # rubocop:disable Naming/AccessorMethodName
+          # Set the MAC address of the first NIC (index 0)
+          # Set MAC address to given value or randomize it if nil
+          mac = random_mac_address if mac.nil?
+          command = ["set_mac_address.applescript", @uuid, "0", mac]
+          execute_osa_script(command)
+        end
+
         def ssh_port(expected_port)
           @logger.debug("Searching for SSH port: #{expected_port.inspect}")
 

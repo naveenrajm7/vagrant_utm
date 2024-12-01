@@ -5,7 +5,8 @@ on run argv
         set config to configuration of vm
         set networkInterfaces to network interfaces of config
         repeat with anInterface in networkInterfaces
-            # if you start log with variable you'll get "," at the end of the log if '&' is used to concatenate
+            # if you start log with variable you'll get "," at the end of the log so '&' is used to concatenate
+            # Example output: nic0,shared
             log "nic" & index of anInterface & "," & mode of anInterface 
         end repeat
     end tell
