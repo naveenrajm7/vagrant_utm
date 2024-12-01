@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_context "utm" do
+shared_context "utm" do # rubocop:disable Metrics/BlockLength
   include_context "unit"
 
   let(:utm_context) { true }
