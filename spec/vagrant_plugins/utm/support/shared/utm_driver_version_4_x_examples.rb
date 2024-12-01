@@ -8,14 +8,15 @@ RSpec.shared_examples "a version 4.x utm driver" do |_options|
   describe "read_guest_ip" do
     it "reads the guest IP" do
       expect(subprocess).to receive(:execute)
-        .with("osascript",
-              File.join(script_path, "read_guest_ip.applescript"),
-              uuid, an_instance_of(Hash))
-        .and_return(subprocess_result(stdout: "192.168.69.1"))
+        .with(utmctl_path,
+              "ip-address",
+              uuid,
+              an_instance_of(Hash))
+        .and_return(subprocess_result(stdout: "192.168.69.1\n10.0.2.15\n"))
 
       value = subject.read_guest_ip
 
-      expect(value).to eq("192.168.69.1")
+      expect(value).to eq(["192.168.69.1", "10.0.2.15"])
     end
   end
 end
