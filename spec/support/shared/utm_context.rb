@@ -39,5 +39,7 @@ shared_context "utm" do # rubocop:disable Metrics/BlockLength
 
     allow(Vagrant::Util::Which).to receive(:which).and_call_original
     allow(Vagrant::Util::Which).to receive(:which).with("locale").and_return(false)
+    # Drivers will try to find the utmctl binary in the system
+    allow(Vagrant::Util::Which).to receive(:which).with("utmctl").and_return("/usr/local/bin/utmctl")
   end
 end
