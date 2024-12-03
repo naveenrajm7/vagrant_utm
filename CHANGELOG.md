@@ -1,6 +1,6 @@
 ## [Unreleased] - 
 
-IMPORTANT: This version of the plugin only works with UTM version 4.5.1 and above
+IMPORTANT: This version of the plugin only works with UTM version 4.5.1 and above, and is incompatible with 0.0.1 version of the plugin.
 
 ### Added
 
