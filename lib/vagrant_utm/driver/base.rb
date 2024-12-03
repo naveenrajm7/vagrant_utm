@@ -86,15 +86,21 @@ module VagrantPlugins
         # @return [Array]
         def read_used_ports(active_only: true); end
 
-        # Returns the IP address of the guest machine.
+        # Returns the  IP addresses of the guest machine.
+        # Only supported for VMs with qemu-guest-agent installed.
         #
-        # @return [String] The IP address of the guest machine.
+        # @return [Array<String>] The IP addresses of the guest machine.
         def read_guest_ip; end
 
         # Returns a list of network interfaces of the VM.
         #
         # @return [Hash]
         def read_network_interfaces; end
+
+        # Sets the MAC address of the first network adapter.
+        #
+        # @param [String] mac MAC address without any spaces/hyphens.
+        def set_mac_address(mac); end # rubocop:disable Naming/AccessorMethodName
 
         # Execute the 'list' command and returns the list of machines.
         # @return [ListResult] The list of machines.
@@ -141,6 +147,21 @@ module VagrantPlugins
         #
         # This should raise a VagrantError if things are not ready.
         def verify!; end
+
+        # Generate a random MAC address.
+        #
+        # This method generates a random MAC address because it is difficult
+        # to get UTM to generate one through scripting.
+        #
+        # @return [String] The MAC address.
+        def random_mac_address
+          # Generate 6 random bytes
+          bytes = Array.new(6) { rand(256) }
+          # Ensure the first byte is local
+          bytes[0] = (bytes[0] & 0xFC) | 0x02
+          # Convert bytes to MAC address string
+          bytes.map { |byte| format("%02X", byte) }.join(":")
+        end
 
         # Execute a script using the OSA interface.
         def execute_osa_script(command); end

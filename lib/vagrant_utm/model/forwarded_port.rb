@@ -57,7 +57,9 @@ module VagrantPlugins
           options ||= {}
           @auto_correct = false
           @auto_correct = options[:auto_correct] if options.key?(:auto_correct)
-          @adapter  = (options[:adapter] || 1).to_i # if adapter is not set, use 1. index 0 is the default adapter
+          # if adapter is not set, use index 1 (Emulated VLAN).
+          # index 0 is the default adapter (Shared Network)
+          @adapter  = (options[:adapter] || 1).to_i
           @guest_ip = options[:guest_ip] || nil
           @host_ip = options[:host_ip] || nil
           @protocol = options[:protocol] || "tcp" # default to TCP

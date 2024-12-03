@@ -94,6 +94,8 @@ module VagrantPlugins
         # If we have multiple network adapters, we need to pick the right one, read_guest_ip returns just first IP
         # Also, since Vagrant by default adds port forwarding for ssh port 22,
         # we might aswell use the forwarded ports to connect to the VM using the localhost.
+        # and the forwarded port.
+        # So we use 127.0.0.1 and the forwarded port to connect to the VM.
         {
           host: "127.0.0.1",
           port: @driver.ssh_port(@machine.config.ssh.guest_port)
@@ -124,7 +126,6 @@ module VagrantPlugins
         Vagrant::MachineState.new(state_id, short, long)
       end
 
-      # TODO: Get UUID of the VM from UTM
       # Returns a human-friendly string version of this provider which
       # includes the machine's ID that this provider represents, if it
       # has one.

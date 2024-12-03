@@ -21,12 +21,7 @@ module VagrantPlugins
       DESCRIPTION
 
       # Register the provider
-      # TODO: Define box format for UTM
-      # IDEA: UTM file comes as a zip file containing
-      # directory with Data/qcow2, Data/efi_vars.fd and config.plist
-      # Box format will only require additional metadata.json file
-      # Till then use UTM file directly and so box_optional: true
-      provider(:utm, box_optional: true, parallel: false) do
+      provider(:utm, box_optional: false, parallel: false) do
         setup_i18n
         require_relative "provider"
         Provider
@@ -50,9 +45,17 @@ module VagrantPlugins
       end
 
       # Register the command
+      ## Start machine as a snapshot and do not save changes to disk
       command "disposable" do
-        require_relative "disposable"
-        Disposable
+        require_relative "commands/disposable"
+        CommandDisposable
+      end
+
+      ## Get the IP address of the machine
+      ## Only supported if machine as qemu-guest-additions
+      command "ip-address" do
+        require_relative "commands/ip_address"
+        CommandIpAddress
       end
 
       # Load the translation files

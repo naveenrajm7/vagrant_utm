@@ -141,6 +141,14 @@ Import VM (if not created)
 
 These are the commands not available in vagrant but specific to UTM provider.
 
+## IP Address
+
+**Command: `vagrant ip-address [name|id]`**
+
+`utmctl ip-address`
+
+List all IP addresses associated with network interfaces on the guest.
+
 ## Disposable
 
 **Command: `vagrant disposable [name|id]`**

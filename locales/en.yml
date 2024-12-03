@@ -149,7 +149,15 @@ en:
             WARNING: The UTM virtual machine is booting in disposable mode. 
             Changes made to the VM will be lost when the VM is powered off.
             Learn more at https://docs.getutm.app/advanced/disposable/
+        ip_address:
+          reading: |-
+            Getting IP address of UTM virtual machine...
+          show: |-
+            Guest IP address(es):
+          not_found: |-
+            IP address not found. The VM may not have guest tools or may not have an IP address.
         snapshot:
           list: |-
             Listing snapshots for UTM virtual machine...
+        
             

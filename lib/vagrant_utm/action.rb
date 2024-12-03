@@ -25,9 +25,11 @@ module VagrantPlugins
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :ForwardPorts, action_root.join("forward_ports")
       autoload :Import, action_root.join("import")
+      autoload :IpAddress, action_root.join("ip_address")
       autoload :IsPaused, action_root.join("is_paused")
       autoload :IsRunning, action_root.join("is_running")
       autoload :IsStopped, action_root.join("is_stopped")
+      autoload :MatchMACAddress, action_root.join("match_mac_address")
       autoload :MessageAlreadyRunning, action_root.join("message_already_running")
       autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :MessageNotRunning, action_root.join("message_not_running")
@@ -136,6 +138,23 @@ module VagrantPlugins
             else
               b2.use MessageNotCreated
             end
+          end
+        end
+      end
+
+      # This action returns ip address of the machine.
+      # UTM equivalent of `utmctl ip-address <uuid>`
+      def self.action_ip_address
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckUtm
+          b.use ConfigValidate
+          b.use Call, IsRunning do |env1, b2|
+            unless env1[:result]
+              b2.use MessageNotRunning
+              next
+            end
+            # If the VM is running, then get the IP address.
+            b2.use IpAddress
           end
         end
       end
@@ -351,12 +370,14 @@ module VagrantPlugins
         end
       end
 
-      # This action start VM in disposable mode.
+      # This action starts VM in disposable mode.
       # UTM equivalent of `utmctl start <uuid> --disposable`
       def self.action_start_disposable
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use ConfigValidate
+          b.use CheckCreated
+
           b.use Call, IsRunning do |env1, b2|
             if env1[:result]
               b2.use MessageAlreadyRunning
@@ -405,6 +426,7 @@ module VagrantPlugins
               b2.use Customize, "pre-import"
 
               b2.use Import
+              b2.use MatchMACAddress
             end
           end
 
