@@ -40,6 +40,8 @@ module VagrantPlugins
       autoload :PackageSetupFiles, action_root.join("package_setup_files")
       autoload :PackageSetupFolders, action_root.join("package_setup_folders")
       autoload :PackageVagrantfile, action_root.join("package_vagrantfile")
+      autoload :PrepareNFSSettings, action_root.join("prepare_nfs_settings")
+      autoload :PrepareNFSValidIds, action_root.join("prepare_nfs_valid_ids")
       autoload :PrepareForwardedPortCollisionParams, action_root.join("prepare_forwarded_port_collision_params")
       autoload :Resume, action_root.join("resume")
       autoload :SetId, action_root.join("set_id")
@@ -66,6 +68,10 @@ module VagrantPlugins
           b.use EnvSet, port_collision_repair: true
           b.use PrepareForwardedPortCollisionParams
           b.use HandleForwardedPortCollisions
+          b.use PrepareNFSValidIds
+          b.use SyncedFolderCleanup
+          b.use SyncedFolders
+          b.use PrepareNFSSettings
           b.use ForwardPorts
           b.use SetHostname
           b.use Customize, "pre-boot"
@@ -90,7 +96,7 @@ module VagrantPlugins
       # This is the action that is primarily responsible for completely
       # freeing the resources of the underlying virtual machine.
       # UTM equivalent of `utmctl delete <uuid>`
-      def self.action_destroy
+      def self.action_destroy # rubocop:disable Metrics/AbcSize
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use Call, Created do |env1, b2|
@@ -106,6 +112,8 @@ module VagrantPlugins
                 b3.use CheckAccessible
                 b3.use action_halt
                 b3.use Destroy
+                b3.use PrepareNFSValidIds
+                b3.use SyncedFolderCleanup
               else
                 b3.use MessageWillNotDestroy
               end
@@ -160,7 +168,7 @@ module VagrantPlugins
       end
 
       # This action packages the virtual machine into a single box file.
-      def self.action_package
+      def self.action_package # rubocop:disable Metrics/AbcSize
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
           b.use Call, Created do |env, b2|
@@ -174,6 +182,8 @@ module VagrantPlugins
             b2.use CheckAccessible
             b2.use action_halt
             b2.use ClearForwardedPorts
+            b2.use PrepareNFSValidIds
+            b2.use SyncedFolderCleanup
             b2.use Package
             b2.use Export
             b2.use PackageVagrantfile
@@ -402,6 +412,16 @@ module VagrantPlugins
               b2.use MessageNotCreated
             end
           end
+        end
+      end
+
+      # This is the action that is called to sync folders to a running
+      # machine without a reboot.
+      def self.action_sync_folders
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use PrepareNFSValidIds
+          b.use SyncedFolders
+          b.use PrepareNFSSettings
         end
       end
 
