@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+
+## [0.1.2.beta] - 2024-12-05
+
 WARNING: This version of the plugin adds initial synced folder support. By default, Vagrant will pick the directory share method which it supports and prefers. e.g., SMB. However, SMB is not fully tested, so you need to force the plugin to pick the one that is simple and tested `rsync`
 
 ```ruby
