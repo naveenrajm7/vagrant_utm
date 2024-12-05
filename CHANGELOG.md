@@ -1,3 +1,19 @@
+## [Unreleased]
+
+WARNING: This version of the plugin adds initial synced folder support. By default, Vagrant will pick the directory share method which it supports and prefers. e.g., SMB. However, SMB is not fully tested, so you need to force the plugin to pick the one that is simple and tested `rsync`
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder ".", "/vagrant", type: "rsync"
+  config.vm.box = "utm/ubuntu-24.04"
+end
+```
+
+### Added
+
+- Initial Synced Folder support with sync
+- Warning: By default vagrant brings other sync methods eg: SMB, NFS but they are not ready to use.
+
 ## [0.1.1] - 2024-12-03 
 
 IMPORTANT: This version of the plugin only works with UTM version 4.5.1 and above, and is incompatible with 0.0.1 version of the plugin.
