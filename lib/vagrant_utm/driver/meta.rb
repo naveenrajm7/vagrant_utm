@@ -104,6 +104,7 @@ module VagrantPlugins
                        :read_network_interfaces,
                        :read_state,
                        :read_used_ports,
+                       :read_vms,
                        :restore_snapshot,
                        :set_mac_address,
                        :set_name,

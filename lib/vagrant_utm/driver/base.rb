@@ -86,6 +86,12 @@ module VagrantPlugins
         # @return [Array]
         def read_used_ports(active_only: true); end
 
+        # Returns a list of all UUIDs of virtual machines currently
+        # known by UTM.
+        #
+        # @return [Array<String>]
+        def read_vms; end
+
         # Returns the  IP addresses of the guest machine.
         # Only supported for VMs with qemu-guest-agent installed.
         #

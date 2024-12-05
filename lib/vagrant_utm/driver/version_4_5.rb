@@ -239,6 +239,16 @@ module VagrantPlugins
           ports
         end
 
+        def read_vms
+          results = {}
+          list.machines.each do |machine|
+            # Store UUID (Unique) as key and name as value
+            results[machine.uuid] = machine.name
+          end
+
+          results
+        end
+
         def set_name(name) # rubocop:disable Naming/AccessorMethodName
           command = ["customize_vm.applescript", @uuid, "--name", name.to_s]
           execute_osa_script(command)
