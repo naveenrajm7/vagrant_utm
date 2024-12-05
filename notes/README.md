@@ -28,3 +28,8 @@ GitHub action upon tag push with "v*" will publish gem to GHR and rubygems
 5. Cancel push to rubygems.org 
 
 GHA will publish gems to GHR and rubygems
+
+
+To update specific gems in the project
+
+`bundle update rubocop`
