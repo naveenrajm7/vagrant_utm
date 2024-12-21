@@ -59,14 +59,14 @@ vagrant plugin install vagrant_utm
 Option 1: Create a Vagrantfile and initiate the box (OR)
 
 ```
-vagrant init utm/debian11
+vagrant init utm/bookworm
 ```
 
 Option 2: Open the Vagrantfile and replace the contents with the following
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "utm/debian11"
+  config.vm.box = "utm/bookworm"
 end
 ```
 
@@ -81,9 +81,9 @@ Now start using your machine!
 
 `vagrant ssh` to log into machine or forward ports to check your website or share folders and start developing.
 
-Check [Commands](commands.md) for all supported Vagrant commands.
-Check [Configuration](configuration.md) for more UTM provider config options.
-
+Check [Commands](commands.md) for all supported Vagrant commands.  
+Check [Configuration](configuration.md) for more UTM provider config options.  
+Discover UTM Vagrant boxes at [HCP Vagrant UTM Registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm), which as boxes of popular OS including OpenBSD!  
 
 ## About the project
 

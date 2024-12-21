@@ -10,22 +10,27 @@ nav_order: 1
 To work with Vagrant, a base VM (box) must have 
 [certain features](https://developer.hashicorp.com/vagrant/docs/boxes/base), like an ssh user for vagrant to connect.
 
-To help you get started with Vagrant UTM provider, a couple of pre-built VMs that work with Vagrant and are published in [HCP Vagrant registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm).
+To help you get started with Vagrant UTM provider, some pre-built VMs that work with Vagrant are published in [HCP Vagrant registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm).
 
 {: .important}
-All the VMs provided are built from [UTM Gallery VMs](https://mac.getutm.app/gallery/) or ISO in an (semi) automated way using [packer plugin for UTM][packer plugin for UTM]. Please see the [UTM Box Guide][UTM Box Guide] on how these UTM Vagrant boxes were built using packer.
+All the VMs provided are built from Cloud Images or ISO files in an (semi) automated way using [packer plugin for UTM][packer plugin for UTM]. Please see the [UTM Box Guide][UTM Box Guide] on how these UTM Vagrant boxes were built using packer.
 
-* Debian 11 (Xfce):   
+* Debian 12 - Built from cloud image:   
+```ruby
+config.vm.box = "utm/bookworm"
+```
+
+* Debian 11 (Xfce) - Built from UTM file of UTM gallery:   
 ```ruby
 config.vm.box = "utm/debian11"
 ```
 
-* Ubuntu 24.04 :
+* Ubuntu 24.04 - Built from ISO:
 ```ruby
 config.vm.box = "utm/ubuntu-24.04"
 ```
 
-* Help build more boxes using [packer plugin for UTM][packer plugin for UTM]
+* Build your own boxes using [packer plugin for UTM][packer plugin for UTM]
 <!-- * ArchLinux ARM -->
 
 
