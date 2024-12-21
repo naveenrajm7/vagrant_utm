@@ -36,6 +36,24 @@ module VagrantPlugins
           command = ["export_vm.applescript", @uuid, path]
           execute_osa_script(command)
         end
+
+        def share_folders(folders)
+          folders.each do |folder|
+            args = ["--args",
+                    ""]
+            command = ["add_qemu_additional_args.applescript", @uuid, *args]
+            execute_osa_script(command)
+          end
+        end
+
+        def unshare_folders(folders)
+          folders.each do |folder|
+            args = ["--args",
+                    ""]
+            command = ["remove_qemu_additional_args.applescript", @uuid, *args]
+            execute_osa_script(command)
+          end
+        end
       end
     end
   end
