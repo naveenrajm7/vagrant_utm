@@ -15,7 +15,7 @@ vagrant plugin install vagrant_utm
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "utm/debian11"
+  config.vm.box = "utm/bookworm"
 end
 ```
 
