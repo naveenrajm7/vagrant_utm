@@ -2,14 +2,14 @@
 -- directory_share_add.applescript
 -- This script adds QEMU arguments for directory sharing in UTM (QEMU) for given id and directory pairs.
 -- Usage: osascript directory_share_add.applescript --id <ID1> --dir <DIR1> --id <ID2> --dir <DIR2> ...
--- Example: osascript directory_share_add.applescript --id 1 --dir "/path/to/dir1" --id 2 --dir "/path/to/dir2"
+-- Example: osascript directory_share_add.applescript --id no1 --dir "/path/to/dir1" --id no2 --dir "/path/to/dir2"
 
 -- Function to create QEMU arguments for directory sharing
 on createQemuArgsForDir(dirId, dirPath)
 
     -- Prepare the QEMU argument strings
-    set fsdevArgStr to "-fsdev local,id=virtfs" & dirId & ",path=" & dirPath & ",security_model=mapped-xattr" 
-    set deviceArgStr to "-device virtio-9p-pci,fsdev=virtfs" & dirId & ",mount_tag=share" & dirId
+    set fsdevArgStr to "-fsdev local,id=" & dirId & ",path=" & dirPath & ",security_model=mapped-xattr" 
+    set deviceArgStr to "-device virtio-9p-pci,fsdev=" & dirId & ",mount_tag=" & dirId
 
     return {fsdevArgStr, deviceArgStr}
 end createQemuArgsForDir
@@ -68,7 +68,7 @@ on run argv
     end repeat
 
     -- Example usage in UTM
-    tell application  "/Users/naveenrajm/Library/Developer/Xcode/DerivedData/UTM-eazuxysqjkwsochfxxgoouqpkvjr/Build/Products/Debug/UTM.app"
+    tell application  "UTM"
         set vm to virtual machine id vmId
         set config to configuration of vm
 
