@@ -20,5 +20,5 @@
 # MacOS
 .DS_Store
 
-# Test Vagrantfiles
-vagrant_play/
+# Test plugin, Vagrantfile
+vagrant_test/
