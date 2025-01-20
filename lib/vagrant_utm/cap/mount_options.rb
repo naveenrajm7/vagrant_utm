@@ -3,7 +3,7 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: BUSL-1.1
 
-require_relative "../../../synced_folders/unix_mount_helpers"
+require_relative "../util/unix_mount_helpers"
 
 module VagrantPlugins
   module Utm
