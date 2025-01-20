@@ -35,3 +35,14 @@ GHA will publish gems to GHR and rubygems
 To update specific gems in the project
 
 `bundle update rubocop`
+
+To update all gems
+
+`bundle update`
+
+To update project after a version bump 
+
+```
+Unable to resolve dependency: user requested 'vagrant_utm (= 0.1.1)'
+```
+Try changing the version number again
