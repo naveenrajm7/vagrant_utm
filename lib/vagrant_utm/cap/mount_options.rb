@@ -30,7 +30,7 @@ module VagrantPlugins
           # VirtFS mount options
           mount_options << "trans=virtio"
           mount_options << "version=9p2000.L"
-          mount_options << if mount_opiotns.include?("ro")
+          mount_options << if mount_options.include?("ro")
                              "ro"
                            else
                              "rw"
