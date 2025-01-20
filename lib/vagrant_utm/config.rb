@@ -85,6 +85,8 @@ module VagrantPlugins
         customize("pre-boot", ["customize_vm.applescript", :id, "--notes", notes])
       end
 
+      # TODO: All warning if user sets directory_share_mode,
+      # because default implementation is 'virtFS'
       # Shortcut for setting the directory share mode of the virtual machine.
       # Calls #customize internally.
       #
@@ -110,10 +112,13 @@ module VagrantPlugins
       # This is the hook that is called to finalize the object before it
       # is put into use.
       def finalize!
+        # By default, we check for guest additions (qemu-ga)
         @check_guest_additions = true if @check_guest_additions == UNSET_VALUE
-
+        # Always set the directory share mode to 'virtFS'
+        # default share folder implementation in utm plugin
+        self.directory_share_mode = "virtFS"
+        # By default, we assume the VM supports virtio 9p filesystems
         @functional_9pfs = true if @functional_9pfs == UNSET_VALUE
-
         # The default name is just nothing, and we default it
         @name = nil if @name == UNSET_VALUE
 
