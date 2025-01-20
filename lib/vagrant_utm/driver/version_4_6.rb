@@ -39,14 +39,30 @@ module VagrantPlugins
           execute_osa_script(command)
         end
 
+        def read_shared_folders
+          @logger.debug("Reading shared folders")
+          script_path = @script_path.join("read_shared_folders.js")
+          cmd = ["osascript", script_path.to_s, @uuid]
+          output = execute_shell(*cmd)
+          result = JSON.parse(output)
+          return unless result["status"]
+
+          # Return the lits of shared folders names(id)
+          result["result"]
+        end
+
         def share_folders(folders)
-          # log the folders we are going to share
+          shared_folders = read_shared_folders
+          @logger.debug("Shared folders: #{shared_folders}")
           @logger.debug("Sharing folders: #{folders}")
 
           folders.each do |folder|
+            # Skip if the folder is already shared
+            next if shared_folders.include?(folder[:name])
+
             args = ["--id", folder[:name],
                     "--dir", folder[:hostpath]]
-            command = ["add_directory_share.applescript", @uuid, *args]
+            command = ["add_folder_share.applescript", @uuid, *args]
             execute_osa_script(command)
           end
         end

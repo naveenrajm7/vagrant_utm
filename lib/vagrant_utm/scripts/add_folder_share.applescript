@@ -77,7 +77,7 @@ on run argv
 
         -- Add the new arguments to the existing ones
         repeat with arg in qemuNewArgs
-            set end of qemuAddArgs to {argument string:fsdevArg of arg, file urls:{dirURL of arg}}
+            set end of qemuAddArgs to {argument string:fsdevArg of arg}
             set end of qemuAddArgs to {argument string:deviceArg of arg}
         end repeat
 
@@ -85,11 +85,11 @@ on run argv
         set qemu additional arguments of config to qemuAddArgs
         update configuration of vm with config
 
-        -- Get the current directory shares in registry
-        set reg to registry of vm
-        -- Add new directory shares to the registry
-        set reg to reg & directoryList
-        -- Update registry of vm with new directory shares
-        update registry of vm with reg
+        -- -- Get the current directory shares in registry
+        -- set reg to registry of vm
+        -- -- Add new directory shares to the registry
+        -- set reg to reg & directoryList
+        -- -- Update registry of vm with new directory shares
+        -- update registry of vm with reg
     end tell
 end run
