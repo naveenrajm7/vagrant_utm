@@ -6,13 +6,12 @@ module VagrantPlugins
     class SyncedFolder < Vagrant.plugin("2", :synced_folder)
       def usable?(machine, _raise_errors = false) # rubocop:disable Style/OptionalBooleanParameter
         # These synced folders only work if the provider is UTM
-        if machine.provider_name != :utm
-          raise Errors::SyncedFolderNonUtm, provider: machine.provider_name.to_s if raise_errors
+        return false if machine.provider_name != :utm
 
-          return false
-        end
+        # This only happens with `vagrant package --base`. Sigh.
+        return true unless machine.provider_config
 
-        true
+        machine.provider_config.functional_9pfs
       end
 
       def prepare(machine, folders, _opts)
@@ -22,7 +21,7 @@ module VagrantPlugins
       def enable(machine, folders, _opts) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
         share_folders(machine, folders)
 
-        # short guestpaths first, so we don't step on ourselves
+        # sort guestpaths first, so we don't step on ourselves
         folders = folders.sort_by do |_id, data|
           if data[:guestpath]
             data[:guestpath].length

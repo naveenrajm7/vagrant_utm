@@ -13,6 +13,8 @@ module VagrantPlugins
           @logger = Log4r::Logger.new("vagrant::provider::utm::version_4_6")
         end
 
+        def clear_shared_folders; end
+
         def import(utm)
           utm = Vagrant::Util::Platform.windows_path(utm)
 
@@ -38,9 +40,12 @@ module VagrantPlugins
         end
 
         def share_folders(folders)
+          # log the folders we are going to share
+          @logger.debug("Sharing folders: #{folders}")
+
           folders.each do |folder|
-            args = ["--args",
-                    ""]
+            args = ["--name", folder[:name],
+                    "--dir", folder[:hostpath]]
             command = ["add_qemu_additional_args.applescript", @uuid, *args]
             execute_osa_script(command)
           end
@@ -48,8 +53,7 @@ module VagrantPlugins
 
         def unshare_folders(folders)
           folders.each do |folder|
-            args = ["--args",
-                    ""]
+            args = ["--name", folder]
             command = ["remove_qemu_additional_args.applescript", @uuid, *args]
             execute_osa_script(command)
           end
