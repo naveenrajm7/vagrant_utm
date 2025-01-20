@@ -27,7 +27,7 @@ module VagrantPlugins
             mount_uid = options[:owner]
             class_variable_get(:@@logger).debug("Owner user ID (provided): #{mount_uid}")
           else
-            output = { stdout: "", stderr: "" }
+            output = { stdout: String.new, stderr: String.new } # Ensure strings are not frozen
             uid_command = "id -u #{options[:owner]}"
             machine.communicate.execute(uid_command,
                                         error_class: Vagrant::Errors::VirtualBoxMountFailed,
@@ -47,7 +47,7 @@ module VagrantPlugins
             class_variable_get(:@@logger).debug("Owner group ID (provided): #{mount_gid}")
           else
             begin
-              output = { stdout: "", stderr: "" }
+              { stdout: String.new, stderr: String.new } # Ensure strings are not frozen
               gid_command = "getent group #{options[:group]}"
               machine.communicate.execute(gid_command,
                                           error_class: Vagrant::Errors::VirtualBoxMountFailed,
@@ -59,7 +59,7 @@ module VagrantPlugins
             rescue Vagrant::Errors::VirtualBoxMountFailed
               if options[:owner] == options[:group] # rubocop:disable Metrics/BlockNesting
                 class_variable_get(:@@logger).debug("Failed to locate group `#{options[:group]}`. Group name matches owner. Fetching effective group ID.") # rubocop:disable Layout/LineLength
-                output = { stdout: "" }
+                output = { stdout: String.new }
                 result = machine.communicate.execute("id -g #{options[:owner]}",
                                                      error_check: false) do |type, data|
                   output[type] << data if output[type] # rubocop:disable Metrics/BlockNesting
