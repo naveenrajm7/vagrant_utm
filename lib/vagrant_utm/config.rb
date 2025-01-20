@@ -7,11 +7,6 @@ module VagrantPlugins
   module Utm
     # This is the configuration class for the UTM provider.
     class Config < Vagrant.plugin("2", :config)
-      # This should be set to the name of the machine in the UTM GUI.
-      #
-      # @return [String]
-      attr_accessor :name
-
       # If true, will check if guest additions are installed and up to
       # date. By default, this is true.
       #
@@ -23,6 +18,19 @@ module VagrantPlugins
       # @return [Array]
       attr_reader :customizations
 
+      # Whether or not this VM has a functional VirtFS 9P filesystem module
+      # for VirtFS directory sharing to work.
+      # This defaults to true. If you set this to false, then the "utm"
+      # synced folder type won't be valid.
+      #
+      # @return [Boolean]
+      attr_accessor :functional_9pfs
+
+      # This should be set to the name of the machine in the UTM GUI.
+      #
+      # @return [String]
+      attr_accessor :name
+
       # The time to wait for the VM to be 'running' after 'started'.
       #
       # @return [Integer]
@@ -33,6 +41,7 @@ module VagrantPlugins
         super
         @check_guest_additions = UNSET_VALUE
         @customizations = []
+        @functional_9pfs = UNSET_VALUE
         @name = UNSET_VALUE
         @wait_time = UNSET_VALUE
       end
@@ -103,6 +112,8 @@ module VagrantPlugins
       def finalize!
         @check_guest_additions = true if @check_guest_additions == UNSET_VALUE
 
+        @functional_9pfs = true if @functional_9pfs == UNSET_VALUE
+
         # The default name is just nothing, and we default it
         @name = nil if @name == UNSET_VALUE
 
@@ -126,6 +137,10 @@ module VagrantPlugins
         end
 
         { "UTM Provider" => errors }
+      end
+
+      def to_s
+        "UTM"
       end
     end
   end
