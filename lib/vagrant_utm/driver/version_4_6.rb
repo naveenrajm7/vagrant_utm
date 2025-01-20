@@ -13,6 +13,7 @@ module VagrantPlugins
           @logger = Log4r::Logger.new("vagrant::provider::utm::version_4_6")
         end
 
+        # TODO: Implement clear_shared_folders
         def clear_shared_folders; end
 
         def import(utm)
@@ -67,11 +68,10 @@ module VagrantPlugins
           end
         end
 
+        # TODO: Implement unshare_folders
         def unshare_folders(folders)
           folders.each do |folder|
-            args = ["--name", folder]
-            command = ["remove_qemu_additional_args.applescript", @uuid, *args]
-            execute_osa_script(command)
+            @logger.debug("NOT IMPLEMENTED: unshare_folders(#{folder})")
           end
         end
       end
