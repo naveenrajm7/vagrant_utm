@@ -14,13 +14,15 @@ module VagrantPlugins
         machine.provider_config.functional_9pfs
       end
 
+      # This is called before VM Boot to prepare the synced folders.
+      # Add required configs to the VM.
       def prepare(machine, folders, _opts)
         share_folders(machine, folders)
       end
 
+      # This is called after VM Boot to mount the synced folders.
+      # Mount the shared folders inside the VM.
       def enable(machine, folders, _opts) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
-        share_folders(machine, folders)
-
         # sort guestpaths first, so we don't step on ourselves
         folders = folders.sort_by do |_id, data|
           if data[:guestpath]
