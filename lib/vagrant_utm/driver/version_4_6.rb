@@ -44,9 +44,9 @@ module VagrantPlugins
           @logger.debug("Sharing folders: #{folders}")
 
           folders.each do |folder|
-            args = ["--name", folder[:name],
+            args = ["--id", folder[:name],
                     "--dir", folder[:hostpath]]
-            command = ["add_qemu_additional_args.applescript", @uuid, *args]
+            command = ["add_directory_share.applescript", @uuid, *args]
             execute_osa_script(command)
           end
         end
