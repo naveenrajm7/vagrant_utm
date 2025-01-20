@@ -1,8 +1,8 @@
 ---
--- directory_share_add.applescript
+-- add_directory_share.applescript
 -- This script adds QEMU arguments for directory sharing in UTM (QEMU) for given id and directory pairs.
--- Usage: osascript directory_share_add.applescript --id <ID1> --dir <DIR1> --id <ID2> --dir <DIR2> ...
--- Example: osascript directory_share_add.applescript --id no1 --dir "/path/to/dir1" --id no2 --dir "/path/to/dir2"
+-- Usage: osascript add_directory_share.applescript UUID --id <ID1> --dir <DIR1> --id <ID2> --dir <DIR2> ...
+-- Example: osascript add_directory_share.applescript UUID --id no1 --dir "/path/to/dir1" --id no2 --dir "/path/to/dir2"
 
 -- Function to create QEMU arguments for directory sharing
 on createQemuArgsForDir(dirId, dirPath)
