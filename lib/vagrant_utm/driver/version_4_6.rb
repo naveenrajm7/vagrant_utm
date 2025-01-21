@@ -13,8 +13,24 @@ module VagrantPlugins
           @logger = Log4r::Logger.new("vagrant::provider::utm::version_4_6")
         end
 
-        # TODO: Implement clear_shared_folders
-        def clear_shared_folders; end
+        # Implement clear_shared_folders
+        def clear_shared_folders
+          # Get the list of shared folders
+          shared_folders = read_shared_folders
+          # Get the args to remove the shared folders
+          script_path = @script_path.join("read_shared_folders_args.js")
+          cmd = ["osascript", script_path.to_s, @uuid, "--ids", shared_folders.join(",")]
+          output = execute_shell(*cmd)
+          result = JSON.parse(output)
+          return unless result["status"]
+
+          # Flatten the list of args and build the command
+          sf_args = result["result"].flatten
+          return unless sf_args.any?
+
+          command = ["remove_qemu_additional_args.applescript", @uuid, "--args", *sf_args]
+          execute_osa_script(command)
+        end
 
         def import(utm)
           utm = Vagrant::Util::Platform.windows_path(utm)
@@ -53,6 +69,9 @@ module VagrantPlugins
         end
 
         def share_folders(folders)
+          # sync folder cleanup will call clear_shared_folders
+          # This is just a precaution, to make sure we don't
+          # have duplicate shared folders
           shared_folders = read_shared_folders
           @logger.debug("Shared folders: #{shared_folders}")
           @logger.debug("Sharing folders: #{folders}")
