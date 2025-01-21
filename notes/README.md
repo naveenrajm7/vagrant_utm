@@ -45,4 +45,6 @@ To update project after a version bump
 ```
 Unable to resolve dependency: user requested 'vagrant_utm (= 0.1.1)'
 ```
-Try changing the version number again
+
+Due to mismatch versions between global installed version and plugin version in the development setup, since they are same name.
+Fix: Uninstall the global version, while using different version of development setup
