@@ -5,7 +5,7 @@ nav_order: 7
 
 # Known Issues
 
-This plugin was built built around the existing UTM API.
+This plugin is built around the existing UTM API.
 Hence there are things which are not ideal.
 
 1. ~~vagrant up : Loads new VM by downloading zip file every time, and manually asks the user to confirm the download completion.~~   
