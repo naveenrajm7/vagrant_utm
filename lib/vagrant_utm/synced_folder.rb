@@ -108,7 +108,7 @@ module VagrantPlugins
           defs << {
             name: os_friendly_id(id),
             hostpath: hostpath.to_s,
-            automount: !!data[:automount]
+            automount: !data[:automount].nil?
           }
         end
 
