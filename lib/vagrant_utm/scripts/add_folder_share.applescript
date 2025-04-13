@@ -77,7 +77,7 @@ on run argv
 
         -- Add the new arguments to the existing ones
         repeat with arg in qemuNewArgs
-        -- TODO: Add file urls to config after UTM supports it. UTM#6977
+        -- SKIP: adding file urls to qemu args file urls , since it is not necessary. UTM#6977
             set end of qemuAddArgs to {argument string:fsdevArg of arg}
             set end of qemuAddArgs to {argument string:deviceArg of arg}
         end repeat
@@ -86,12 +86,11 @@ on run argv
         set qemu additional arguments of config to qemuAddArgs
         update configuration of vm with config
 
-        -- TODO: Enabel registry update after UTM supports it. UTM#6977
-        -- -- Get the current directory shares in registry
-        -- set reg to registry of vm
-        -- -- Add new directory shares to the registry
-        -- set reg to reg & directoryList
-        -- -- Update registry of vm with new directory shares
-        -- update registry of vm with reg
+        -- Get the current directory shares in registry
+        set reg to registry of vm
+        -- Add new directory shares to the registry
+        set reg to reg & directoryList
+        -- Update registry of vm with new directory shares
+        update registry of vm with reg
     end tell
 end run
