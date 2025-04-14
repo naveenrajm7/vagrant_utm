@@ -37,7 +37,6 @@ module VagrantPlugins
                            end
           mount_options << "_netdev"
           mount_options << "nofail"
-          mount_options << "auto"
 
           mount_options = mount_options.join(",")
           [mount_options, mount_uid, mount_gid]
