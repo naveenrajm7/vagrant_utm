@@ -87,11 +87,21 @@ module VagrantPlugins
           end
         end
 
-        # TODO: Implement unshare_folders
         def unshare_folders(folders)
-          folders.each do |folder|
-            @logger.debug("NOT IMPLEMENTED: unshare_folders(#{folder})")
-          end
+          @logger.debug("Unsharing folder: #{folder[:name]}")
+          # Get the args to remove the shared folders
+          script_path = @script_path.join("read_shared_folders_args.js")
+          cmd = ["osascript", script_path.to_s, @uuid, "--ids", folders.join(",")]
+          output = execute_shell(*cmd)
+          result = JSON.parse(output)
+          return unless result["status"]
+
+          # Flatten the list of args and build the command
+          sf_args = result["result"].flatten
+          return unless sf_args.any?
+
+          command = ["remove_qemu_additional_args.applescript", @uuid, "--args", *sf_args]
+          execute_osa_script(command)
         end
       end
     end
