@@ -23,6 +23,8 @@ module VagrantPlugins
       # This is called after VM Boot to mount the synced folders.
       # Mount the shared folders inside the VM.
       def enable(machine, folders, _opts) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
+        share_folders(machine, folders)
+
         # sort guestpaths first, so we don't step on ourselves
         folders = folders.sort_by do |_id, data|
           if data[:guestpath]
@@ -51,6 +53,12 @@ module VagrantPlugins
             ssh_info = machine.ssh_info
             data[:owner] ||= ssh_info[:username]
             data[:group] ||= ssh_info[:username]
+
+            # Unmount the folder before we mount it
+            machine.guest.capability(
+              :unmount_virtualbox_shared_folder,
+              data[:guestpath], data
+            )
 
             # Mount the actual folder
             machine.guest.capability(
