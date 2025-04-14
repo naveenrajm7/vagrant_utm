@@ -64,7 +64,7 @@ module VagrantPlugins
           result = JSON.parse(output)
           return unless result["status"]
 
-          # Return the lits of shared folders names(id)
+          # Return the list of shared folders names(id)
           result["result"]
         end
 
