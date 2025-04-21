@@ -18,3 +18,4 @@ The Table below maps the vagrant commands to the corresponding UTM commands that
 | `vagrant status`      | `utmctl status` | 
 | `vagrant disposable`  | `utmctl start --disposable` | 
 | `vagrant snapshot`    | `qemu-img snapshot`         |
+| `vagrant ip-address`  | `utmctl ip-address`         |

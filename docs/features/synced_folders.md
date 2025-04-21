@@ -7,22 +7,22 @@ nav_order: 1
 
 # Synced Folders
 
-UTM Vagrant plugin currently gives rudimentary support for syncing folders between host and guest machine.
-The plugin provides option to configure the Qemu directory share mode. 
-After which the the host directory can be selected from UTM UI, and the guest directory can be mounted in guest OS. Both of these steps are now manual until UTM exposes API to configure Host/Guest directory.
+UTM Vagrant plugin has support for syncing multiple folders between host and guest machine.
+The plugin implements [UTM QEMU VirtFS](https://docs.getutm.app/guest-support/linux/#virtfs) as the default synced folder implementation for UTM provider.
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "utm/debian11"
-  config.vm.provider :utm do |u|
-    # QEMU Directoy Share mode for the VM. 
-    # Takes none, webDAV or virtFS
-    u.directory_share_mode = "webDAV"
-  end
+  config.vm.box = "utm/bookworm"
+  config.vm.synced_folder "../test", "/vagrant-test"
 end
 ```
 
-## Other Vagrant options
+Vagrant by default syncs the current folder where that Vagrantfile is, and you can access them at `/vagrant` in the guest.
 
 {: .important}
-Apart from the provider specific Sync options, Vagrant has components to provide sync folders feature using NFS and RSync. These features are not yet supported in UTM plugin.
+
+
+## Other Vagrant options
+
+Apart from the provider specific Sync options, Vagrant has components to provide sync folders feature using NFS and RSync. These features are also supported in UTM plugin.
+Check all Vagrant provided sync options at [Vagrant synced folders](https://developer.hashicorp.com/vagrant/docs/synced-folders).
