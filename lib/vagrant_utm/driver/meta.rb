@@ -58,9 +58,14 @@ module VagrantPlugins
             "4.6" => Version_4_6
           }
 
-          # UTM 4.6.0  doesn't have import support to work with Vagrant box,
-          # so show error
-          raise Errors::UtmInvalidVersion if @version.start_with?("4.6.0")
+          # UTM version < 4.6.5  doesn't have
+          # import support to work with Vagrant box (< 4.6.1)
+          # registry support to work with synced folders (< 4.6.5)
+          # Restrict to UTM versions >= 4.6.5
+          unless Gem::Version.new(@version) >= Gem::Version.new("4.6.5")
+            raise Errors::UtmInvalidVersion,
+                  supported_versions: "4.6.5 or earlier"
+          end
 
           driver_klass = nil
           driver_map.each do |key, klass|
