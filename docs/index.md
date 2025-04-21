@@ -19,8 +19,8 @@ allowing Vagrant to control and provision machines via UTM's API.
 ---
 
 {: .new}
-> UTM Vagrant plugin now supports [Vagrant boxes](https://developer.hashicorp.com/vagrant/docs/boxes)!   
-> Find UTM boxes at [HCP Vagrant registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm). 
+> Plugin now supports [Vagrant boxes](https://developer.hashicorp.com/vagrant/docs/boxes)!, find UTM boxes at [HCP Vagrant registry](https://portal.cloud.hashicorp.com/vagrant/discover/utm)  
+> Plugin now supports multiple synced folders, check out [Synced Folder](features/synced_folders.md)
 
 [UTM] is a free, full-featured system emulator and virtual machine host for iOS and macOS.  
 The UTM provider currently supports UTM versions 

@@ -33,6 +33,12 @@ module VagrantPlugins
         Config
       end
 
+      # Register the synced folder implementation
+      synced_folder(:utm) do
+        require_relative "synced_folder"
+        SyncedFolder
+      end
+
       # Register capabilities
       provider_capability(:utm, :forwarded_ports) do
         require_relative "cap"
@@ -42,6 +48,21 @@ module VagrantPlugins
       provider_capability(:utm, :snapshot_list) do
         require_relative "cap"
         Cap
+      end
+
+      synced_folder_capability(:utm, "mount_options") do
+        require_relative "cap/mount_options"
+        Cap::MountOptions
+      end
+
+      synced_folder_capability(:utm, "mount_type") do
+        require_relative "cap/mount_options"
+        Cap::MountOptions
+      end
+
+      synced_folder_capability(:utm, "mount_name") do
+        require_relative "cap/mount_options"
+        Cap::MountOptions
       end
 
       # Register the command

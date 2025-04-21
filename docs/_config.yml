@@ -28,8 +28,8 @@ nav_external_links:
     url: https://mac.getutm.app
   - title: Packer plugin for UTM
     url: https://github.com/naveenrajm7/packer-plugin-utm
-  # - title: GitHub
-  #   url: https://github.com/naveenrajm7/vagrant_utm
+  - title: UTM Gallery
+    url: https://naveenrajm7.github.io/utm-gallery/
 
 
 # Aux links for the upper right navigation
