@@ -1,6 +1,20 @@
 ## [Unreleased]
 
 
+## [0.1.3] - 2025-04-20
+
+### Added 
+
+- Implements VirtFS synced folder in UTM using qemu additional args and vm registry (for permission)
+
+### Changed
+
+- Config: Makes `virtFS` as default directory_share_mode in UTM
+
+### Removed
+
+- Driver: Removed support for UTM versions < 4.6.5 
+
 ## [0.1.2.beta] - 2024-12-05
 
 WARNING: This version of the plugin adds initial synced folder support. By default, Vagrant will pick the directory share method which it supports and prefers. e.g., SMB. However, SMB is not fully tested, so you need to force the plugin to pick the one that is simple and tested `rsync`
