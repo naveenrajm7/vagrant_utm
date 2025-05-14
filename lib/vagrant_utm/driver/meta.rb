@@ -64,7 +64,7 @@ module VagrantPlugins
           # Restrict to UTM versions >= 4.6.5
           unless Gem::Version.new(@version) >= Gem::Version.new("4.6.5")
             raise Errors::UtmInvalidVersion,
-                  supported_versions: "4.6.5 or earlier"
+                  supported_versions: "4.6.5 or later"
           end
 
           driver_klass = nil
