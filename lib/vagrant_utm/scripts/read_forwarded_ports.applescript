@@ -17,8 +17,8 @@ on run argv
                     set i to i + 1
                     # Log the port forward details Virtualbox style 
                     # 'Forwarding(nicIndex)(ruleIndex)="protocol,guestAddress,guestPort,hostAddress,hostPort"'
-                    log "Forwarding(" & index of anInterface & ")(" & i & ")=\"" & protocol of aPortForward & "," Â
-                        & guest address of aPortForward & "," & guest port of aPortForward & "," Â
+                    log "Forwarding(" & index of anInterface & ")(" & i & ")=\"" & protocol of aPortForward & "," Â¬
+                        & guest address of aPortForward & "," & guest port of aPortForward & "," Â¬
                         & host address of aPortForward & "," & host port of aPortForward & "\""
                 end repeat
             end if

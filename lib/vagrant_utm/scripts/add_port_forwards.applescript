@@ -25,10 +25,10 @@ on run argv
     set ruleComponents to text items of ruleArg
     
     -- Create a port forwarding rule record
-    set portForwardRule to { Â
-          indexVal:indexNumber, protocolVal:item 1 of ruleComponents, Â
-          guestAddress:item 2 of ruleComponents, guestPort:item 3 of ruleComponents, Â
-          hostAddress:item 4 of ruleComponents, hostPort:item 5 of ruleComponents Â
+    set portForwardRule to { Â¬
+          indexVal:indexNumber, protocolVal:item 1 of ruleComponents, Â¬
+          guestAddress:item 2 of ruleComponents, guestPort:item 3 of ruleComponents, Â¬
+          hostAddress:item 4 of ruleComponents, hostPort:item 5 of ruleComponents Â¬
         }
     
     -- Add the rule to the list
@@ -49,12 +49,12 @@ on run argv
           set portForwards to port forwards of anInterface
           
           -- Create a new port forward configuration
-          set newPortForward to { Â
-                protocol:(protocolVal of portForwardRule), Â
-                guest address:(guestAddress of portForwardRule), Â 
-                guest port:(guestPort of portForwardRule), Â
-                host address:(hostAddress of portForwardRule), Â
-                host port:(hostPort of portForwardRule) Â
+          set newPortForward to { Â¬
+                protocol:(protocolVal of portForwardRule), Â¬
+                guest address:(guestAddress of portForwardRule), Â¬
+                guest port:(guestPort of portForwardRule), Â¬
+                host address:(hostAddress of portForwardRule), Â¬
+                host port:(hostPort of portForwardRule) Â¬
               }
           
           -- Add new port forward to the list
