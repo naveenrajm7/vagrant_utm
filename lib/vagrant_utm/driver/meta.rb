@@ -55,7 +55,8 @@ module VagrantPlugins
           # Instantiate the proper version driver for UTM
           @logger.debug("Finding driver for UTM version: #{@version}")
           driver_map = {
-            "4.6" => Version_4_6
+            "4.6" => Version_4_6,
+            "4.7" => Version_4_7
           }
 
           # UTM version < 4.6.5  doesn't have
