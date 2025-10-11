@@ -155,6 +155,6 @@ List all IP addresses associated with network interfaces on the guest.
 
 `utmctl start --disposable`
 
-Start virtual machine in disposable mdoe, which allows you to run a virtual machine without saving any persistent changes to the drive.
+Start virtual machine in disposable mode, which allows you to run a virtual machine without saving any persistent changes to the drive.
 
 Read about Disposable mode in [UTM docs](https://docs.getutm.app/advanced/disposable/)
