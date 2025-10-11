@@ -24,6 +24,7 @@ allowing Vagrant to control and provision machines via UTM's API.
 
 [UTM] is a free, full-featured system emulator and virtual machine host for iOS and macOS.  
 The UTM provider currently supports UTM versions 
+* 4.7.x
 * 4.6.x   
 * 4.5.x (Obsolete, use plugin version 0.0.1)  
 

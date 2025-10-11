@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.1.4] - 2025-10-11
+
+- Driver: Add support for UTM 4.7.x
+
 
 ## [0.1.3] - 2025-04-20
 
