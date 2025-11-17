@@ -85,6 +85,20 @@ module VagrantPlugins
         customize("pre-boot", ["customize_vm.applescript", :id, "--notes", notes])
       end
 
+      # Shortcut for setting the icon of the virtual machine.
+      # Calls #customize internally.
+      #
+      # Available icons can be found at:
+      # https://github.com/utmapp/UTM/tree/main/Icons
+      #
+      # Common icons include: linux, ubuntu, debian, fedora, archlinux,
+      # openbsd, freebsd, windows, macos, android, etc.
+      #
+      # @param icon [String] the icon name for the VM (e.g., "ubuntu", "debian")
+      def icon=(icon)
+        customize("pre-boot", ["customize_vm.applescript", :id, "--icon", icon.to_s])
+      end
+
       # TODO: All warning if user sets directory_share_mode,
       # because default implementation is 'virtFS'
       # Shortcut for setting the directory share mode of the virtual machine.
