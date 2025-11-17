@@ -45,6 +45,8 @@ Vagrant.configure("2") do |config|
     u.cpus = 1
     # Memory in MB
     u.memory = 1024
+    # VM icon (Available icons https://github.com/utmapp/UTM/tree/main/Icons)
+    u.icon = "debian"
     # Notes for UTM VM (Appears in UTM UI)
     u.notes = "Vagrant: For testing plugin development"
     # QEMU Directoy Share mode for the VM. 

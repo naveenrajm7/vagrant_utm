@@ -6,6 +6,7 @@ on run argv
         set memorySize to 0
         set vmNotes to ""
         set directoryShareMode to null
+        set vmIcon to ""
 
         -- Parse arguments
         repeat with i from 2 to (count argv)
@@ -20,6 +21,8 @@ on run argv
                 set vmNotes to item (i + 1) of argv
             else if currentArg is "--directory-share-mode" then
                 set directoryShareMode to item (i + 1) of argv
+            else if currentArg is "--icon" then
+                set vmIcon to item (i + 1) of argv
             end if
         end repeat
         
@@ -50,6 +53,11 @@ on run argv
         -- Set Directory Sharing mode if provided
         if directoryShareMode is not null then
             set directory share mode of config to directoryShareMode -- mode is assumed to be enum value
+        end if
+
+        -- Set icon if provided
+        if vmIcon is not "" then
+            set icon of config to vmIcon
         end if
 
         -- Save the configuration
