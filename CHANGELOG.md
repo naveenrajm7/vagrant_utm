@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.1.5] - 2025-11-16
+
+- Support vm icon
+
+
+
 ## [0.1.4] - 2025-10-11
 
 - Driver: Add support for UTM 4.7.x
