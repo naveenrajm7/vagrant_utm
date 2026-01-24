@@ -176,6 +176,15 @@ module VagrantPlugins
         def read_guest_ip
           output = execute("ip-address", @uuid)
           output.strip.split("\n")
+        rescue Errors::UtmctlError => e
+          # Apple Virtualization VMs don't support ip-address command
+          # Return empty array so callers can handle gracefully
+          if e.message.include?("Operation not supported by the backend")
+            @logger.warn("ip-address not supported (Apple Virtualization VM), returning empty")
+            []
+          else
+            raise
+          end
         end
 
         def read_network_interfaces

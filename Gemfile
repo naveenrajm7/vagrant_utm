@@ -8,6 +8,7 @@ group :development do
   gem "rspec", "~> 3.0"
   gem "rubocop", "~> 1.21"
   gem "vagrant", git: "https://github.com/hashicorp/vagrant.git", tag: "v2.4.1"
+  gem "vagrant-spec", git: "https://github.com/hashicorp/vagrant-spec.git"
 end
 
 group :plugins do
