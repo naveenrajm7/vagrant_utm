@@ -36,6 +36,12 @@ module VagrantPlugins
       # @return [Integer]
       attr_accessor :wait_time
 
+      # If true, skips auto-setting directory_share_mode to 'virtFS'.
+      # Set this to true for Apple Virtualization VMs which don't use QEMU directory sharing.
+      #
+      # @return [Boolean]
+      attr_accessor :skip_directory_share_mode
+
       # Initialize the configuration with unset values.
       def initialize
         super
@@ -128,9 +134,8 @@ module VagrantPlugins
       def finalize!
         # By default, we check for guest additions (qemu-ga)
         @check_guest_additions = true if @check_guest_additions == UNSET_VALUE
-        # Always set the directory share mode to 'virtFS'
-        # default share folder implementation in utm plugin
-        self.directory_share_mode = "virtFS"
+        # Set virtFS as default for QEMU VMs, skip for Apple Virtualization
+        self.directory_share_mode = "virtFS" unless @skip_directory_share_mode
         # By default, we assume the VM supports virtio 9p filesystems
         @functional_9pfs = true if @functional_9pfs == UNSET_VALUE
         # The default name is just nothing, and we default it
