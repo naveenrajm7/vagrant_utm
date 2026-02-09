@@ -8,7 +8,7 @@
 on createQemuArgsForDir(dirId, dirPath)
 
     -- Prepare the QEMU argument strings
-    set fsdevArgStr to "-fsdev local,id=" & dirId & ",path=" & dirPath & ",security_model=mapped-xattr" 
+    set fsdevArgStr to "-fsdev \"local,id=" & dirId & ",path=" & dirPath & ",security_model=mapped-xattr\"" 
     set deviceArgStr to "-device virtio-9p-pci,fsdev=" & dirId & ",mount_tag=" & dirId
 
     return {fsdevArgStr, deviceArgStr}
