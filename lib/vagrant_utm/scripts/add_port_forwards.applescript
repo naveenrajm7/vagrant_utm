@@ -25,11 +25,12 @@ on run argv
     set ruleComponents to text items of ruleArg
     
     -- Create a port forwarding rule record
-    set portForwardRule to { Â
-          indexVal:indexNumber, protocolVal:item 1 of ruleComponents, Â
-          guestAddress:item 2 of ruleComponents, guestPort:item 3 of ruleComponents, Â
-          hostAddress:item 4 of ruleComponents, hostPort:item 5 of ruleComponents Â
-        }
+    set ruleProtocol to item 1 of ruleComponents
+    set ruleGuestAddress to item 2 of ruleComponents
+    set ruleGuestPort to item 3 of ruleComponents
+    set ruleHostAddress to item 4 of ruleComponents
+    set ruleHostPort to item 5 of ruleComponents
+    set portForwardRule to {indexVal:indexNumber, protocolVal:ruleProtocol, guestAddress:ruleGuestAddress, guestPort:ruleGuestPort, hostAddress:ruleHostAddress, hostPort:ruleHostPort}
     
     -- Add the rule to the list
     set end of portForwardRules to portForwardRule
@@ -49,13 +50,12 @@ on run argv
           set portForwards to port forwards of anInterface
           
           -- Create a new port forward configuration
-          set newPortForward to { Â
-                protocol:(protocolVal of portForwardRule), Â
-                guest address:(guestAddress of portForwardRule), Â 
-                guest port:(guestPort of portForwardRule), Â
-                host address:(hostAddress of portForwardRule), Â
-                host port:(hostPort of portForwardRule) Â
-              }
+          set forwardProtocol to protocolVal of portForwardRule
+          set forwardGuestAddress to guestAddress of portForwardRule
+          set forwardGuestPort to guestPort of portForwardRule
+          set forwardHostAddress to hostAddress of portForwardRule
+          set forwardHostPort to hostPort of portForwardRule
+          set newPortForward to {protocol:forwardProtocol, guest address:forwardGuestAddress, guest port:forwardGuestPort, host address:forwardHostAddress, host port:forwardHostPort}
           
           -- Add new port forward to the list
           copy newPortForward to the end of portForwards

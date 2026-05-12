@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+### Fixed
+- Fix AppleScript line continuation character encoding issue on Japanese/Korean locales
+
 ## [0.1.5] - 2025-11-16
 
 - Support vm icon
