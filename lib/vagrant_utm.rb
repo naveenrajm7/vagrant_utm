@@ -18,6 +18,7 @@ module VagrantPlugins
       autoload :Version_4_5, lib_path.join("version_4_5") # rubocop:disable Naming/VariableNumber
       autoload :Version_4_6, lib_path.join("version_4_6") # rubocop:disable Naming/VariableNumber
       autoload :Version_4_7, lib_path.join("version_4_7") # rubocop:disable Naming/VariableNumber
+      autoload :Version_5_0, lib_path.join("version_5_0") # rubocop:disable Naming/VariableNumber
     end
 
     # Drop some autoloads for the model classes
