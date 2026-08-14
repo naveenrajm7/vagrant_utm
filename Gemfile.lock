@@ -33,7 +33,7 @@ GIT
 PATH
   remote: .
   specs:
-    vagrant_utm (0.1.5)
+    vagrant_utm (0.1.6)
 
 GEM
   remote: https://rubygems.org/

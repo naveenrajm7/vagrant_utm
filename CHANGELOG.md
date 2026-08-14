@@ -1,10 +1,13 @@
 ## [Unreleased]
 
+## [0.1.6] - 2026-08-14
+
 ### Added
 - Driver: Add support for UTM 5.0.x
 
 ### Fixed
 - Fix AppleScript line continuation character encoding issue on Japanese/Korean locales
+- Allow shared folders with whitespace in the host path
 
 ## [0.1.5] - 2025-11-16
 
