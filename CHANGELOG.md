@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+### Added
+- Driver: Add support for UTM 5.0.x
+
 ### Fixed
 - Fix AppleScript line continuation character encoding issue on Japanese/Korean locales
 
