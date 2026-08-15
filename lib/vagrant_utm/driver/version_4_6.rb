@@ -17,9 +17,11 @@ module VagrantPlugins
         def clear_shared_folders
           # Get the list of shared folders
           shared_folders = read_shared_folders
+          return if shared_folders.nil? || shared_folders.empty?
+
           # Get the args to remove the shared folders
           script_path = @script_path.join("read_shared_folders_args.js")
-          cmd = ["osascript", script_path.to_s, @uuid, "--ids", shared_folders.join(",")]
+          cmd = ["osascript", "-l", "JavaScript", script_path.to_s, @uuid, "--ids", shared_folders.join(",")]
           output = execute_shell(*cmd)
           result = JSON.parse(output)
           return unless result["status"]
@@ -59,7 +61,7 @@ module VagrantPlugins
         def read_shared_folders
           @logger.debug("Reading shared folders")
           script_path = @script_path.join("read_shared_folders.js")
-          cmd = ["osascript", script_path.to_s, @uuid]
+          cmd = ["osascript", "-l", "JavaScript", script_path.to_s, @uuid]
           output = execute_shell(*cmd)
           result = JSON.parse(output)
           return unless result["status"]
@@ -88,10 +90,10 @@ module VagrantPlugins
         end
 
         def unshare_folders(folders)
-          @logger.debug("Unsharing folder: #{folder[:name]}")
+          @logger.debug("Unsharing folders: #{folders}")
           # Get the args to remove the shared folders
           script_path = @script_path.join("read_shared_folders_args.js")
-          cmd = ["osascript", script_path.to_s, @uuid, "--ids", folders.join(",")]
+          cmd = ["osascript", "-l", "JavaScript", script_path.to_s, @uuid, "--ids", folders.join(",")]
           output = execute_shell(*cmd)
           result = JSON.parse(output)
           return unless result["status"]

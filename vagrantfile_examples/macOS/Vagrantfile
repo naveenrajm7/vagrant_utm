@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# frozen_string_literal: true
+
+# macOS on Apple Silicon uses Apple Virtualization framework in UTM
+# This has different capabilities than QEMU VMs:
+# - No NAT port forwarding (uses shared networking)
+# - VirtioFS for shared folders (auto-mounts at /Volumes/My Shared Files/)
+# - No qemu-guest-agent (can't query IP address)
+# - SSH via mDNS hostname (e.g., vagrant-macos.local)
+
+Vagrant.configure("2") do |config|
+  config.vm.box = ENV["MACOS_BOX"] || "macOS26"
+  config.vm.box_url = ENV["MACOS_BOX_URL"] if ENV["MACOS_BOX_URL"]
+
+  # Direct SSH to VM via mDNS (Apple Virtualization uses shared networking)
+  config.ssh.host = ENV["MACOS_SSH_HOST"] || "vagrant-macos.local"
+  config.ssh.port = 22
+  config.ssh.username = "vagrant"
+  config.ssh.insert_key = false
+
+  # Disable default SSH port forwarding (not supported by Apple Virtualization)
+  config.vm.network "forwarded_port", id: "ssh", guest: 22, host: 2222, disabled: true
+
+  # Synced folder via VirtioFS (Apple Virtualization)
+  # Auto-mounts at /Volumes/My Shared Files/ in macOS guest
+  config.vm.synced_folder ".", "/vagrant", type: :utm
+
+  config.vm.provider :utm do |utm|
+    utm.memory = 8192
+    utm.cpus = 4
+    utm.check_guest_additions = false
+    # Apple Virtualization: skip QEMU directory_share_mode (uses VirtioFS instead)
+    utm.skip_directory_share_mode = true
+  end
+end
