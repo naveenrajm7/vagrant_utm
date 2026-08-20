@@ -123,6 +123,61 @@ module VagrantPlugins
         customize("pre-boot", ["customize_vm.applescript", :id, "--directory-share-mode", mode_code])
       end
 
+      # Configure VLAN / DHCP settings on a UTM network interface.
+      #
+      # Maps to the AppleScript network properties added in UTM 5.0.4
+      # (utmapp/UTM#7710). These apply to shared/host network modes and let
+      # you pin the guest subnet / DHCP pool without editing the UTM UI
+      # (see utmapp/UTM#3294).
+      #
+      # @param index [Integer] network interface index (0 = first adapter)
+      # @param options [Hash]
+      # @option options [String] :vlan_guest_address IPv4 subnet CIDR (e.g. "192.168.222.0/24")
+      # @option options [String] :vlan_guest_address_ipv6 IPv6 prefix (e.g. "fec0::/64")
+      # @option options [String] :vlan_dhcp_start_address first DHCP pool address
+      # @option options [String] :vlan_dhcp_end_address last DHCP pool address
+      # @option options [Boolean] :isolate_from_host isolate guest from host
+      # @return [void]
+      def network_interface(index, **options)
+        args = ["update_network_interface.applescript", :id, "--index", index.to_s]
+
+        {
+          vlan_guest_address: "--vlan-guest-address",
+          vlan_guest_address_ipv6: "--vlan-guest-address-ipv6",
+          vlan_dhcp_start_address: "--vlan-dhcp-start-address",
+          vlan_dhcp_end_address: "--vlan-dhcp-end-address"
+        }.each do |key, flag|
+          value = options[key]
+          next if value.nil? || value.to_s.empty?
+
+          args.concat([flag, value.to_s])
+        end
+
+        unless options[:isolate_from_host].nil?
+          args.concat(["--isolate-from-host", options[:isolate_from_host] ? "true" : "false"])
+        end
+
+        if args.length == 4
+          raise Vagrant::Errors::ConfigInvalid,
+                errors: "network_interface requires at least one of: " \
+                        "vlan_guest_address, vlan_guest_address_ipv6, " \
+                        "vlan_dhcp_start_address, vlan_dhcp_end_address, " \
+                        "isolate_from_host"
+        end
+
+        customize("pre-boot", args)
+      end
+
+      # Ask UTM to re-read the VM configuration from disk (UTM 5.0.4+,
+      # utmapp/UTM#7711). Use after a customize step that edits config.plist
+      # (or other files under the .utm bundle) so UTM picks up those changes.
+      # The VM must be stopped.
+      #
+      # @return [void]
+      def reload_configuration
+        customize("pre-boot", ["reload_configuration.applescript", :id])
+      end
+
       # This is the hook that is called to finalize the object before it
       # is put into use.
       def finalize!

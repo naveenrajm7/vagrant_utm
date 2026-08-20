@@ -113,6 +113,7 @@ module VagrantPlugins
                        :read_state,
                        :read_used_ports,
                        :read_vms,
+                       :reload_configuration,
                        :restore_snapshot,
                        :set_mac_address,
                        :set_name,
@@ -121,8 +122,8 @@ module VagrantPlugins
                        :start,
                        :start_disposable,
                        :suspend,
+                       :update_network_interface,
                        :vm_exists?
-
         protected
 
         # This returns the version of UTM that is running.
