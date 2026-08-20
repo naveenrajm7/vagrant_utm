@@ -168,16 +168,6 @@ module VagrantPlugins
         customize("pre-boot", args)
       end
 
-      # Ask UTM to re-read the VM configuration from disk (UTM 5.0.4+,
-      # utmapp/UTM#7711). Use after a customize step that edits config.plist
-      # (or other files under the .utm bundle) so UTM picks up those changes.
-      # The VM must be stopped.
-      #
-      # @return [void]
-      def reload_configuration
-        customize("pre-boot", ["reload_configuration.applescript", :id])
-      end
-
       # This is the hook that is called to finalize the object before it
       # is put into use.
       def finalize!

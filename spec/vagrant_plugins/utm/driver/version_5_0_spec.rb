@@ -47,19 +47,4 @@ RSpec.describe VagrantPlugins::Utm::Driver::Version_5_0 do
       end.to raise_error(VagrantPlugins::Utm::Errors::UtmInvalidVersion)
     end
   end
-
-  describe "#reload_configuration" do
-    it "runs reload_configuration.applescript" do
-      expect(subprocess).to receive(:execute)
-        .with(
-          "osascript",
-          File.join(script_path, "reload_configuration.applescript"),
-          uuid,
-          an_instance_of(Hash)
-        )
-        .and_return(subprocess_result)
-
-      subject.reload_configuration
-    end
-  end
 end

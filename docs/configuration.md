@@ -56,19 +56,6 @@ machine.provider.driver.update_network_interface(
 )
 ```
 
-## Reload configuration from disk (UTM 5.0.4+)
-
-If a customize step edits `config.plist` (or other files under the `.utm` bundle) outside AppleScript, UTM keeps a cached copy until you ask it to reload ([utmapp/UTM#7711](https://github.com/utmapp/UTM/pull/7711)). The VM must be stopped:
-
-```ruby
-config.vm.provider "utm" do |u|
-  # ... customize that edits files on disk ...
-  u.reload_configuration
-end
-```
-
-Or via the driver: `machine.provider.driver.reload_configuration`.
-
 ## Other customization
 
 ```ruby

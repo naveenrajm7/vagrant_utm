@@ -42,13 +42,15 @@ RSpec.describe VagrantPlugins::Utm::Config do
     end
   end
 
-  describe "#reload_configuration" do
-    it "schedules a pre-boot reload configuration customize" do
-      sut.reload_configuration
+  describe "#validate" do
+    it "raises an error if 'utm_file_url' has no value" do
+      sut.utm_file_url = nil
+      sut.name = "debian"
+      sut.finalize!
 
-      event, command = sut.customizations.last
-      expect(event).to eq("pre-boot")
-      expect(command).to eq(["reload_configuration.applescript", :id])
+      result = sut.validate(nil)
+
+      expect(result["UTM Provider"].size).to eq(1)
     end
   end
 end

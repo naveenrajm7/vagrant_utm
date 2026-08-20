@@ -2,7 +2,6 @@
 
 ### Added
 - Config/Driver: Support UTM AppleScript VLAN guest/DHCP network properties (`network_interface`, `update_network_interface`) — requires UTM 5.0.4+ ([utmapp/UTM#7710](https://github.com/utmapp/UTM/pull/7710))
-- Config/Driver: Support UTM AppleScript `reload configuration` (`reload_configuration`) — requires UTM 5.0.4+ ([utmapp/UTM#7711](https://github.com/utmapp/UTM/pull/7711))
 
 ## [0.1.6] - 2026-08-14
 

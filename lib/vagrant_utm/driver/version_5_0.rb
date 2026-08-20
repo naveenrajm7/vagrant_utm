@@ -7,27 +7,14 @@ module VagrantPlugins
     module Driver
       # Driver for UTM 5.0.x
       class Version_5_0 < Version_4_7 # rubocop:disable Naming/ClassAndModuleCamelCase
-        # UTM AppleScript VLAN / reload-configuration APIs land in 5.0.4
-        # (utmapp/UTM#7710, utmapp/UTM#7711).
+        # UTM AppleScript VLAN network properties land in 5.0.4
+        # (utmapp/UTM#7710).
         VLAN_NETWORK_MIN_VERSION = "5.0.4"
 
         def initialize(uuid)
           super
 
           @logger = Log4r::Logger.new("vagrant::provider::utm::version_5_0")
-        end
-
-        # Reload the VM configuration from disk, discarding unsaved in-memory
-        # changes. The VM must be stopped.
-        #
-        # Use this after editing config.plist (or other files in the .utm
-        # bundle) outside of AppleScript so UTM picks up those changes.
-        #
-        # Requires UTM 5.0.4+ (utmapp/UTM#7711).
-        def reload_configuration
-          require_vlan_network_support!(__method__)
-          command = ["reload_configuration.applescript", @uuid]
-          execute_osa_script(command)
         end
 
         # Update VLAN / DHCP settings on a network interface.
