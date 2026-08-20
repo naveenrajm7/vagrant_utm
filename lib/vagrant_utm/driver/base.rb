@@ -103,6 +103,14 @@ module VagrantPlugins
         # @return [Hash]
         def read_network_interfaces; end
 
+        # Update VLAN / DHCP settings on a network interface (UTM 5.0.4+).
+        #
+        # @param [Integer] index Network interface index
+        # @param [Hash] options VLAN / DHCP options
+        def update_network_interface(_index, _options = {})
+          raise Errors::UtmInvalidVersion, supported_versions: "5.0.4+"
+        end
+
         # Sets the MAC address of the first network adapter.
         #
         # @param [String] mac MAC address without any spaces/hyphens.

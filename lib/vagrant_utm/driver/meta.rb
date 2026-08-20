@@ -121,6 +121,7 @@ module VagrantPlugins
                        :start,
                        :start_disposable,
                        :suspend,
+                       :update_network_interface,
                        :vm_exists?
 
         protected

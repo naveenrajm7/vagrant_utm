@@ -7,6 +7,13 @@ module VagrantPlugins
   module Utm
     # This is the configuration class for the UTM provider.
     class Config < Vagrant.plugin("2", :config)
+      NETWORK_OPTION_FLAGS = {
+        vlan_guest_address: "--vlan-guest-address",
+        vlan_guest_address_ipv6: "--vlan-guest-address-ipv6",
+        vlan_dhcp_start_address: "--vlan-dhcp-start-address",
+        vlan_dhcp_end_address: "--vlan-dhcp-end-address"
+      }.freeze
+
       # If true, will check if guest additions are installed and up to
       # date. By default, this is true.
       #
@@ -123,6 +130,36 @@ module VagrantPlugins
         customize("pre-boot", ["customize_vm.applescript", :id, "--directory-share-mode", mode_code])
       end
 
+      # Configure VLAN / DHCP settings on a UTM network interface.
+      #
+      # Maps to the AppleScript network properties added in UTM 5.0.4
+      # (utmapp/UTM#7710). These apply to shared/host network modes and let
+      # you pin the guest subnet / DHCP pool without editing the UTM UI
+      # (see utmapp/UTM#3294).
+      #
+      # @param index [Integer] network interface index (0 = first adapter)
+      # @param options [Hash]
+      # @option options [String] :vlan_guest_address IPv4 subnet CIDR (e.g. "192.168.222.0/24")
+      # @option options [String] :vlan_guest_address_ipv6 IPv6 prefix (e.g. "fec0::/64")
+      # @option options [String] :vlan_dhcp_start_address first DHCP pool address
+      # @option options [String] :vlan_dhcp_end_address last DHCP pool address
+      # @option options [Boolean] :isolate_from_host isolate guest from host
+      # @return [void]
+      def network_interface(index, **options)
+        args = ["update_network_interface.applescript", :id, "--index", index.to_s] +
+               network_option_arguments(options)
+
+        if args.length == 4
+          raise Vagrant::Errors::ConfigInvalid,
+                errors: "network_interface requires at least one of: " \
+                        "vlan_guest_address, vlan_guest_address_ipv6, " \
+                        "vlan_dhcp_start_address, vlan_dhcp_end_address, " \
+                        "isolate_from_host"
+        end
+
+        customize("pre-boot", args)
+      end
+
       # This is the hook that is called to finalize the object before it
       # is put into use.
       def finalize!
@@ -160,6 +197,26 @@ module VagrantPlugins
 
       def to_s
         "UTM"
+      end
+
+      private
+
+      def network_option_arguments(options)
+        NETWORK_OPTION_FLAGS.flat_map do |key, flag|
+          option_argument(flag, options[key])
+        end + isolate_from_host_argument(options[:isolate_from_host])
+      end
+
+      def option_argument(flag, value)
+        return [] if value.nil? || value.to_s.empty?
+
+        [flag, value.to_s]
+      end
+
+      def isolate_from_host_argument(value)
+        return [] if value.nil?
+
+        ["--isolate-from-host", value ? "true" : "false"]
       end
     end
   end
