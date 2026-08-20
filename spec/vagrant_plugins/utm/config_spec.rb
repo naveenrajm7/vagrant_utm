@@ -2,7 +2,7 @@
 
 require "vagrant_utm/config"
 
-RSpec.describe VagrantPlugins::Utm::Config do
+RSpec.describe VagrantPlugins::Utm::Config do # rubocop:disable Metrics/BlockLength
   subject(:sut) { described_class.new }
 
   context "defaults" do

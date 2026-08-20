@@ -7,6 +7,13 @@ module VagrantPlugins
   module Utm
     # This is the configuration class for the UTM provider.
     class Config < Vagrant.plugin("2", :config)
+      NETWORK_OPTION_FLAGS = {
+        vlan_guest_address: "--vlan-guest-address",
+        vlan_guest_address_ipv6: "--vlan-guest-address-ipv6",
+        vlan_dhcp_start_address: "--vlan-dhcp-start-address",
+        vlan_dhcp_end_address: "--vlan-dhcp-end-address"
+      }.freeze
+
       # If true, will check if guest additions are installed and up to
       # date. By default, this is true.
       #
@@ -139,23 +146,8 @@ module VagrantPlugins
       # @option options [Boolean] :isolate_from_host isolate guest from host
       # @return [void]
       def network_interface(index, **options)
-        args = ["update_network_interface.applescript", :id, "--index", index.to_s]
-
-        {
-          vlan_guest_address: "--vlan-guest-address",
-          vlan_guest_address_ipv6: "--vlan-guest-address-ipv6",
-          vlan_dhcp_start_address: "--vlan-dhcp-start-address",
-          vlan_dhcp_end_address: "--vlan-dhcp-end-address"
-        }.each do |key, flag|
-          value = options[key]
-          next if value.nil? || value.to_s.empty?
-
-          args.concat([flag, value.to_s])
-        end
-
-        unless options[:isolate_from_host].nil?
-          args.concat(["--isolate-from-host", options[:isolate_from_host] ? "true" : "false"])
-        end
+        args = ["update_network_interface.applescript", :id, "--index", index.to_s] +
+               network_option_arguments(options)
 
         if args.length == 4
           raise Vagrant::Errors::ConfigInvalid,
@@ -205,6 +197,26 @@ module VagrantPlugins
 
       def to_s
         "UTM"
+      end
+
+      private
+
+      def network_option_arguments(options)
+        NETWORK_OPTION_FLAGS.flat_map do |key, flag|
+          option_argument(flag, options[key])
+        end + isolate_from_host_argument(options[:isolate_from_host])
+      end
+
+      def option_argument(flag, value)
+        return [] if value.nil? || value.to_s.empty?
+
+        [flag, value.to_s]
+      end
+
+      def isolate_from_host_argument(value)
+        return [] if value.nil?
+
+        ["--isolate-from-host", value ? "true" : "false"]
       end
     end
   end

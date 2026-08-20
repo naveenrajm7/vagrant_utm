@@ -2,14 +2,14 @@
 
 require_relative "../base"
 
-RSpec.describe VagrantPlugins::Utm::Driver::Version_5_0 do
+RSpec.describe VagrantPlugins::Utm::Driver::Version_5_0 do # rubocop:disable Metrics/BlockLength
   include_context "utm"
   let(:utm_version) { "5.0.4" }
   subject { VagrantPlugins::Utm::Driver::Meta.new(uuid) }
 
   it_behaves_like "a version 4.x utm driver"
 
-  describe "#update_network_interface" do
+  describe "#update_network_interface" do # rubocop:disable Metrics/BlockLength
     it "runs update_network_interface.applescript with VLAN options" do
       expect(subprocess).to receive(:execute)
         .with(

@@ -10,6 +10,12 @@ module VagrantPlugins
         # UTM AppleScript VLAN network properties land in 5.0.4
         # (utmapp/UTM#7710).
         VLAN_NETWORK_MIN_VERSION = "5.0.4"
+        NETWORK_OPTION_FLAGS = {
+          vlan_guest_address: "--vlan-guest-address",
+          vlan_guest_address_ipv6: "--vlan-guest-address-ipv6",
+          vlan_dhcp_start_address: "--vlan-dhcp-start-address",
+          vlan_dhcp_end_address: "--vlan-dhcp-end-address"
+        }.freeze
 
         def initialize(uuid)
           super
@@ -32,22 +38,7 @@ module VagrantPlugins
         def update_network_interface(index, options = {})
           require_vlan_network_support!(__method__)
 
-          args = ["--index", index.to_s]
-          {
-            vlan_guest_address: "--vlan-guest-address",
-            vlan_guest_address_ipv6: "--vlan-guest-address-ipv6",
-            vlan_dhcp_start_address: "--vlan-dhcp-start-address",
-            vlan_dhcp_end_address: "--vlan-dhcp-end-address"
-          }.each do |key, flag|
-            value = options[key]
-            next if value.nil? || value.to_s.empty?
-
-            args.concat([flag, value.to_s])
-          end
-
-          unless options[:isolate_from_host].nil?
-            args.concat(["--isolate-from-host", options[:isolate_from_host] ? "true" : "false"])
-          end
+          args = ["--index", index.to_s] + network_option_arguments(options)
 
           if args.length == 2
             raise ArgumentError,
@@ -60,6 +51,24 @@ module VagrantPlugins
 
         private
 
+        def network_option_arguments(options)
+          NETWORK_OPTION_FLAGS.flat_map do |key, flag|
+            option_argument(flag, options[key])
+          end + isolate_from_host_argument(options[:isolate_from_host])
+        end
+
+        def option_argument(flag, value)
+          return [] if value.nil? || value.to_s.empty?
+
+          [flag, value.to_s]
+        end
+
+        def isolate_from_host_argument(value)
+          return [] if value.nil?
+
+          ["--isolate-from-host", value ? "true" : "false"]
+        end
+
         def require_vlan_network_support!(method_name)
           version = read_utm_version
           return if Gem::Version.new(version) >= Gem::Version.new(VLAN_NETWORK_MIN_VERSION)
@@ -70,7 +79,7 @@ module VagrantPlugins
         end
 
         def read_utm_version
-          @utm_version ||= begin
+          @read_utm_version ||= begin
             cmd = ["osascript", "-e",
                    'tell application "System Events" to return version of application "UTM"']
             execute_shell(*cmd).strip
