@@ -19,6 +19,5 @@ Draw back -  UTM does not expose export API. (UTM already has 'Share')~~
 
 4. Hide: Any plugin action will bring up the main UTM window. However, a properly built UTM box with no display will run headless.
 
-5. vagrant snapshot: Even though UTM does not have snapshot feature, this plugin has a experimental support for offline VM snapshots using qemu-img. 
-The VM must be stopped, for any snapshot commands to work.
-The snapshot only works for **single** qcow2 based VM images
+5. `vagrant snapshot` requires UTM 5.0.6 or newer (native `utmctl snapshot`).
+   There is no `qemu-img` fallback in this plugin version.

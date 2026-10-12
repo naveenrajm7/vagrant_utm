@@ -14,7 +14,6 @@ module VagrantPlugins
       autoload :CheckAccessible, action_root.join("check_accessible")
       autoload :CheckCreated, action_root.join("check_created")
       autoload :CheckGuestAdditions, action_root.join("check_guest_additions")
-      autoload :CheckQemuImg, action_root.join("check_qemu_img")
       autoload :CheckRunning, action_root.join("check_running")
       autoload :CheckUtm, action_root.join("check_utm")
       autoload :ClearForwardedPorts, action_root.join("clear_forwarded_ports")
@@ -266,17 +265,9 @@ module VagrantPlugins
       def self.action_snapshot_delete
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
-          b.use CheckQemuImg
           b.use Call, Created do |env, b2|
             if env[:result]
-              # qemu-img needs write-lock to file, so VM should be stopped
-              b2.use Call, IsStopped do |env2, b3|
-                if env2[:result]
-                  b3.use SnapshotDelete
-                else
-                  b3.use MessageNotStopped
-                end
-              end
+              b2.use SnapshotDelete
             else
               b2.use MessageNotCreated
             end
@@ -288,20 +279,19 @@ module VagrantPlugins
       def self.action_snapshot_restore # rubocop:disable Metrics/AbcSize
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
-          b.use CheckQemuImg
           b.use Call, Created do |env, b2|
             raise Vagrant::Errors::VMNotCreatedError unless env[:result]
 
             b2.use CheckAccessible
+            # Restoring a running QEMU VM can leave UTM waiting for its RPC.
+            # Stop it first, then let Vagrant honor --no-start below.
             b2.use EnvSet, force_halt: true
             b2.use action_halt
-            b2.use SnapshotRestore
-
-            b2.use Call, IsEnvSet, :snapshot_delete do |env2, b3|
-              b3.use action_snapshot_delete if env2[:result]
-            end
-
             b2.use Call, IsEnvSet, :snapshot_start do |env2, b3|
+              b3.use SnapshotRestore
+              b3.use Call, IsEnvSet, :snapshot_delete do |env3, b4|
+                b4.use action_snapshot_delete if env3[:result]
+              end
               b3.use action_start if env2[:result]
             end
           end
@@ -312,17 +302,9 @@ module VagrantPlugins
       def self.action_snapshot_save
         Vagrant::Action::Builder.new.tap do |b|
           b.use CheckUtm
-          b.use CheckQemuImg
           b.use Call, Created do |env, b2|
             if env[:result]
-              # qemu-img does offline snapshot, so VM should be stopped
-              b2.use Call, IsStopped do |env2, b3|
-                if env2[:result]
-                  b3.use SnapshotSave
-                else
-                  b3.use MessageNotStopped
-                end
-              end
+              b2.use SnapshotSave
             else
               b2.use MessageNotCreated
             end
