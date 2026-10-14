@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-## [0.2.0] - unreleased
+## [0.2.0] - 2026-10-14
 
 ### Added
 - Use UTM 5.0.6's native snapshot API through `utmctl` for supported QEMU
