@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json"
+
 require File.expand_path("version_4_7", __dir__)
 
 module VagrantPlugins
@@ -16,6 +18,7 @@ module VagrantPlugins
           vlan_dhcp_start_address: "--vlan-dhcp-start-address",
           vlan_dhcp_end_address: "--vlan-dhcp-end-address"
         }.freeze
+        SNAPSHOT_MIN_VERSION = "5.0.6"
 
         def initialize(uuid)
           super
@@ -49,6 +52,27 @@ module VagrantPlugins
           execute_osa_script(command)
         end
 
+        def create_snapshot(machine_id, snapshot_name)
+          require_snapshot_support!
+          execute("snapshot", "create", machine_id, "--name", snapshot_name)
+        end
+
+        def delete_snapshot(machine_id, snapshot_name)
+          require_snapshot_support!
+          execute("snapshot", "delete", machine_id, "--snapshot", snapshot_name)
+        end
+
+        def list_snapshots(machine_id)
+          require_snapshot_support!
+          output = execute("snapshot", "list", machine_id, "--json")
+          JSON.parse(output).map { |snapshot| snapshot.fetch("name") }
+        end
+
+        def restore_snapshot(machine_id, snapshot_name)
+          require_snapshot_support!
+          execute("snapshot", "restore", machine_id, "--snapshot", snapshot_name)
+        end
+
         private
 
         def network_option_arguments(options)
@@ -78,12 +102,14 @@ module VagrantPlugins
                                     "(required for #{method_name})"
         end
 
+        def require_snapshot_support!
+          return if Gem::Version.new(read_utm_version) >= Gem::Version.new(SNAPSHOT_MIN_VERSION)
+
+          snapshot_unsupported!
+        end
+
         def read_utm_version
-          @read_utm_version ||= begin
-            cmd = ["osascript", "-e",
-                   'tell application "System Events" to return version of application "UTM"']
-            execute_shell(*cmd).strip
-          end
+          @read_utm_version ||= execute("version").strip
         end
       end
     end

@@ -8,7 +8,7 @@ nav_order: 1
 The Table below maps the vagrant commands to the corresponding UTM commands that are executed.
 
 | Vagrant | utmctl / AppleScript |
-| --- | ------------------ |
+| --- | --- |
 | `vagrant up` | `utmctl start` |
 | `vagrant halt` | `utmctl stop` |
 | `vagrant suspend` | `utmctl suspend` |
@@ -17,6 +17,6 @@ The Table below maps the vagrant commands to the corresponding UTM commands that
 | `vagrant destroy` | `utmctl delete` |
 | `vagrant status` | `utmctl status` |
 | `vagrant disposable` | `utmctl start --disposable` |
-| `vagrant snapshot` | `qemu-img snapshot` |
+| `vagrant snapshot` | `utmctl snapshot` |
 | `vagrant ip-address` | `utmctl ip-address` |
-| Provider `network_interface` (UTM 5.0.4+) | AppleScript update network VLAN/DHCP properties |
+| Provider `network_interface` (UTM 5.0.4+) | AppleScript network VLAN/DHCP properties |

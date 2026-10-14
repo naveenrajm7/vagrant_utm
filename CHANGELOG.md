@@ -1,7 +1,22 @@
 ## [Unreleased]
 
+## [0.2.0] - unreleased
+
 ### Added
-- Config/Driver: Support UTM AppleScript VLAN guest/DHCP network properties (`network_interface`, `update_network_interface`) — requires UTM 5.0.4+ ([utmapp/UTM#7710](https://github.com/utmapp/UTM/pull/7710))
+- Use UTM 5.0.6's native snapshot API through `utmctl` for supported QEMU
+  and Apple Virtualization VMs (Apple snapshots require macOS 27).
+- Support UTM 5.0.4+ VLAN guest and DHCP network properties through
+  `network_interface` and `update_network_interface`.
+
+### Changed
+- Let UTM handle snapshot creation, listing, restoration, and deletion across
+  supported VM states.
+- Stop a running VM before restoring a snapshot to avoid UTM's live restore RPC
+  timeout, then restart it unless Vagrant's `--no-start` option is given.
+
+### Removed
+- Remove the `qemu-img` snapshot workaround. Snapshots now require UTM 5.0.6 or
+  newer; keep an older plugin release if you need snapshots on older UTM.
 
 ## [0.1.6] - 2026-08-14
 

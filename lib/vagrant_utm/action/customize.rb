@@ -13,7 +13,7 @@ module VagrantPlugins
           @event = event
         end
 
-        def call(env) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
+        def call(env)
           customizations = []
           env[:machine].provider_config.customizations.each do |event, command|
             customizations << command if event == @event
@@ -24,25 +24,34 @@ module VagrantPlugins
 
             # Execute each customization command.
             customizations.each do |command|
-              processed_command = command.collect do |arg|
-                arg = env[:machine].id if arg == :id
-                arg.to_s
-              end
-
-              begin
-                env[:machine].provider.driver.execute_osa_script(
-                  processed_command
-                )
-              rescue VagrantPlugins::Utm::Errors::CommandError => e
-                raise Vagrant::Errors::VMCustomizationFailed, {
-                  command: command,
-                  error: e.inspect
-                }
-              end
+              execute_customization(env, command)
             end
           end
 
           @app.call(env)
+        end
+
+        private
+
+        def execute_customization(env, command)
+          if command.first == :network_interface
+            env[:machine].provider.driver.update_network_interface(command[1], command[2])
+          else
+            execute_osa_customization(env, command)
+          end
+        rescue VagrantPlugins::Utm::Errors::CommandError => e
+          raise Vagrant::Errors::VMCustomizationFailed, {
+            command: command,
+            error: e.inspect
+          }
+        end
+
+        def execute_osa_customization(env, command)
+          processed_command = command.map do |arg|
+            arg = env[:machine].id if arg == :id
+            arg.to_s
+          end
+          env[:machine].provider.driver.execute_osa_script(processed_command)
         end
       end
     end

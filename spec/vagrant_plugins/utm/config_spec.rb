@@ -12,7 +12,7 @@ RSpec.describe VagrantPlugins::Utm::Config do # rubocop:disable Metrics/BlockLen
     it { expect(subject.name).to be_nil }
   end
 
-  describe "#network_interface" do
+  describe "#network_interface" do # rubocop:disable Metrics/BlockLength
     it "schedules a pre-boot customize with VLAN options" do
       sut.network_interface(
         0,
@@ -25,13 +25,14 @@ RSpec.describe VagrantPlugins::Utm::Config do # rubocop:disable Metrics/BlockLen
       event, command = sut.customizations.last
       expect(event).to eq("pre-boot")
       expect(command).to eq([
-                              "update_network_interface.applescript",
-                              :id,
-                              "--index", "0",
-                              "--vlan-guest-address", "192.168.222.0/24",
-                              "--vlan-dhcp-start-address", "192.168.222.2",
-                              "--vlan-dhcp-end-address", "192.168.222.254",
-                              "--isolate-from-host", "false"
+                              :network_interface,
+                              0,
+                              {
+                                vlan_guest_address: "192.168.222.0/24",
+                                vlan_dhcp_start_address: "192.168.222.2",
+                                vlan_dhcp_end_address: "192.168.222.254",
+                                isolate_from_host: false
+                              }
                             ])
     end
 

@@ -39,6 +39,26 @@ module VagrantPlugins
         # @return [Boolean]
         def check_qemu_guest_agent; end
 
+        # Create a named full-VM snapshot.
+        def create_snapshot(_machine_id, _snapshot_name)
+          snapshot_unsupported!
+        end
+
+        # Delete a named full-VM snapshot.
+        def delete_snapshot(_machine_id, _snapshot_name)
+          snapshot_unsupported!
+        end
+
+        # List named full-VM snapshots.
+        def list_snapshots(_machine_id)
+          snapshot_unsupported!
+        end
+
+        # Restore a named full-VM snapshot.
+        def restore_snapshot(_machine_id, _snapshot_name)
+          snapshot_unsupported!
+        end
+
         # Forwards a set of ports for a VM.
         #
         # This will not affect any previously set forwarded ports,
@@ -340,6 +360,11 @@ module VagrantPlugins
         end
 
         private
+
+        def snapshot_unsupported!
+          raise Errors::UtmInvalidVersion,
+                supported_versions: "5.0.6+ (required for snapshots)"
+        end
 
         # List of LANG values to attempt to use
         LANG_VARIATIONS = %w[C.UTF-8 C.utf8 en_US.UTF-8 en_US.utf8 C POSIX].map(&:freeze).freeze

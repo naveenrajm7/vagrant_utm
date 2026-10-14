@@ -9,7 +9,7 @@ nav_order: 2
 
 This page lists all the supported Vagrant commands which depend on the  UTM provider. Eg. `up`, `suspend`, `resume`, `halt`.
 
-Adds note to the command which are have some limitations. Eg. `snapshot`.
+Adds notes to commands which have provider-specific behavior. Eg. `snapshot`.
 
 The Vagrant commands that do not depend on provider are not listed and will continue to work. Eg. `global-status`
 
@@ -84,13 +84,23 @@ This resumes a Vagrant managed machine that was previously suspended, perhaps wi
 
 **Command: `vagrant snapshot`**
 
-{: .warning }
-Snapshot feature is not available in UTM. 
-The plugin just provides experimental feature using qemu-img 
+`utmctl snapshot`
 
-Vagrant UTM provider supports offline snapshots using 
-qemu-img. Hence only VM with single qcow2 file is supported.
+With UTM 5.0.6 or newer, the provider uses UTM's native named snapshots.
+UTM supports QEMU snapshots on macOS. Apple Virtualization snapshots require
+macOS 27. A snapshot of a running QEMU VM includes its running state; a
+snapshot of a stopped VM saves its disks. UTM handles saving, listing, and
+deleting snapshots through its native API.
 
+`vagrant snapshot restore` stops a running VM before restoring its snapshot.
+Vagrant starts the restored VM afterward unless `--no-start` is given. UTM may
+resume saved RAM state when the restored VM next starts. The provider does not call
+`utmctl discard-state` during a restore, because that would discard the saved
+running state.
+
+Older UTM releases do not expose the 5.0.6 snapshot API. This plugin no longer uses
+`qemu-img` as a fallback. If you need snapshots on UTM older than 5.0.6,
+keep the previous plugin version that paired with that UTM release.
 
 
 ## **SSH**

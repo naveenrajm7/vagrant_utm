@@ -146,10 +146,7 @@ module VagrantPlugins
       # @option options [Boolean] :isolate_from_host isolate guest from host
       # @return [void]
       def network_interface(index, **options)
-        args = ["update_network_interface.applescript", :id, "--index", index.to_s] +
-               network_option_arguments(options)
-
-        if args.length == 4
+        if network_option_arguments(options).empty?
           raise Vagrant::Errors::ConfigInvalid,
                 errors: "network_interface requires at least one of: " \
                         "vlan_guest_address, vlan_guest_address_ipv6, " \
@@ -157,7 +154,7 @@ module VagrantPlugins
                         "isolate_from_host"
         end
 
-        customize("pre-boot", args)
+        customize("pre-boot", [:network_interface, index, options])
       end
 
       # This is the hook that is called to finalize the object before it
