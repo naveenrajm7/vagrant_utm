@@ -1,5 +1,21 @@
 ## [Unreleased]
 
+## [0.2.0] - unreleased
+
+### Added
+- Use UTM 5.0.6's native snapshot API through `utmctl` for supported QEMU
+  and Apple Virtualization VMs (Apple snapshots require macOS 27).
+
+### Changed
+- Let UTM handle snapshot creation, listing, restoration, and deletion across
+  supported VM states.
+- Stop a running VM before restoring a snapshot to avoid UTM's live restore RPC
+  timeout, then restart it unless Vagrant's `--no-start` option is given.
+
+### Removed
+- Remove the `qemu-img` snapshot workaround. Snapshots now require UTM 5.0.6 or
+  newer; keep an older plugin release if you need snapshots on older UTM.
+
 ## [0.1.6] - 2026-08-14
 
 ### Added

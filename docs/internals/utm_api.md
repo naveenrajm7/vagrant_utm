@@ -23,8 +23,8 @@ So we rely on Apple Scripting Bridge scripts which can be executed using `osascr
 When it comes to writing the OSA scripts, our first choice is applescript language due to its simplicity and support.
 But, if we need to exchange complex data like json from UTM to plugin we use Javascript (Note: Some APIs are difficult to get it working in JS, hence our first choice is applescript).
 
-**3. Shell command** : 
-All interactions with UTM should be possible with `utmctl` or `osascript`. But, due to the unavailablity of certain commands or features, we work around the issue by using direct shell command.  
-For Example:
+**3. Shell command** :
+All interactions with UTM should be possible with `utmctl` or `osascript`.
+Direct shell commands are reserved for capabilities that UTM does not expose.
 
-* Snapshot `qemu-img snapshot ...`
+Snapshots use UTM's native `utmctl snapshot` commands.
