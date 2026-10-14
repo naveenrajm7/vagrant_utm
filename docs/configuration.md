@@ -27,6 +27,35 @@ config.vm.provider "utm" do |u|
 end
 ```
 
+## Shared network VLAN / DHCP (UTM 5.0.4+)
+
+UTM 5.0.4 exposed AppleScript properties for the shared/host network VLAN subnet and DHCP pool ([utmapp/UTM#7710](https://github.com/utmapp/UTM/pull/7710)), so you no longer need to set them manually in the UTM UI ([utmapp/UTM#3294](https://github.com/utmapp/UTM/issues/3294)).
+
+Index `0` is typically the first (Shared Network) adapter used by Vagrant boxes:
+
+```ruby
+config.vm.provider "utm" do |u|
+  u.network_interface 0,
+    vlan_guest_address: "192.168.222.0/24",
+    vlan_dhcp_start_address: "192.168.222.2",
+    vlan_dhcp_end_address: "192.168.222.254",
+    isolate_from_host: false
+end
+```
+
+Optional keys: `vlan_guest_address`, `vlan_guest_address_ipv6`, `vlan_dhcp_start_address`, `vlan_dhcp_end_address`, `isolate_from_host`.
+
+You can also call the driver directly when the machine already exists:
+
+```ruby
+machine.provider.driver.update_network_interface(
+  0,
+  vlan_guest_address: "192.168.222.0/24",
+  vlan_dhcp_start_address: "192.168.222.2",
+  vlan_dhcp_end_address: "192.168.222.254"
+)
+```
+
 ## Other customization
 
 ```ruby

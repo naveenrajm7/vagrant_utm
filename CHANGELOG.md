@@ -5,6 +5,8 @@
 ### Added
 - Use UTM 5.0.6's native snapshot API through `utmctl` for supported QEMU
   and Apple Virtualization VMs (Apple snapshots require macOS 27).
+- Support UTM 5.0.4+ VLAN guest and DHCP network properties through
+  `network_interface` and `update_network_interface`.
 
 ### Changed
 - Let UTM handle snapshot creation, listing, restoration, and deletion across

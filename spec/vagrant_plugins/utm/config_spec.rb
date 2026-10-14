@@ -2,7 +2,7 @@
 
 require "vagrant_utm/config"
 
-RSpec.describe VagrantPlugins::Utm::Config do
+RSpec.describe VagrantPlugins::Utm::Config do # rubocop:disable Metrics/BlockLength
   subject(:sut) { described_class.new }
 
   context "defaults" do
@@ -10,6 +10,37 @@ RSpec.describe VagrantPlugins::Utm::Config do
 
     it { expect(subject.check_guest_additions).to be(true) }
     it { expect(subject.name).to be_nil }
+  end
+
+  describe "#network_interface" do # rubocop:disable Metrics/BlockLength
+    it "schedules a pre-boot customize with VLAN options" do
+      sut.network_interface(
+        0,
+        vlan_guest_address: "192.168.222.0/24",
+        vlan_dhcp_start_address: "192.168.222.2",
+        vlan_dhcp_end_address: "192.168.222.254",
+        isolate_from_host: false
+      )
+
+      event, command = sut.customizations.last
+      expect(event).to eq("pre-boot")
+      expect(command).to eq([
+                              :network_interface,
+                              0,
+                              {
+                                vlan_guest_address: "192.168.222.0/24",
+                                vlan_dhcp_start_address: "192.168.222.2",
+                                vlan_dhcp_end_address: "192.168.222.254",
+                                isolate_from_host: false
+                              }
+                            ])
+    end
+
+    it "raises when no network options are given" do
+      expect do
+        sut.network_interface(0)
+      end.to raise_error(Vagrant::Errors::ConfigInvalid)
+    end
   end
 
   describe "#validate" do
