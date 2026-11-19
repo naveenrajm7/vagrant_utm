@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# frozen_string_literal: true
+
+# Apple Virtualization macOS VMs use shared networking (bridged-like)
+# No NAT port forwarding - SSH directly to mDNS hostname
+
+# Derive paths from synced folder source
+HOST_PATH = File.expand_path(".")
+FOLDER_NAME = File.basename(HOST_PATH)
+GUEST_PATH = HOST_PATH.sub(%r{^/Users/[^/]+}, "/Users/vagrant")
+VIRTFS_MOUNT = "/Volumes/My Shared Files/#{FOLDER_NAME}"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = ENV["MACOS_BOX"] || "macOS26"
+  config.vm.box_url = ENV["MACOS_BOX_URL"] if ENV["MACOS_BOX_URL"]
+
+  # Direct SSH to VM (no port forwarding for Apple Virtualization)
+  config.ssh.host = ENV["MACOS_SSH_HOST"] || "vagrant-macos.local"
+  config.ssh.port = 22
+  config.ssh.username = "vagrant"
+  config.ssh.insert_key = false
+
+  # Disable default SSH port forwarding
+  config.vm.network "forwarded_port", id: "ssh", guest: 22, host: 2222, disabled: true
+
+  # VirtioFS synced folder - user will be prompted to add via UTM GUI
+  # Mounts at /Volumes/My Shared Files/<folder_name>/
+  config.vm.synced_folder ".", "/vagrant"
+
+  config.vm.provider :utm do |utm|
+    utm.memory = 4096
+    utm.cpus = 2
+    utm.check_guest_additions = false
+    # Apple Virtualization: skip QEMU directory_share_mode (uses VirtioFS instead)
+    utm.skip_directory_share_mode = true
+  end
+
+  # Create symlink to mirror host path structure under vagrant user's home
+  config.vm.provision "shell", inline: <<~SHELL
+    mkdir -p "#{File.dirname(GUEST_PATH)}"
+    ln -sfn "#{VIRTFS_MOUNT}" "#{GUEST_PATH}"
+  SHELL
+end
