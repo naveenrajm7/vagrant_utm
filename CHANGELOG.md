@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-21
+
+### Fixed
+- Check whether forwarded host ports can be bound when repairing collisions,
+  allowing multiple UTM VMs to start with distinct SSH ports (#53).
+- Raise an error when the usable port range is exhausted instead of selecting
+  an occupied port, and honor wildcard port reservations from other VMs.
+- Pin Ruby workflow runners to Ubuntu 22.04 to support Ruby 3.3.4.
+
 ## [0.2.0] - 2026-10-14
 
 ### Added
