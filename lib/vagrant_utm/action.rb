@@ -23,6 +23,7 @@ module VagrantPlugins
       autoload :Export, action_root.join("export")
       autoload :ForcedHalt, action_root.join("forced_halt")
       autoload :ForwardPorts, action_root.join("forward_ports")
+      autoload :HandleForwardedPortCollisions, action_root.join("handle_forwarded_port_collisions")
       autoload :Import, action_root.join("import")
       autoload :IpAddress, action_root.join("ip_address")
       autoload :IsPaused, action_root.join("is_paused")
