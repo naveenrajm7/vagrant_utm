@@ -43,6 +43,7 @@ module VagrantPlugins
       autoload :PrepareNFSSettings, action_root.join("prepare_nfs_settings")
       autoload :PrepareNFSValidIds, action_root.join("prepare_nfs_valid_ids")
       autoload :PrepareForwardedPortCollisionParams, action_root.join("prepare_forwarded_port_collision_params")
+      autoload :PromptVirtioFS, action_root.join("prompt_virtiofs")
       autoload :Resume, action_root.join("resume")
       autoload :SetId, action_root.join("set_id")
       autoload :SetName, action_root.join("set_name")
@@ -75,6 +76,7 @@ module VagrantPlugins
           b.use ForwardPorts
           b.use SetHostname
           b.use Customize, "pre-boot"
+          b.use PromptVirtioFS
           b.use Boot
           b.use Customize, "post-boot"
 
